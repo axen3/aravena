@@ -80,7 +80,7 @@ async function router() {
         await loadUI("product");
         if (window.loadProduct) await window.loadProduct(param);
 
-    } else if (currentRoute === "pages" && param) {
+    } else if (currentRoute === "page" && param) {
         let htmlContent = "";
         let pageTitle = "Page Not Found";
         
@@ -158,14 +158,4 @@ document.addEventListener("DOMContentLoaded", async () => {
     await loadHeaderFooter();
     // Use the router to load the initial clean path (e.g., /home, /product/123)
     await router(); 
-    // 3. CRITICAL: Once the page is fully assembled (Header, Footer, and Content in #app)
-    // and styles are applied, fade in the entire site wrapper.
-    const wrapper = document.getElementById("site-wrapper");
-    if (wrapper) {
-        // Ensure transition is set for a smooth visual reveal
-        wrapper.style.transition = "opacity 0.25s ease";
-        // Make the entire site visible
-        wrapper.style.opacity = "1"; 
-    }
-    
 });
