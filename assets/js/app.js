@@ -52,7 +52,7 @@ function updateCartCounter() {
 
 // --- NAVIGATION FUNCTION (NEW) ---
 
-const navigateTo = url => {
+   window.navigateTo = url => {
     // 1. Use History API to change the URL without a page reload
     history.pushState(null, null, url);
     // 2. Run the router logic to render the new content
