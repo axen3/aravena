@@ -1,0 +1,54 @@
+<div class="checkout-page">
+  <div class="container">
+    <h1>Checkout</h1>
+    <p class="cod-note"><i class="fas fa-truck"></i> Pay when you receive • Free Shipping • 30-day returns</p>
+
+    <div class="checkout-grid">
+      <!-- Order Summary -->
+      <div class="order-summary">
+        <h2>Your Order</h2>
+        <div id="cart-items"></div>
+        <div class="total-price">
+          <strong>Total: MAD <span id="grand-total">0</span></strong>
+        </div>
+      </div>
+
+      <!-- Delivery Form -->
+      <div class="delivery-form">
+        <h2>Delivery Details</h2>
+        <form id="cod-form">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input type="text" id="name" required>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <input type="tel" id="phone" required placeholder="06 XX XX XX XX">
+          </div>
+          <div class="form-group">
+            <label>Full Address *</label>
+            <textarea id="address" rows="3" required placeholder="House no, street, area, landmark"></textarea>
+          </div>
+          
+          <!-- CITY DROPDOWN – REPLACED INPUT -->
+          <div class="form-group">
+  <label>City *</label>
+  <div class="select-wrapper">
+    <select id="city" required>
+      <option value="" disabled selected>Choose your city</option>
+    </select>
+    <i class="fas fa-chevron-down select-arrow"></i>
+  </div>
+</div>
+
+          <div class="form-group">
+            <label>Additional Notes (optional)</label>
+            <textarea id="notes" rows="2" placeholder="e.g. Ring the bell, leave with neighbor"></textarea>
+          </div>
+
+          <button type="submit" class="place-order-btn">Place Order</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="product-page">
+    <div class="container">
+        <!-- LEFT COLUMN: Gallery (sticky on desktop) -->
+        <div class="product-gallery" id="product-images">
+            <!-- Gallery injected by main.js -->
+        </div>
+
+        <!-- RIGHT COLUMN: All info + Add to Cart button -->
+        <div class="product-info">
+            <p id="product-category" class="category"></p>
+            <h1 id="product-title"></h1>
+
+            <div class="price-container">
+                <span id="product-price" class="price"></span>
+                <span id="original-price" class="original-price"></span>
+                <span id="discount-badge" class="discount-badge"></span>
+            </div>
+
+            <div id="product-stock" class="product-stock">
+                <i class="fas fa-check-circle stock-icon"></i>
+                <span class="stock-text">In Stock</span>
+            </div>
+
+            <p id="product-description" class="short-desc"></p>
+
+            <div class="options">
+                <div class="option-group">
+                    <label>Size</label>
+                    <select id="selectedSize"></select>
+                </div>
+
+                <div class="option-group">
+                    <label>Color</label>
+                    <div id="color-options" class="color-options"></div>
+                </div>
+
+                <div class="option-group quantity-group">
+                    <label>Quantity</label>
+                    <div class="quantity-controls">
+                        <button
+                            type="button"
+                            class="qty-btn minus"
+                            id="qty-minus"
+                        >
+                            -
+                        </button>
+                        <input
+                            type="text"
+                            id="selectedUnits"
+                            value="1"
+                            readonly
+                        />
+                        <button
+                            type="button"
+                            class="qty-btn plus"
+                            id="qty-plus"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <small class="qty-note">Maximum 10 per order</small>
+                </div>
+            </div>
+
+            <!-- ADD TO CART IS NOW INSIDE THE RIGHT COLUMN -->
+            <button class="add-to-cart-btn" id="add-to-cart">
+                Add to Cart
+            </button>
+            <button class="buy-now-btn" id="buy-now">
+                <i class="fas fa-bolt"></i> Buy Now • Pay on Delivery
+            </button>
+            <div id="description-blocks" class="description-blocks"></div>
+        </div>
+        <!-- End of .product-info -->
+    </div>
+</div>
