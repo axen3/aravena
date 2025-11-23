@@ -7,15 +7,7 @@
   <meta name="description" content="Premium quality products at unbeatable prices.">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" xintegrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="/assets/css/styles.css">
-
-  <!-- 
-  *** CRITICAL FIX FOR CLEAN URLS ON GITHUB PAGES ***
-  This script runs first. If the user navigated to a clean path (like /product/123) 
-  and was redirected here via the 404.html trick, this script finds the saved path
-  in sessionStorage and restores it in the URL bar using history.replaceState, 
-  so app.js sees the correct clean URL.
-  -->
-  <script defer>
+  <script>
     (function () {
       var path = sessionStorage.getItem('redirect');
       
