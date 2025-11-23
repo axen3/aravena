@@ -35,7 +35,7 @@ function updateCartCounter() {
 // ================ Home Page ================
 window.loadHome = async function (selectedCategory = null) {
     const container = document.getElementById("products-grid");
-    const res = await fetch("data/products.json");
+    const res = await fetch("/data/products.json");
     const products = await res.json();
 
     // Filter products if a category is selected
@@ -96,7 +96,7 @@ window.loadHome = async function (selectedCategory = null) {
 
 // ================ Product Page ================
 window.loadProduct = async function (id) {
-    const res = await fetch("data/products.json");
+    const res = await fetch("/data/products.json");
     const products = await res.json();
     const product = products.find(p => p.id == id);
 
@@ -268,7 +268,7 @@ window.loadProduct = async function (id) {
 
 // ================ Static Pages ================
 window.loadPage = async function (page) {
-    const res = await fetch("data/pages.json");
+    const res = await fetch("/data/pages.json");
     const pages = await res.json();
     const content = pages[page] || { title: "Page Not Found", content: "<p>Sorry, this page does not exist.</p>" };
 

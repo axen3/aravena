@@ -4,7 +4,7 @@ const appDiv = document.getElementById("app");
 
 async function loadUI(file) {
     appDiv.style.opacity = "0";
-    const html = await fetch(`ui/${file}.html`).then(r => r.text());
+    const html = await fetch(`/ui/${file}.html`).then(r => r.text());
     appDiv.innerHTML = html;
     
     // Get the current clean route path (e.g., /product/123 -> product)
@@ -22,9 +22,9 @@ async function loadUI(file) {
 }
 
 async function loadHeaderFooter() {
-    const header = await fetch("components/header.html").then(r => r.text());
+    const header = await fetch("/components/header.html").then(r => r.text());
     document.getElementById("header").innerHTML = header;
-    const footer = await fetch("components/footer.html").then(r => r.text());
+    const footer = await fetch("/components/footer.html").then(r => r.text());
     document.getElementById("footer").innerHTML = footer;
 
     const toggle = document.querySelector(".mobile-menu-toggle");
@@ -85,17 +85,17 @@ async function router() {
         let pageTitle = "Page Not Found";
         
         try {
-            const response = await fetch(`pages/${param}.html`);
+            const response = await fetch(`/pages/${param}.html`);
             if (response.ok) {
                 htmlContent = await response.text();
                 pageTitle = param.charAt(0).toUpperCase() + param.slice(1).replace(/-/g, " ");
             } else {
                 // If page not found, fetch 404
-                htmlContent = await fetch("pages/404.html").then(r => r.text());
+                htmlContent = await fetch("/pages/404.html").then(r => r.text());
             }
         } catch (err) {
             // Handle network errors by showing 404
-            htmlContent = await fetch("pages/404.html").then(r => r.text());
+            htmlContent = await fetch("/pages/404.html").then(r => r.text());
         }
 
         appDiv.innerHTML = htmlContent;
