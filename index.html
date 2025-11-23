@@ -15,7 +15,7 @@
   in sessionStorage and restores it in the URL bar using history.replaceState, 
   so app.js sees the correct clean URL.
   -->
-  <script>
+  <script defer>
     (function () {
       var path = sessionStorage.getItem('redirect');
       
