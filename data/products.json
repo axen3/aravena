@@ -1,1 +1,198 @@
-
+[
+  {
+    "id": 1,
+    "name": "Aerlo Jacket",
+    "brand": "Nordvue",
+    "category": "Clothing",
+    "inStock": false,
+    "price": 12999,
+    "originalPrice": 15999,
+    "shortDescription": "Lightweight insulated jacket for all-season use.",
+    "shipping": "free",
+    "image": "https://picsum.photos/600/600?random=1",
+    "images": [
+      "https://picsum.photos/600/600?random=11",
+      "https://picsum.photos/600/600?random=12"
+    ],
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+      { "name": "Black", "hex": "#000000" },
+      { "name": "Forest Green", "hex": "#0b6623" }
+    ],
+    "descriptionBlocks": [
+      { "type": "h1", "content": "Aerlo All-Season Jacket" },
+      {
+        "type": "image",
+        "src": "https://picsum.photos/800/400?random=13",
+        "alt": "Aerlo Jacket"
+      },
+      {
+        "type": "paragraph",
+        "content": "Designed for comfort and performance, the Aerlo Jacket offers warmth without bulk, perfect for outdoor adventures or urban wear."
+      },
+      { "type": "h1", "content": "Product specifications" },
+      {
+        "type": "ul",
+        "items": ["Water-resistant", "Windproof", "Breathable fabric", "Machine washable"]
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Vortex Headphones",
+    "brand": "Audionyx",
+    "category": "Electronics",
+    "inStock": true,
+    "price": 8999,
+    "originalPrice": 10999,
+    "shortDescription": "Wireless noise-cancelling headphones with premium sound.",
+    "shipping": "free",
+    "image": "https://picsum.photos/600/600?random=2",
+    "images": [
+      "https://picsum.photos/600/600?random=21",
+      "https://picsum.photos/600/600?random=22"
+    ],
+    "sizes": [],
+    "colors": [
+      { "name": "Midnight Blue", "hex": "#191970" },
+      { "name": "Silver", "hex": "#C0C0C0" }
+    ],
+    "descriptionBlocks": [
+      { "type": "h1", "content": "Vortex Premium Headphones" },
+      {
+        "type": "image",
+        "src": "https://picsum.photos/800/400?random=23",
+        "alt": "Vortex Headphones"
+      },
+      {
+        "type": "paragraph",
+        "content": "Enjoy studio-quality sound and immersive noise cancellation with up to 40 hours of battery life."
+      },
+      { "type": "h1", "content": "Product specifications" },
+      {
+        "type": "ul",
+        "items": ["Bluetooth 5.3", "Active noise cancelling", "Touch controls", "Fast charging"]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Lunaris Smartwatch",
+    "brand": "Chronox",
+    "category": "Wearables",
+    "inStock": 
+    true,
+    "price": 11499,
+    "originalPrice": 13999,
+    "shortDescription": "Sleek smartwatch with fitness tracking and customizable faces.",
+    "shipping": "free",
+    "image": "https://picsum.photos/600/600?random=3",
+    "images": [
+      "https://picsum.photos/600/600?random=31",
+      "https://picsum.photos/600/600?random=32"
+    ],
+    "sizes": ["One Size"],
+    "colors": [
+      { "name": "Graphite", "hex": "#2f2f2f" },
+      { "name": "Rose Gold", "hex": "#b76e79" }
+    ],
+    "descriptionBlocks": [
+      { "type": "h1", "content": "Lunaris Smartwatch" },
+      {
+        "type": "image",
+        "src": "https://picsum.photos/800/400?random=33",
+        "alt": "Lunaris Watch"
+      },
+      {
+        "type": "paragraph",
+        "content": "Stay connected and monitor your health with the Lunaris Smartwatch, featuring an intuitive display and robust sensors."
+      },
+      { "type": "h1", "content": "Product specifications" },
+      {
+        "type": "ul",
+        "items": ["Heart rate monitor", "Sleep tracking", "Water resistant", "Wireless charging"]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Nimbus Running Shoes",
+    "brand": "Stridex",
+    "category": "Shoes",
+    "inStock": true,
+    "price": 7499,
+    "originalPrice": 8999,
+    "shortDescription": "Cushioned running shoes built for speed and comfort.",
+    "shipping": "free",
+    "image": "https://picsum.photos/600/600?random=4",
+    "images": [
+      "https://picsum.photos/600/600?random=41",
+      "https://picsum.photos/600/600?random=42"
+    ],
+    "sizes": ["40", "41", "42", "43", "44", "45"],
+    "colors": [
+      { "name": "Crimson", "hex": "#dc143c" },
+      { "name": "Slate Grey", "hex": "#708090" }
+    ],
+    "descriptionBlocks": [
+      { "type": "h1", "content": "Nimbus Performance Running Shoes" },
+      {
+        "type": "image",
+        "src": "https://picsum.photos/800/400?random=43",
+        "alt": "Nimbus Shoes"
+      },
+      {
+        "type": "paragraph",
+        "content": "Experience lightweight cushioning and superior grip for your daily runs or races."
+      },
+      { "type": "h1", "content": "Product specifications" },
+      {
+        "type": "ul",
+        "items": ["Breathable mesh upper", "Foam midsole", "Durable outsole", "Reflective details"]
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Sjuss",
+    "brand": "Djdud",
+    "category": "Misc",
+    "inStock": true,
+    "price": 6838,
+    "originalPrice": null,
+    "shortDescription": "A stylish and affordable product for everyday use.",
+    "shipping": "free",
+    "image": "https://picsum.photos/600/600?random=5",
+    "images": [
+      "https://picsum.photos/600/600?random=51",
+      "https://picsum.photos/600/600?random=52"
+    ],
+    "sizes": ["S", "M", "L", "XL", "XXL", "XXXL"],
+    "colors": [
+      { "name": "Ciel", "hex": "#00ffff" },
+      { "name": "Unnamed", "hex": "#36c0e3" }
+    ],
+    "descriptionBlocks": [
+      { "type": "h1", "content": "This is a h1 title for a random product" },
+      {
+        "type": "image",
+        "src": "https://picsum.photos/800/400?random=53",
+        "alt": "Product"
+      },
+      {
+        "type": "paragraph",
+        "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s..."
+      },
+      { "type": "h1", "content": "Product specifications" },
+      {
+        "type": "ul",
+        "items": ["Lightweight", "Good price", "Iso 9001", "Good quality"]
+      },
+      {
+        "type": "image",
+        "src": "https://picsum.photos/800/400?random=54",
+        "alt": "Service"
+      }
+    ]
+  }
+]
