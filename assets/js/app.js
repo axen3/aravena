@@ -100,16 +100,6 @@ async function router() {
 
         appDiv.innerHTML = htmlContent;
 
-        // Re-render hCaptcha if on contact page
-        if (param === "contact") {
-            setTimeout(() => {
-                const captchaDiv = document.querySelector('.h-captcha[data-captcha="true"]');
-                if (captchaDiv && window.hcaptcha) {
-                    window.hcaptcha.render(captchaDiv);
-                }
-            }, 500);
-        }
-
         requestAnimationFrame(() => {
             appDiv.style.transition = "opacity 0.25s ease";
             appDiv.style.opacity = "1";
