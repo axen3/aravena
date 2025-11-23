@@ -1,38 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Wally Store</title>
-  <meta name="description" content="Premium quality products at unbeatable prices.">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" xintegrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="/assets/css/styles.css">
-  <script>
-    (function () {
-      var path = sessionStorage.getItem('redirect');
-      
-      // Check if a redirect path exists and if it's different from the current URL
-      if (path && path !== location.pathname) {
-        sessionStorage.removeItem('redirect');
-        
-        // Use History API to change the URL without triggering a page reload
-        history.replaceState(null, null, path); 
-      }
-    })();
-  </script>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Wally Store</title>
+        <meta
+            name="description"
+            content="Premium quality products at unbeatable prices."
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+            xintegrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+            crossorigin="anonymous"
+            referrerpolicy="no-referrer"
+        />
+        <link rel="stylesheet" href="/assets/css/styles.css" />
+        <script>
+            (function () {
+                // *** MUST BE localStorage NOW ***
+                var path = localStorage.getItem("redirect");
+                if (path && path !== location.pathname) {
+                    // 1. Restore the correct path
+                    history.replaceState(null, null, path);
+                    // 2. CRITICAL: Clear the stored path immediately after using it.
+                    localStorage.removeItem("redirect");
+                }
+            })();
+        </script>
 
-  <script src="/assets/js/app.js" defer></script>
-  <script src="/assets/js/main.js" defer></script>
-</head>
-<body>
-  <div id="header"></div>
+        <script src="/assets/js/app.js" defer></script>
+        <script src="/assets/js/main.js" defer></script>
+    </head>
+    <body>
+        <div id="header"></div>
 
-  <div id="app">
-    <div class="loader">
-      <div class="spinner"></div>
-    </div>
-  </div>
+        <div id="app">
+            <div class="loader">
+                <div class="spinner"></div>
+            </div>
+        </div>
 
-  <div id="footer"></div>
-</body>
+        <div id="footer"></div>
+    </body>
 </html>

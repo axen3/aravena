@@ -4,14 +4,17 @@
     <meta charset="utf-8">
     <title>Redirecting...</title>
     <script>
-      // Save the path the user was trying to access
-      sessionStorage.redirect = location.pathname + location.search;
+      // CRITICAL FIX: Switch to localStorage for better persistence across refreshes/redirects.
+      // Save the full intended path and search query (e.g., /product/123)
+      localStorage.setItem('redirect', location.pathname + location.search);
+      
+      // Immediately redirect the browser to the root of the site.
+      location.replace('/'); // Use JS redirect as an alternative to meta refresh
     </script>
-    <!-- Redirect to the root (index.html) immediately -->
-    <meta http-equiv="refresh" content="0;URL='/'">
+    
+    <meta http-equiv="refresh" content="0;URL='/'"> 
   </head>
   <body>
-    <!-- Message added for visibility during the brief redirect period -->
     <p style="font-family: sans-serif; text-align: center; margin-top: 100px;">
       One moment, redirecting to the requested page...
     </p>
