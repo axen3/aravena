@@ -146,7 +146,7 @@ img { max-width:100%; display:block; }
 }
 
 .cta-button:hover i {
-  transform: translateX(6px);   /* arrow slides right on hover */
+  transform: translateX(6px);    /* arrow slides right on hover */
 }
 
 /* ================= Products Grid ================= */
@@ -207,7 +207,7 @@ img { max-width:100%; display:block; }
   }
 
   .desktop-cart {
-    margin-left: auto;   /* Pushes cart to the right */
+    margin-left: auto;    /* Pushes cart to the right */
   }
 }
 
@@ -450,7 +450,7 @@ img { max-width:100%; display:block; }
   border-left: 5px solid var(--accent);
   margin: 1.5rem 0;
 }
-/* ======= FOOTER  ========= */
+/* ======= FOOTER  ========= */
 .site-footer {
   background: linear-gradient(135deg, var(--primary) 0%, #0f1a2e 100%);
   color: white;
@@ -680,6 +680,14 @@ img { max-width:100%; display:block; }
   min-height: 70vh;
 }
 
+/* 🚀 NEW CODE ADDED HERE FOR STATIC PAGE WIDTH 🚀 */
+.static-page.container {
+    max-width: 900px; /* Restrict width for readability on large screens */
+    margin-left: auto;
+    margin-right: auto;
+}
+/* 🚀 END NEW CODE 🚀 */
+
 .static-page h1 {
   text-align: center;
   font-size: 2.8rem;
@@ -888,7 +896,7 @@ img { max-width:100%; display:block; }
   gap: 1rem;
   padding: 1rem 0;
   width: 100%;
-  justify-content: flex-start;   /* everything starts from the same left point */
+  justify-content: flex-start;  /* everything starts from the same left point */
   font-size: 1.2rem;
 }
 
