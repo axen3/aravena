@@ -27,16 +27,7 @@ async function loadHeaderFooter() {
     const footer = await fetch("/components/footer.html").then(r => r.text());
     document.getElementById("footer").innerHTML = footer;
 
-    const toggle = document.querySelector(".mobile-menu-toggle");
-    const closeBtn = document.querySelector(".mobile-menu-close");
-    const nav = document.querySelector(".main-nav");
-    const closeMenu = () => nav.classList.remove("active");
-
-    toggle?.addEventListener("click", () => nav.classList.toggle("active"));
-    closeBtn?.addEventListener("click", closeMenu);
-    document.querySelectorAll(".main-nav a[data-link]").forEach(link => {
-        link.addEventListener("click", closeMenu);
-    });
+    
 }
 
 function updateTitle(title) {
@@ -102,6 +93,9 @@ async function router() {
         if (window.loadContact) {
         window.loadContact(); 
     }
+  /*  if (window.loadCheckout) {
+        window.loadCheckout(); 
+    } */
         requestAnimationFrame(() => {
             appDiv.style.transition = "opacity 0.25s ease";
             appDiv.style.opacity = "1";
@@ -120,7 +114,9 @@ async function router() {
             }
         };
         waitForCart();
-
+         if (window.loadCheckout) {
+        window.loadCheckout(); 
+    }
     } else if (currentRoute === "thankyou") {
         appDiv.innerHTML = `
             <div style="text-align:center;padding:6rem 1rem;">
@@ -157,7 +153,11 @@ document.addEventListener("click", e => {
 window.addEventListener("popstate", router); 
 
 document.addEventListener("DOMContentLoaded", async () => {
+    if (typeof window.setupMobileMenuListeners === 'function') {
+        window.setupMobileMenuListeners();
+    }
     await loadHeaderFooter();
+    await window.loadHeaderLinks();
     // Use the router to load the initial clean path (e.g., /home, /product/123)
     await router(); 
 });

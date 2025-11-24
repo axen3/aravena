@@ -1,16 +1,20 @@
+// assets/js/main.js
+
 // ================ Simple Cart System ================
 function addToCart(product, size, color, qty = 1) {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
-    const existing = cart.find(i => 
-        i.id === product.id && 
-        i.size === size && 
-        i.color === color
-    );
+    
+    // Create a unique cartId based on product ID, size, and color
+    const cartId = `${product.id}-${size || 'none'}-${color || 'none'}`;
+
+    // Update the existing find logic to use the unique cartId
+    const existing = cart.find(i => i.cartId === cartId);
 
     if (existing) {
         existing.qty += qty;
     } else {
         cart.push({ 
+            cartId: cartId, // ADDED: The unique identifier for this item configuration
             id: product.id, 
             name: product.name, 
             price: product.price, 
@@ -31,14 +35,97 @@ function updateCartCounter() {
     const counter = document.getElementById("cart-counter");
     if (counter) counter.textContent = total;
 }
+// loading header links and close button handler
+function setupMobileMenuListeners() {
+    // Select elements again as they might have been dynamically replaced
+    const toggle = document.querySelector(".mobile-menu-toggle");
+    const closeBtn = document.querySelector(".mobile-menu-close");
+    const nav = document.querySelector(".main-nav");
+    
+    // Safety check: ensure required elements exist
+    if (!nav || !toggle) return; 
 
+    // Define the close function
+    const closeMenu = () => {
+        nav.classList.remove("active");
+        // Remove 'menu-open' class from the header, often used for styling overlay/shadow
+        document.querySelector(".site-header")?.classList.remove("menu-open"); 
+    };
+
+    // 1. Toggle Button (Open/Close) - Stays static in HTML, set up only once.
+    if (!toggle.hasAttribute('data-listeners-set')) {
+        toggle.addEventListener("click", () => {
+            nav.classList.toggle("active");
+            document.querySelector(".site-header")?.classList.toggle("menu-open");
+        });
+        toggle.setAttribute('data-listeners-set', 'true'); // Mark as set
+    }
+    
+    // 2. Close Button (Dynamically replaced, so must be re-attached every time loadHeaderLinks runs)
+    // Using .onclick overwrites any previous handler, preventing duplicate listeners.
+    if (closeBtn) {
+        closeBtn.onclick = closeMenu;
+    }
+
+    // 3. Navigation Links (Closes menu on navigation)
+    document.querySelectorAll(".main-nav a[data-link]").forEach(link => {
+        // Using .onclick overwrites any previous handler
+        link.onclick = closeMenu;
+    });
+}
+// ======== HEADER LINKS ================
+window.loadHeaderLinks = async function() {
+    const res = await fetch("/data/products.json"); 
+    const data = await res.json();
+    const categories = data.categories;
+
+    const navContainer = document.querySelector('.main-nav');
+    if (!navContainer) return;
+
+    // Static Home Link
+    const staticHomeLink = '<a href="/home" data-link><i class="fas fa-home"></i> Home</a>';
+    
+    // Dynamic Category Links
+    const categoryLinksHTML = categories.map(cat => {
+        const catSlug = cat.toLowerCase(); 
+        return `<a href="/category/${catSlug}" data-link><i class="fas fa-tag"></i> ${cat}</a>`;
+    }).join('');
+
+    // Static Cart Icon Link
+    const cartIconHTML = `
+      <div class="cart-icon desktop-cart">
+        <a href="/checkout" data-link><i class="fas fa-shopping-cart"></i> <span id="cart-counter">0</span></a>
+      </div>
+    `;
+
+    // 5. Construct the final innerHTML, replacing the existing content
+    navContainer.innerHTML = `
+        <button class="mobile-menu-close" aria-label="Close menu"><i class="fas fa-times"></i></button>
+        ${staticHomeLink}
+        ${categoryLinksHTML}
+        ${cartIconHTML}
+    `;
+    
+    // Ensure the cart counter is updated (assuming updateCartCounter is defined elsewhere)
+    if (typeof updateCartCounter === 'function') {
+        updateCartCounter();
+    }
+
+    // 6. CRITICAL FIX: Re-attach the event listeners to the new elements
+    setupMobileMenuListeners(); 
+};
 // ================ Home Page ================
 window.loadHome = async function (selectedCategory = null) {
     const container = document.getElementById("products-grid");
     const res = await fetch("/data/products.json");
-    const products = await res.json();
+    const data = await res.json();
+    const products = data.products;
 
     // Filter products if a category is selected
+    const jsonCategories = data.categories.map(c => c.toLowerCase());
+    
+    // 2. Prepend 'all' to the list
+    const categories = ["all", ...jsonCategories]; 
     const filteredProducts = selectedCategory 
         ? products.filter(p => p.category.toLowerCase() === selectedCategory.toLowerCase())
         : products;
@@ -77,7 +164,7 @@ window.loadHome = async function (selectedCategory = null) {
     // Add category filter buttons above grid (only on home/category pages)
     const header = document.querySelector(".hero-section");
     if (header && !document.getElementById("category-filters")) {
-        const categories = ["all", "clothing", "electronics", "wearables", "shoes", "misc"];
+        
         const filterHTML = `<div id="category-filters" class="category-filters">
             ${categories.map(cat => {
                 // Determine the clean URL path for the button
@@ -117,7 +204,8 @@ window.loadHome = async function (selectedCategory = null) {
 // ================ Product Page ================
 window.loadProduct = async function (id) {
     const res = await fetch("/data/products.json");
-    const products = await res.json();
+    const data = await res.json();
+    const products = data.products;
     const product = products.find(p => p.id == id);
 
     if (!product) {
@@ -287,8 +375,9 @@ window.loadProduct = async function (id) {
 };
 
 // ================ Static Pages ================
+/*
 window.loadPage = async function (page) {
-    const res = await fetch("/data/pages.json");
+    const res = await ("/data/pages.json");
     const pages = await res.json();
     const content = pages[page] || { title: "Page Not Found", content: "<p>Sorry, this page does not exist.</p>" };
 
@@ -296,6 +385,75 @@ window.loadPage = async function (page) {
     document.getElementById("page-content").innerHTML = content.content;
     updateTitle(content.title);
 };
+*/
+// ================ CHECKOUT VALIDATION LOGIC ================
+
+/**
+ * Validates the checkout form fields according to specified rules.
+ * Required fields: name (min 2), phone (10 digits starting with 0), address (min 10), city.
+ * Notes field is optional.
+ *  True if all required fields are valid.
+ */
+function validateCheckoutForm(event) {
+    event.preventDefault(); // Stop default form submission first
+    
+    let isValid = true;
+    
+    // Define the required fields and their IDs
+    const requiredFields = [
+        { id: 'name', minLength: 2, msg: 'Full name is required (min 2 characters).' },
+        { id: 'phone', type: 'phone', msg: 'Phone must be 10 digits, starting with 0.' },
+        { id: 'address', minLength: 10, msg: 'Full address is required (min 10 characters).' },
+        { id: 'city', type: 'select', msg: 'Please select your city.' }
+    ];
+
+    // Helper function to check and display errors for a single field
+    const checkField = (inputEl, errorEl, message, isInvalid) => {
+        if (isInvalid) {
+            errorEl.textContent = message;
+            inputEl.classList.add('invalid');
+            isValid = false;
+        } else {
+            errorEl.textContent = '';
+            inputEl.classList.remove('invalid');
+        }
+    };
+
+    requiredFields.forEach(field => {
+        const inputEl = document.getElementById(field.id);
+        const errorEl = document.getElementById(`${field.id}-error`);
+        if (!inputEl || !errorEl) return; 
+
+        const value = inputEl.value.trim();
+
+        // 1. Check for basic emptiness (applies to all required fields)
+        if (value.length === 0 || (field.type === 'select' && value === '')) {
+            const genericMsg = field.msg.split('(')[0].trim() + ' is required.';
+            checkField(inputEl, errorEl, genericMsg, true);
+            return;
+        }
+        
+        // 2. Check Min Length
+        if (field.minLength && value.length < field.minLength) {
+             checkField(inputEl, errorEl, field.msg, true);
+             return;
+        }
+
+        // 3. Specific Validation for Phone Number (10 digits starting with 0)
+        if (field.type === 'phone') {
+            const phoneRegex = /^0\d{9}$/;
+            if (!phoneRegex.test(value)) {
+                checkField(inputEl, errorEl, field.msg, true);
+                return;
+            }
+        }
+        
+        // If all checks passed for this field
+        checkField(inputEl, errorEl, '', false);
+    });
+
+    return isValid;
+}
 
 // ================ Checkout Page – ALWAYS AVAILABLE & FIXED ================
 window.loadCheckout = function () {
@@ -363,7 +521,7 @@ window.loadCheckout = function () {
     ];
 
     const citySelect = document.getElementById("city");
-    if (citySelect && citySelect.options.length === 1) {  // only run once
+    if (citySelect && citySelect.options.length === 1) {  // only run once
         moroccoCities.sort().forEach(city => {
             const option = document.createElement("option");
             option.value = city;
@@ -374,15 +532,26 @@ window.loadCheckout = function () {
 
     const form = document.getElementById("cod-form");
     if (form) {
-        form.onsubmit = async e => {
-            e.preventDefault();
+        // Attach validation to the form submit
+        form.addEventListener('submit', async e => {
+            
+            // 1. Run the validation function
+            const isFormValid = validateCheckoutForm(e); 
+            
+            if (!isFormValid) {
+                // Stop here if validation failed
+                return;
+            }
+            
+            // 2. If valid, proceed with order submission
+            
             const btn = form.querySelector(".place-order-btn");
             btn.disabled = true;
             btn.textContent = "Placing Order...";
 
             const orderData = {
                 // orderDate: new Date().
-                orderId: "WALLY-" + Date.now().toString().slice(-6), // nice short ID
+                orderId: "WY-" + Date.now().toString().slice(-6), // nice short ID
                 name: document.getElementById("name").value.trim(),
                 phone: document.getElementById("phone").value.trim(),
                 address: document.getElementById("address").value.trim(),
@@ -390,7 +559,7 @@ window.loadCheckout = function () {
                 notes: document.getElementById("notes").value.trim() || "No notes",
                 items: cart.map(i => `${i.name} (${i.qty}x)${i.size ? " - Size: " + i.size : ""}${i.color ? " - Color: " + i.color : ""}`).join(" • "),
                 total: total.toFixed(2),
-                status: "Pending"                                 // ← Status last + default
+                status: "Pending"                       
             };
 
             const webhookURL = "https://hook.eu1.make.com/daglayfja85x5ovvk2zr66qlb0br7pqy"; // ← Replace with your real URL
@@ -411,9 +580,10 @@ window.loadCheckout = function () {
                 btn.disabled = false;
                 btn.textContent = "Place Order";
             }
-        };
+        });
     }
 };
+
 // fixed id scroll utility
 window.scrollToElement = function(targetId) {
     const targetElement = document.getElementById(targetId);
@@ -435,6 +605,7 @@ window.scrollToElement = function(targetId) {
         });
     }
 };
+
 // ================ CONTACT FORM UTILITIES AND VALIDATION ================
 
 // Global variable to store the CAPTCHA answer
@@ -610,28 +781,3 @@ window.loadContact = function() {
         successMessage.style.display = 'none';
     }
 };
-// --- HASHCHANGE LISTENER MODIFIED FOR CLEAN PATH ---
-// We need to check the pathname now instead of the hash.
-/*
-window.addEventListener("popstate", () => {
-    // Check if the current path is /home or starts with /category/
-    const path = location.pathname;
-    if (path === "/home" || path.startsWith("/category/") || path === "/") {
-        const filters = document.getElementById("category-filters");
-        if (filters) {
-            // Get header height (works even if header size changes)
-            const header = document.querySelector(".site-header");
-            const headerHeight = header ? header.offsetHeight : 80;
-
-            // Calculate exact position so filters touch the top of viewport
-            const filtersTop = filters.getBoundingClientRect().top + window.pageYOffset;
-            const targetScroll = filtersTop - headerHeight;
-
-            // Smooth scroll to that exact position
-            window.scrollTo({
-                top: targetScroll,
-                behavior: "smooth"
-            });
-        }
-    }
-});*/
