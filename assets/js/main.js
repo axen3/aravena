@@ -92,6 +92,26 @@ window.loadHome = async function (selectedCategory = null) {
         </div>`;
         header.insertAdjacentHTML("afterend", filterHTML);
     }
+        // Categories filters scroll
+    const targetElement = document.getElementById("products-start");
+    
+    if (selectedCategory && targetElement) {
+        
+        // Ensure the header height is accounted for if it's sticky
+        const siteHeader = document.getElementById("header"); // Assuming your sticky header is #header
+        const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
+
+        // Calculate the top position of the target element relative to the document
+        const targetTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
+
+        // Calculate the final scroll position: Target Top - Header Height (for sticky header offset)
+        const scrollToY = targetTop - headerHeight - 20; // -20 for a small padding/buffer
+        window.scrollTo({
+            top: scrollToY,
+            behavior: "smooth"
+        });
+    }
+
 };
 
 // ================ Product Page ================
@@ -394,10 +414,205 @@ window.loadCheckout = function () {
         };
     }
 };
+// fixed id scroll utility
+window.scrollToElement = function(targetId) {
+    const targetElement = document.getElementById(targetId);
 
+    if (targetElement) {
+        // Assuming your sticky header is #header
+        const siteHeader = document.getElementById("header");
+        const headerHeight = siteHeader ? siteHeader.offsetHeight : 0;
+
+        // Calculate the top position of the target element relative to the document
+        const targetTop = targetElement.getBoundingClientRect().top + window.pageYOffset;
+
+        // Calculate the final scroll position: Target Top - Header Height - Padding
+        const scrollToY = targetTop - headerHeight - 20; // 20px buffer for padding
+
+        window.scrollTo({
+            top: scrollToY,
+            behavior: "smooth"
+        });
+    }
+};
+// ================ CONTACT FORM UTILITIES AND VALIDATION ================
+
+// Global variable to store the CAPTCHA answer
+let correctCaptchaAnswer; 
+
+/**
+ * Generates a simple math CAPTCHA.
+ */
+function generateCaptcha() {
+    const num1 = Math.floor(Math.random() * 10) + 1;
+    const num2 = Math.floor(Math.random() * 5) + 1;
+    const operator = (Math.random() > 0.5) ? '+' : '-';
+    
+    let question;
+    let answer;
+
+    if (operator === '+') {
+        question = `${num1} + ${num2}`;
+        answer = num1 + num2;
+    } else {
+        const largeNum = Math.max(num1, num2);
+        const smallNum = Math.min(num1, num2);
+        question = `${largeNum} - ${smallNum}`;
+        answer = largeNum - smallNum;
+    }
+    
+    // Update the question text and store the answer
+    const questionEl = document.getElementById('captcha-question');
+    if (questionEl) {
+        questionEl.textContent = `What is ${question}?`;
+    }
+    correctCaptchaAnswer = answer.toString();
+}
+
+/**
+ * Validates form fields and CAPTCHA.
+ * @returns {boolean} True if all validation passes.
+ */
+function validateFields() {
+    let isValid = true;
+
+    // Helper to validate and display errors
+    const checkField = (id, check, message) => {
+        const inputEl = document.getElementById(id);
+        const errorEl = document.getElementById(id.replace('-input', '-error'));
+        
+        if (check()) {
+            errorEl.textContent = message;
+            inputEl.classList.add('invalid');
+            isValid = false;
+        } else {
+            errorEl.textContent = '';
+            inputEl.classList.remove('invalid');
+        }
+    };
+
+    // --- 1. Basic Field Validation ---
+    const nameVal = document.getElementById('name-input').value.trim();
+    const emailVal = document.getElementById('email-input').value.trim();
+    const messageVal = document.getElementById('message-input').value.trim();
+    
+    checkField('name-input', () => nameVal.length < 2, 'Name must be at least 2 characters.');
+    checkField('email-input', () => emailVal === '' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal), 'Please enter a valid email address.');
+    checkField('message-input', () => messageVal.length < 10, 'Message must be at least 10 characters.');
+
+    // --- 2. CAPTCHA Validation ---
+    const captchaInput = document.getElementById('captcha-input');
+    const captchaError = document.getElementById('captcha-error');
+    const captchaVal = captchaInput.value.trim();
+    
+    if (captchaVal !== correctCaptchaAnswer) {
+        captchaError.textContent = 'Incorrect answer. Please try again.';
+        captchaInput.classList.add('invalid');
+        generateCaptcha(); // Generate new CAPTCHA on failure
+        isValid = false;
+    } else {
+        captchaError.textContent = '';
+        captchaInput.classList.remove('invalid');
+    }
+
+    return isValid;
+}
+
+/**
+ * Handles the click event for the submit button, running validation and fetch.
+ */
+async function handleContactFormSubmit() {
+    // 1. Run client-side validation
+    if (!validateFields()) {
+        return;
+    }
+
+    const form = document.getElementById('contact-form');
+    const submitBtn = document.getElementById('submit-button');
+    const formData = new FormData(form);
+    
+    // Disable button and show loading state
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+    // 2. Submit data via FETCH (required when overriding default form action)
+    try {
+        const response = await fetch(form.action, {
+            method: form.method,
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        // 3. Handle successful submission
+        if (response.ok) {
+            const formWrapper = document.querySelector('.contact-form-wrapper');
+    // 2. Get the success message element (which is currently hidden in the HTML)
+    const successMessage = document.getElementById('contact-success');
+    
+    if (formWrapper && successMessage) {
+        // *** CRITICAL FIX: Replace the form content with the success message ***
+        formWrapper.innerHTML = successMessage.outerHTML;
+
+        // Ensure the replaced element is visible (since the original success div had display:none)
+        const newSuccessMessage = document.getElementById('contact-success');
+        if (newSuccessMessage) {
+            newSuccessMessage.style.display = 'block';
+            newSuccessMessage.style.opacity = '0'; // Optional: for fade-in effect
+            setTimeout(() => { 
+                newSuccessMessage.style.transition = 'opacity 0.5s ease';
+                newSuccessMessage.style.opacity = '1';
+                if (window.scrollToElement) {
+                    window.scrollToElement('contact-success'); 
+                }
+            }, 10);
+        }
+            } else {
+                alert('Success! Your message was sent.');
+            }
+        } else {
+            alert('Form submission failed! Please try again or use WhatsApp.');
+            // Re-enable button on failure
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+        }
+
+    } catch (error) {
+        console.error('Submission error:', error);
+        alert('An unexpected error occurred. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
+    }
+}
+
+
+// ================ PAGE INITIALIZER FUNCTIONS ================
+
+/**
+ * Initializes the contact form page with CAPTCHA and event listeners.
+ */
+window.loadContact = function() {
+    const contactForm = document.getElementById('contact-form');
+    const submitButton = document.getElementById('submit-button');
+    
+    if (contactForm && submitButton) {
+        // 1. Generate the initial CAPTCHA question
+        generateCaptcha();
+
+        // 2. Attach the new submission handler to the button click
+        submitButton.addEventListener('click', handleContactFormSubmit);
+    }
+    
+    // Ensures the success message is initially hidden when the page loads
+    const successMessage = document.getElementById('contact-success');
+    if (successMessage) {
+        successMessage.style.display = 'none';
+    }
+};
 // --- HASHCHANGE LISTENER MODIFIED FOR CLEAN PATH ---
 // We need to check the pathname now instead of the hash.
-
+/*
 window.addEventListener("popstate", () => {
     // Check if the current path is /home or starts with /category/
     const path = location.pathname;
@@ -419,4 +634,4 @@ window.addEventListener("popstate", () => {
             });
         }
     }
-});
+});*/

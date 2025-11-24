@@ -99,7 +99,9 @@ async function router() {
         }
 
         appDiv.innerHTML = htmlContent;
-
+        if (window.loadContact) {
+        window.loadContact(); 
+    }
         requestAnimationFrame(() => {
             appDiv.style.transition = "opacity 0.25s ease";
             appDiv.style.opacity = "1";
