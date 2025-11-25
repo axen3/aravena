@@ -583,7 +583,7 @@ window.loadCheckout = function () {
             btn.disabled = true;
             btn.textContent = "Placing Order...";
 
-            const orderData = {
+         /*   const orderData = {
                 // orderDate: new Date().
                 orderId: "WY-" + Date.now().toString().slice(-6), // nice short ID
                 name: document.getElementById("name").value.trim(),
@@ -594,16 +594,34 @@ window.loadCheckout = function () {
                 items: cart.map(i => `${i.name} (${i.qty}x)${i.size ? " - Size: " + i.size : ""}${i.color ? " - Color: " + i.color : ""}`).join(" • "),
                 total: total.toFixed(2),
                 status: "Pending"                       
-            };
+            };*/
+
+        const orderData = {
+    secret: "Aravena900",
+    orderId: "WY-" + Date.now().toString().slice(-6),
+    name: document.getElementById("name").value.trim(),
+    phone: document.getElementById("phone").value.trim(),
+    address: document.getElementById("address").value.trim(),
+    city: document.getElementById("city").value.trim(),
+    notes: document.getElementById("notes").value.trim() || "No notes",
+    items: cart.map(i => `${i.name} (${i.qty}x)${i.size ? " - Size: " + i.size : ""}${i.color ? " - Color: " + i.color : ""}`).join(" • "),
+    total: total.toFixed(2),
+    status: "Pending"
+};
 
             const webhookURL = "https://hook.eu1.make.com/daglayfja85x5ovvk2zr66qlb0br7pqy"; // ← Replace with your real URL
 
             try {
-                await fetch(webhookURL, {
+                /* await fetch(webhookURL, {
                     method: "POST",
                     body: JSON.stringify(orderData),
                     headers: { "Content-Type": "application/json" }
-                });
+                });*/
+               await fetch("https://script.google.com/macros/s/AKfycby3YlL49Wi3H_eKLSaPtHIES3ZXJvYBDO23qLk01Cf_vTtF7ew0PSNApTSKzaYtLH0F/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(orderData)
+});
                 localStorage.removeItem("cart");
                 updateCartCounter();
                 
