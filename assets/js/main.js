@@ -203,11 +203,36 @@ window.loadHome = async function (selectedCategory = null) {
 
 // ================ Product Page ================
 window.loadProduct = async function (id) {
+  function generateStarRating(rating,reviewCount) {
+        const normalizedRating = Math.round(rating * 2) / 2;
+        
+        let starsHtml = '';
+        let ratingValue = normalizedRating;
+        
+        const FULL_STAR = '<i class="fas fa-star" style="color: #ffc107;"></i>';
+        const HALF_STAR = '<i class="fas fa-star-half-alt" style="color: #ffc107;"></i>';
+        const EMPTY_STAR = '<i class="far fa-star" style="color: #ffc107;"></i>';
+
+        for (let i = 0; i < 5; i++) {
+            if (ratingValue >= 1) {
+                starsHtml += FULL_STAR;
+                ratingValue--;
+            } else if (ratingValue === 0.5) {
+                starsHtml += HALF_STAR;
+                ratingValue = 0;
+            } else {
+                starsHtml += EMPTY_STAR;
+            }
+        }
+        
+        return `<span class="fa-rating-icons">${starsHtml}</span><span class="count"> (${reviewCount})</span>`;
+    }
+    // loading product details
     const res = await fetch("/data/products.json");
     const data = await res.json();
     const products = data.products;
     const product = products.find(p => p.id == id);
-
+    
     if (!product) {
         document.getElementById("app").innerHTML = "<h2 style='text-align:center;padding:4rem;'>Product not found 😢</h2>";
         return;
@@ -217,13 +242,22 @@ window.loadProduct = async function (id) {
 
     document.getElementById("product-title").textContent = product.name;
     document.getElementById("product-category").textContent = product.category;
+    document.getElementById("product-rating").innerHTML = generateStarRating(product.rating|| 0,product.reviewCount || 0);
     document.getElementById("product-description").textContent = product.shortDescription;
-
+    // shipping
+    let shippingBadgeHTML = '';
+    
+    if (product.shipping === 'free') {
+        shippingBadgeHTML = `<span class="detail-badge shipping-free-badge"><i class="fas fa-shipping-fast"></i> FREE SHIPPING</span>`;
+    } else if (product.shipping === 'paid' && product.shippingCost > 0) {
+        const cost = product.shippingCost;
+        shippingBadgeHTML = `<span class="detail-badge shipping-paid-badge"><i class="fas fa-shipping-fast"></i> Shipping: ${cost} MAD</span>`;
+    }
+    document.getElementById("product-shipping").innerHTML = shippingBadgeHTML;
     // Stock Status + Disable buttons if out of stock
     const stockEl = document.getElementById("product-stock");
     const stockTextEl = stockEl.querySelector(".stock-text");
     const stockIconEl = stockEl.querySelector(".stock-icon");
-
     const addToCartBtn = document.getElementById("add-to-cart");
     const buyNowBtn = document.getElementById("buy-now");
 
