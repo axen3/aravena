@@ -46,8 +46,11 @@
       "inStock": false,
       "price": 12999,
       "originalPrice": 15999,
+      "rating": 4.2,
+      "reviewCount": 45,
       "shortDescription": "Lightweight insulated jacket for all-season use.",
-      "shipping": "free",
+      "shipping": "paid",
+      "shippingCost" : 15,
       "image": "https://picsum.photos/600/600?random=1",
       "images": [
         "https://picsum.photos/600/600?random=11",
