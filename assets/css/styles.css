@@ -264,10 +264,33 @@ img { max-width:100%; display:block; }
 
 /* Product Info */
 .product-info h1 { font-size:2.5rem; margin-bottom:0.5rem; }
+#product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+
+#product-rating .fa-rating-icons {
+    line-height: 1;
+}
+
+#product-rating .fa-rating-icons i {
+    font-size: 1.25rem;
+    margin-right: 1px;
+}
+
+#product-rating .count {
+    color: #666;
+    font-size: 1rem;
+    font-weight: 500;
+}
 .category { color:#64748b; text-transform:uppercase; font-size:0.9rem; letter-spacing:1px; margin-bottom:1rem; }
 
 .price-container { margin:1.5rem 0; display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
-.price { font-size:2.2rem; font-weight:bold; color:var(--danger); }
+.price { font-size:1.5rem; font-weight:bold; color:var(--danger); }
 .original-price { text-decoration:line-through; color:#94a3b8; }
 .discount-badge { background:var(--success); color:white; padding:4px 10px; border-radius:4px; font-weight:bold; }
 
@@ -292,7 +315,26 @@ img { max-width:100%; display:block; }
 }
 
 .stock-icon { font-size: 1rem; }
+/* shipping */
+.detail-badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
 
+/* Free Shipping Badge */
+.shipping-free-badge {
+    background-color: var(--color-success, #28a745); /* Green */
+    color: white;
+}
+
+/* Paid Shipping Badge */
+.shipping-paid-badge {
+    background-color: var(--color-info, #17a2b8); /* Blue/Teal */
+    color: white;
+}
 /* Options */
 .options { 
   display:grid; 
