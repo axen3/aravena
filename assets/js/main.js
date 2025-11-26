@@ -565,77 +565,50 @@ window.loadCheckout = function () {
     }
 
     const form = document.getElementById("cod-form");
-    if (form) {
-        // Attach validation to the form submit
-        form.addEventListener('submit', async e => {
-            
-            // 1. Run the validation function
-            const isFormValid = validateCheckoutForm(e); 
-            
-            if (!isFormValid) {
-                // Stop here if validation failed
-                return;
-            }
-            
-            // 2. If valid, proceed with order submission
-            
-            const btn = form.querySelector(".place-order-btn");
-            btn.disabled = true;
-            btn.textContent = "Placing Order...";
 
-         /*   const orderData = {
-                // orderDate: new Date().
-                orderId: "WY-" + Date.now().toString().slice(-6), // nice short ID
-                name: document.getElementById("name").value.trim(),
-                phone: document.getElementById("phone").value.trim(),
-                address: document.getElementById("address").value.trim(),
-                city: document.getElementById("city").value.trim(),
-                notes: document.getElementById("notes").value.trim() || "No notes",
-                items: cart.map(i => `${i.name} (${i.qty}x)${i.size ? " - Size: " + i.size : ""}${i.color ? " - Color: " + i.color : ""}`).join(" • "),
-                total: total.toFixed(2),
-                status: "Pending"                       
-            };*/
+if (form) {
+    form.addEventListener('submit', async e => {
+        e.preventDefault();
+
+        const isFormValid = validateCheckoutForm(e); 
+        if (!isFormValid) return;
+
+        const btn = form.querySelector(".place-order-btn");
+        btn.disabled = true;
+        btn.textContent = "Placing Order...";
 
         const orderData = {
-    secret: "Aravena900",
-    orderId: "WY-" + Date.now().toString().slice(-6),
-    name: document.getElementById("name").value.trim(),
-    phone: document.getElementById("phone").value.trim(),
-    address: document.getElementById("address").value.trim(),
-    city: document.getElementById("city").value.trim(),
-    notes: document.getElementById("notes").value.trim() || "No notes",
-    items: cart.map(i => `${i.name} (${i.qty}x)${i.size ? " - Size: " + i.size : ""}${i.color ? " - Color: " + i.color : ""}`).join(" • "),
-    total: total.toFixed(2),
-    status: "Pending"
-};
+            secret: "Aravena900",
+            orderId: "WY-" + Date.now().toString().slice(-6),
+            name: document.getElementById("name").value.trim(),
+            phone: document.getElementById("phone").value.trim(),
+            address: document.getElementById("address").value.trim(),
+            city: document.getElementById("city").value.trim(),
+            notes: document.getElementById("notes").value.trim() || "No notes",
+            items: cart.map(i => `${i.name} (${i.qty}x)${i.size ? " - Size: " + i.size : ""}${i.color ? " - Color: " + i.color : ""}`).join(" • "),
+            total: total.toFixed(2),
+            status: "Pending"
+        };
+        try {
+            await fetch("https://script.google.com/macros/s/AKfycbzG8oCEKdqt678i9bYYnL22aIQEO42M09pYgGiUgIYU6imas3sjA03DXNST6oEKsfKV/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData)
+            });
 
-            const webhookURL = "https://hook.eu1.make.com/daglayfja85x5ovvk2zr66qlb0br7pqy"; // ← Replace with your real URL
-
-            try {
-                /* await fetch(webhookURL, {
-                    method: "POST",
-                    body: JSON.stringify(orderData),
-                    headers: { "Content-Type": "application/json" }
-                });*/
-               await fetch("https://script.google.com/macros/s/AKfycby3YlL49Wi3H_eKLSaPtHIES3ZXJvYBDO23qLk01Cf_vTtF7ew0PSNApTSKzaYtLH0F/exec", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(orderData)
-});
-                localStorage.removeItem("cart");
-                updateCartCounter();
-                
-                // HASH REMOVED: Navigate using the new navigateTo function from app.js
-                window.navigateTo('/thankyou'); 
-            } catch (err) {
-                alert("Order failed. Please try again or contact us.");
-                btn.disabled = false;
-                btn.textContent = "Place Order";
-            }
-        });
-    }
-};
-
+            localStorage.removeItem("cart");
+            updateCartCounter();
+            window.navigateTo('/thankyou'); 
+        } catch (err) {
+            console.error(err);
+            console.log(err.error);
+            alert("Order failed. Please try again or contact us.");
+            btn.disabled = false;
+            btn.textContent = "Place Order";
+        }
+    });
+}
+}
 // fixed id scroll utility
 window.scrollToElement = function(targetId) {
     const targetElement = document.getElementById(targetId);
