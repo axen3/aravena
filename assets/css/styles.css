@@ -395,7 +395,7 @@ img { max-width:100%; display:block; }
 .add-to-cart-btn {
   display: block;
   width: 100%;
-  margin: 2rem 0;
+  margin: 1rem 0;
   padding: 1.2rem 2rem;
   background: var(--primary);
   color: white;
@@ -693,7 +693,7 @@ img { max-width:100%; display:block; }
 }
 .buy-now-btn {
   width: 100%;
-  margin: 1rem 0 0;
+  margin: 0.8rem 0 0;
   padding: 1.2rem;
   background: #f97316;  /* Bright orange – stands out */
   color: white;
@@ -722,8 +722,6 @@ img { max-width:100%; display:block; }
     margin-left: auto;
     margin-right: auto;
 }
-/* 🚀 END NEW CODE 🚀 */
-
 .static-page h1 {
   text-align: center;
   font-size: 2.8rem;
@@ -1017,4 +1015,52 @@ img { max-width:100%; display:block; }
   font-size: 0.9rem;
   margin-top: 0.4rem;
   display: block;
+}
+/*==== toast message ====*/
+#toast {
+    visibility: hidden;
+    min-width: 220px;
+    max-width: 320;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    border-radius: 6px;
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translateX(-50%);
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.4s ease, bottom 0.4s ease;
+    z-index: 9999;
+    box-sizing: border-box;
+}
+
+/* Show animation */
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 60px;
+}
+
+/* Toast types */
+.toast-success {
+    background-color: #28a745 !important; /* green */
+}
+
+.toast-error {
+    background-color: #dc3545 !important; /* red */
+}
+
+/* Make text take all width */
+#toast span {
+    flex: 1;          /* fills remaining space */
+    word-break: break-word; /* wrap long text */
+}
+
+#toast i {
+    font-size: 18px;
+    flex-shrink: 0;   /* keeps icon from shrinking */
 }
