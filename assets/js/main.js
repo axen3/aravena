@@ -1,6 +1,4 @@
-// assets/js/main.js
-
-// ================ Simple Cart System ================
+// ======= Simple Cart System ==========
 function addToCart(product, size, color, qty = 1) {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
@@ -35,9 +33,8 @@ function updateCartCounter() {
     const counter = document.getElementById("cart-counter");
     if (counter) counter.textContent = total;
 }
-// loading header links and close button handler
+// ======= Header Section ===========
 function setupMobileMenuListeners() {
-    // Select elements again as they might have been dynamically replaced
     const toggle = document.querySelector(".mobile-menu-toggle");
     const closeBtn = document.querySelector(".mobile-menu-close");
     const nav = document.querySelector(".main-nav");
@@ -62,9 +59,6 @@ function setupMobileMenuListeners() {
         });
         toggle.setAttribute("data-listeners-set", "true"); // Mark as set
     }
-
-    // 2. Close Button (Dynamically replaced, so must be re-attached every time loadHeaderLinks runs)
-    // Using .onclick overwrites any previous handler, preventing duplicate listeners.
     if (closeBtn) {
         closeBtn.onclick = closeMenu;
     }
@@ -75,7 +69,7 @@ function setupMobileMenuListeners() {
         link.onclick = closeMenu;
     });
 }
-// ======== HEADER LINKS ================
+// load header links
 window.loadHeaderLinks = async function () {
     const res = await fetch("/data/products.json");
     const data = await res.json();
@@ -102,24 +96,18 @@ window.loadHeaderLinks = async function () {
         <a href="/checkout" data-link><i class="fas fa-shopping-cart"></i> <span id="cart-counter">0</span></a>
       </div>
     `;
-
-    // 5. Construct the final innerHTML, replacing the existing content
     navContainer.innerHTML = `
         <button class="mobile-menu-close" aria-label="Close menu"><i class="fas fa-times"></i></button>
         ${staticHomeLink}
         ${categoryLinksHTML}
         ${cartIconHTML}
     `;
-
-    // Ensure the cart counter is updated (assuming updateCartCounter is defined elsewhere)
     if (typeof updateCartCounter === "function") {
         updateCartCounter();
     }
-
-    // 6. CRITICAL FIX: Re-attach the event listeners to the new elements
     setupMobileMenuListeners();
 };
-// ================ Home Page ================
+// ============ Home Page ============
 window.loadHome = async function (selectedCategory = null) {
     const container = document.getElementById("products-grid");
     const res = await fetch("/data/products.json");
@@ -235,7 +223,7 @@ window.loadHome = async function (selectedCategory = null) {
     }
 };
 
-// ================ Product Page ================
+// ======== Product Page ============
 window.loadProduct = async function (id) {
     function generateStarRating(rating, reviewCount) {
         const normalizedRating = Math.round(rating * 2) / 2;
@@ -278,7 +266,7 @@ window.loadProduct = async function (id) {
     // ... (rest of the product display logic remains the same) ...
 
     document.getElementById("product-title").textContent = product.name;
-    document.getElementById("product-category").textContent = product.category;
+    document.getElementById("product-category").innerHTML = `<i class="fas fa-tag"></i> ${product.category}`;
     document.getElementById("product-rating").innerHTML = generateStarRating(
         product.rating || 0,
         product.reviewCount || 0
@@ -470,6 +458,7 @@ window.loadProduct = async function (id) {
         const qty = parseInt(qtyInput.value) || 1;
 
         addToCart(product, size, color, qty);
+        showToast('added to cart','success');
     };
 
     // Buy Now – silent + instant checkout
@@ -490,27 +479,7 @@ window.loadProduct = async function (id) {
 
     updateTitle(product.name);
 };
-
-// ================ Static Pages ================
-/*
-window.loadPage = async function (page) {
-    const res = await ("/data/pages.json");
-    const pages = await res.json();
-    const content = pages[page] || { title: "Page Not Found", content: "<p>Sorry, this page does not exist.</p>" };
-
-    document.getElementById("page-title").textContent = content.title;
-    document.getElementById("page-content").innerHTML = content.content;
-    updateTitle(content.title);
-};
-*/
-// ================ CHECKOUT VALIDATION LOGIC ================
-
-/**
- * Validates the checkout form fields according to specified rules.
- * Required fields: name (min 2), phone (10 digits starting with 0), address (min 10), city.
- * Notes field is optional.
- *  True if all required fields are valid.
- */
+// ===== CHECKOUT VALIDATION =====
 function validateCheckoutForm(event) {
     event.preventDefault(); // Stop default form submission first
 
@@ -583,8 +552,7 @@ function validateCheckoutForm(event) {
 
     return isValid;
 }
-
-// ================ Checkout Page – ALWAYS AVAILABLE & FIXED ================
+// ========= Checkout Page ===========
 window.loadCheckout = function () {
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
 
@@ -638,6 +606,7 @@ window.loadCheckout = function () {
             localStorage.setItem("cart", JSON.stringify(cart));
             updateCartCounter();
             loadCheckout();
+            showToast('Item removed.','success');
         };
     });
 
@@ -747,7 +716,7 @@ if (form && !form.dataset.bound) {
 
         const btn = form.querySelector(".place-order-btn");
         btn.disabled = true;
-        btn.textContent = "Placing Order...";
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Placing Order...`;
 
         const formData = new FormData();
         formData.append("secret", "Aravena900");
@@ -792,7 +761,7 @@ if (form && !form.dataset.bound) {
     });
 }
 };
-// fixed id scroll utility
+// fixed #id scroll utility
 window.scrollToElement = function (targetId) {
     const targetElement = document.getElementById(targetId);
 
@@ -815,14 +784,10 @@ window.scrollToElement = function (targetId) {
     }
 };
 
-// ================ CONTACT FORM UTILITIES AND VALIDATION ================
+// ==== CONTACT FORM VALIDATION =====
 
-// Global variable to store the CAPTCHA answer
+
 let correctCaptchaAnswer;
-
-/**
- * Generates a simple math CAPTCHA.
- */
 function generateCaptcha() {
     const num1 = Math.floor(Math.random() * 10) + 1;
     const num2 = Math.floor(Math.random() * 5) + 1;
@@ -849,10 +814,6 @@ function generateCaptcha() {
     correctCaptchaAnswer = answer.toString();
 }
 
-/**
- * Validates form fields and CAPTCHA.
- * @returns {boolean} True if all validation passes.
- */
 function validateFields() {
     let isValid = true;
 
@@ -910,9 +871,6 @@ function validateFields() {
     return isValid;
 }
 
-/**
- * Handles the click event for the submit button, running validation and fetch.
- */
 async function handleContactFormSubmit() {
     // 1. Run client-side validation
     if (!validateFields()) {
@@ -963,10 +921,10 @@ async function handleContactFormSubmit() {
                     }, 10);
                 }
             } else {
-                alert("Success! Your message was sent.");
+                showToast("Success! Your message wshowerror","success");
             }
         } else {
-            alert("Form submission failed! Please try again or use WhatsApp.");
+            showToast("Form submission failed! Please try again or use WhatsApp.","error");
             // Re-enable button on failure
             submitBtn.disabled = false;
             submitBtn.innerHTML =
@@ -974,17 +932,14 @@ async function handleContactFormSubmit() {
         }
     } catch (error) {
         console.error("Submission error:", error);
-        alert("An unexpected error occurred. Please try again.");
+        showToast("An unexpected error occurred. Please try again.","error");
         submitBtn.disabled = false;
         submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Message';
     }
 }
 
-// ================ PAGE INITIALIZER FUNCTIONS ================
+// ====== CONTACT PAGE ================
 
-/**
- * Initializes the contact form page with CAPTCHA and event listeners.
- */
 window.loadContact = function () {
     const contactForm = document.getElementById("contact-form");
     const submitButton = document.getElementById("submit-button");
@@ -1003,3 +958,33 @@ window.loadContact = function () {
         successMessage.style.display = "none";
     }
 };
+// show toast message
+function showToast(message, type = "") {
+    const toast = document.getElementById("toast");
+    const icon = toast.querySelector("i");
+    const text = toast.querySelector("span");
+
+    text.textContent = message;
+
+    // Remove old type classes
+    toast.classList.remove("toast-success", "toast-error");
+
+    // Add new type
+    if (type === "success") {
+        toast.classList.add("toast-success");
+        icon.className = "fa-solid fa-check-circle";
+    } 
+    else if (type === "error") {
+        toast.classList.add("toast-error");
+        icon.className = "fa-solid fa-circle-xmark";
+    } 
+    else {
+        icon.className = "";
+    }
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 2500);
+}

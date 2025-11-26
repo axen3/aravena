@@ -120,9 +120,9 @@ async function router() {
     } else if (currentRoute === "thankyou") {
         appDiv.innerHTML = `
             <div style="text-align:center;padding:6rem 1rem;">
-                <h1>Thank You! 🎉</h1>
+                <h1>Thank You for your purchase.</h1>
                 <p>Your order has been placed successfully.</p>
-                <p>We will call you soon to confirm.</p>
+                <p>We will call you soon to confirm.</p><br/>
                 <a href="/home" data-link class="cta-button">Continue Shopping</a>
             </div>`;
         updateTitle("Thank You");
