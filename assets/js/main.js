@@ -157,17 +157,17 @@ window.loadHome = async function (selectedCategory = null) {
                         <img src="${p.image}" alt="${p.name}" loading="lazy">
                     </div>
                     <div class="card-content">
-                        <h3>${p.name}</h3>
-                        <p class="category-badge">${p.category}</p>
+                        <h3 style="color:#000">${p.name}</h3>
+                        <p class="category-badge"><i class="fas fa-tag"></i> ${p.category}</p>
                         <div class="price-row">
-                            <span class="price">MAD ${(p.price / 100).toFixed(
+                            <span class="price">${(p.price / 100).toFixed(
                                 2
-                            )}</span>
+                            )} Dhs</span>
                             ${
                                 hasDiscount
-                                    ? `<span class="original-price">MAD ${(
+                                    ? `<span class="original-price">${(
                                           p.originalPrice / 100
-                                      ).toFixed(2)}</span>`
+                                      ).toFixed(2)} Dhs</span>`
                                     : ""
                             }
                         </div>
@@ -280,7 +280,7 @@ window.loadProduct = async function (id) {
         shippingBadgeHTML = `<span class="detail-badge shipping-free-badge"><i class="fas fa-shipping-fast"></i> FREE SHIPPING</span>`;
     } else if (product.shipping === "paid" && product.shippingCost > 0) {
         const cost = product.shippingCost;
-        shippingBadgeHTML = `<span class="detail-badge shipping-paid-badge"><i class="fas fa-shipping-fast"></i> Shipping: ${cost} MAD</span>`;
+        shippingBadgeHTML = `<span class="detail-badge shipping-paid-badge"><i class="fas fa-shipping-fast"></i> Shipping: ${cost} Dhs</span>`;
     }
     document.getElementById("product-shipping").innerHTML = shippingBadgeHTML;
     // Stock Status + Disable buttons if out of stock
@@ -316,15 +316,15 @@ window.loadProduct = async function (id) {
         buyNowBtn.style.cursor = "not-allowed";
     }
     const priceEl = document.getElementById("product-price");
-    priceEl.textContent = `MAD ${(product.price / 100).toFixed(2)}`;
+    priceEl.textContent = `${(product.price / 100).toFixed(2)} Dhs`;
 
     const originalPriceEl = document.getElementById("original-price");
     const discountBadgeEl = document.getElementById("discount-badge");
 
     if (product.originalPrice && product.originalPrice > product.price) {
-        originalPriceEl.textContent = `MAD ${(
+        originalPriceEl.textContent = `${(
             product.originalPrice / 100
-        ).toFixed(2)}`;
+        ).toFixed(2)} Dhs`;
         originalPriceEl.style.display = "inline";
         const discount = Math.round(
             (1 - product.price / product.originalPrice) * 100
@@ -582,7 +582,7 @@ window.loadCheckout = function () {
                 <p>${item.size ? "Size: " + item.size + " • " : ""}${
                     item.color ? "Color: " + item.color + " • " : ""
                 }Qty: ${item.qty}</p>
-                <p>MAD ${((item.price / 100) * item.qty).toFixed(2)}</p>
+                <p>${((item.price / 100) * item.qty).toFixed(2)} Dhs</p>
             </div>
             <button class="remove-item-btn" data-index="${index}">
                 <i class="fas fa-trash-alt"></i>
@@ -725,7 +725,7 @@ if (form && !form.dataset.bound) {
         formData.append("phone", document.getElementById("phone").value.trim());
         formData.append("address", document.getElementById("address").value.trim());
         formData.append("city", document.getElementById("city").value.trim());
-        formData.append("notes", document.getElementById("notes").value.trim() || "No notes");
+        formData.append("notes", document.getElementById("notes").value.trim() || "-");
         formData.append(
             "items",
             cart
@@ -839,19 +839,19 @@ function validateFields() {
 
     checkField(
         "name-input",
-        () => nameVal.length < 2,
-        "Name must be at least 2 characters."
+        () => !/^(?!\s)(?!.*\s$)[\p{L} ]{4,}$/u.test(nameVal),
+        "Please enter valid name."
     );
     checkField(
         "email-input",
-        () => emailVal === "" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal),
+        () => emailVal === "" || !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(emailVal),
         "Please enter a valid email address."
     );
     checkField(
-        "message-input",
-        () => messageVal.length < 10,
-        "Message must be at least 10 characters."
-    );
+    "message-input",
+    () => !/^(?=(?:.*\s){2,})(?=.{10,250}$)[\s\S]*$/.test(messageVal),
+    "Message must be at least 10 characters and not empty."
+);
 
     // --- 2. CAPTCHA Validation ---
     const captchaInput = document.getElementById("captcha-input");
