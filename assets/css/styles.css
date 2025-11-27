@@ -263,6 +263,9 @@ img { max-width:100%; display:block; }
 }
 
 /* Product Info */
+.product-info {
+    overflow-x: hidden; 
+}
 .product-info h1 { font-size:2.5rem; margin-bottom:0.5rem; }
 #product-rating {
     display: flex;
@@ -919,7 +922,7 @@ img { max-width:100%; display:block; }
 
 .category-badge {
   font-size: 0.8rem;
-  color: var(--accent);
+  color: var(--success);
   font-weight: bold;
   margin: 0.5rem 0;
 }
@@ -1031,7 +1034,7 @@ img { max-width:100%; display:block; }
     left: 50%;
     bottom: 40px;
     transform: translateX(-50%);
-    font-size: 14px;
+    font-size: 16px;
     opacity: 0;
     transition: opacity 0.4s ease, bottom 0.4s ease;
     z-index: 9999;
@@ -1063,4 +1066,117 @@ img { max-width:100%; display:block; }
 #toast i {
     font-size: 18px;
     flex-shrink: 0;   /* keeps icon from shrinking */
+}
+/* ================= Product Page - Related Products (Horizontal Scroll) ================= */
+
+.more-products-section {
+    padding-top: 2rem;
+    /* This section is contained within the narrow .product-info column */
+}
+
+/* Title styling for the section */
+.more-products-section .products-section-title { 
+    font-size: 1.4rem; /* Smaller title size for the column */
+    margin: 0 0 1rem; 
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    color: var(--primary); /* Keep color consistent */
+}
+
+/* --- Horizontal Scroll Container --- */
+.related-products-carousel {
+    display: flex; 
+    overflow-x: auto; /* ENABLE HORIZONTAL SCROLLING */
+    gap: 15px; /* Spacing between cards */
+    padding-bottom: 10px; /* Space for scrollbar */
+    /* Scrollbar hiding for a cleaner desktop look */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+/* Custom scrollbar hiding for Webkit (Chrome, Safari) */
+.related-products-carousel::-webkit-scrollbar {
+    display: none;
+}
+
+
+/* --- Independent Card Style (.related-product-card) --- */
+.related-product-card {
+    min-width: 150px; /* Fixed width for consistent sizing */
+    width: 150px; 
+    flex-shrink: 0; /* Prevents cards from shrinking */
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: relative;
+    padding-bottom: 10px; /* Padding for content */
+    transition: box-shadow 0.3s ease;
+}
+
+.related-product-card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.related-product-card .sale-badge {
+    /* Style reused from your main product card logic */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: var(--danger);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    z-index: 10;
+    display: inline-block;
+    width: auto;
+}
+
+.related-product-card .product-image-wrapper {
+    height: 150px; /* Square image container */
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+.related-product-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.related-product-card .card-content {
+    padding: 0 10px;
+}
+
+.related-product-card .related-card-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--primary);
+}
+
+.related-product-card .price-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.related-product-card .price {
+    font-size: 1rem;
+    color: var(--primary);
+    font-weight: bold;
+}
+
+.related-product-card .original-price {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    text-decoration: line-through;
 }
