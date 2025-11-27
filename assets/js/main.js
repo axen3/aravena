@@ -222,7 +222,44 @@ window.loadHome = async function (selectedCategory = null) {
         });
     }
 };
+// ========= Related Products ===========
+// Helper function for generating HTML for a horizontally scrolling product card
+function generateRelatedCardHTML(p) {
+    const hasDiscount = p.originalPrice && p.originalPrice > p.price;
+    const discount = hasDiscount
+        ? Math.round((1 - p.price / p.originalPrice) * 100)
+        : 0;
 
+    return `
+        <div class="related-product-card">
+            ${
+                hasDiscount
+                    ? `<div class="sale-badge">-${discount}%</div>`
+                    : ""
+            }
+            <a href="/product/${p.id}" data-link> 
+                <div class="product-image-wrapper">
+                    <img src="${p.image}" alt="${p.name}" loading="lazy">
+                </div>
+                <div class="card-content">
+                    <h3 class="related-card-title">${p.name}</h3>
+                    <div class="price-row">
+                        <span class="price">${(p.price / 100).toFixed(
+                            2
+                        )} Dhs</span>
+                        ${
+                            hasDiscount
+                                ? `<span class="original-price">${(
+                                      p.originalPrice / 100
+                                  ).toFixed(2)} Dhs</span>`
+                                : ""
+                        }
+                    </div>
+                </div>
+            </a>
+        </div>
+    `;
+}
 // ======== Product Page ============
 window.loadProduct = async function (id) {
     function generateStarRating(rating, reviewCount) {
@@ -476,7 +513,31 @@ window.loadProduct = async function (id) {
         // HASH REMOVED: Navigate using the new navigateTo function from app.js
         window.navigateTo("/checkout");
     };
+    // --- Related Products Logic ---
+    // 1. Filter products by category, excluding the current one.
+    const relatedProducts = products.filter(p => 
+        p.category.toLowerCase() === product.category.toLowerCase() && p.id !== product.id
+    );
 
+    const relatedProductsSection = document.getElementById("more-products-section");
+
+    if (relatedProducts.length > 0 && relatedProductsSection) {
+        // 2. Generate HTML (Show up to 6 products for a scrollable list)
+        const relatedProductsHTML = relatedProducts.slice(0, 6)
+            .map(generateRelatedCardHTML) // Use the new dedicated helper
+            .join("");
+            
+        // 3. Assemble the full section HTML and inject with new classes
+        relatedProductsSection.innerHTML = `
+            <h3 class="products-section-title">Related Products</h3>
+            <div class="related-products-carousel">
+                ${relatedProductsHTML}
+            </div>
+        `;
+    } else if (relatedProductsSection) {
+        // Clear section if no related products are found
+        relatedProductsSection.innerHTML = "";
+    }
     updateTitle(product.name);
 };
 // ===== CHECKOUT VALIDATION =====
