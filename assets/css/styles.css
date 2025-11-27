@@ -437,7 +437,7 @@ img { max-width:100%; display:block; }
 .description-blocks ol {
   margin: 1.8rem 0;
   padding-left: 0;
-  line-height: 1.9;
+  line-height: 1.8;
   font-size: 1.05rem;
 }
 
@@ -448,12 +448,12 @@ img { max-width:100%; display:block; }
 
 .description-blocks ul li {
   position: relative;
-  padding-left: 2.2rem;
+  padding-left: 1.5rem;
   margin-bottom: 0.9rem;
 }
 
 .description-blocks ul li::before {
-  content: "✓";
+  content: "•";
   position: absolute;
   left: 0;
   color: var(--success);
@@ -1179,4 +1179,50 @@ img { max-width:100%; display:block; }
     font-size: 0.8rem;
     color: #94a3b8;
     text-decoration: line-through;
+}
+/* ================= Image Placeholder (Skeleton Loader) ================= */
+
+/* 1. Define the pulsing animation */
+@keyframes pulse-bg {
+    0% {
+        background-color: #e2e8f0; /* var(--border) */
+    }
+    50% {
+        background-color: #f8fafc; /* var(--light-bg) */
+    }
+    100% {
+        background-color: #e2e8f0;
+    }
+}
+
+/* 2. Apply the placeholder styles */
+.placeholder {
+    /* Apply a default background and animation to the wrapper DIV */
+    background-color: #e2e8f0;
+    animation: pulse-bg 1.5s infinite ease-in-out;
+    position: relative;
+    /* Ensure no visual overflow from the image */
+    overflow: hidden; 
+}
+
+/* 3. Hide the image until it loads */
+.placeholder img {
+    /* Initially hide the image while the placeholder runs */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* 4. When the image loads, display it and stop the placeholder effect */
+.placeholder img:not([src=""]) {
+    opacity: 1; /* Show the image */
+}
+
+/* Special Case: When the image is fully loaded, remove the animation from the parent */
+.placeholder img[data-loaded="true"] { 
+    /* This requires a JS trigger, see step 3 */
+    opacity: 1;
+}
+.placeholder:has(img[data-loaded="true"]) {
+    animation: none;
+    background-color: transparent;
 }
