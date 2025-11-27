@@ -153,7 +153,7 @@ window.loadHome = async function (selectedCategory = null) {
                         : ""
                 }
                 <a href="/product/${p.id}" data-link> 
-                    <div class="product-image-wrapper">
+                    <div class="product-image-wrapper placeholder">
                         <img src="${p.image}" alt="${p.name}" loading="lazy">
                     </div>
                     <div class="card-content">
@@ -221,6 +221,7 @@ window.loadHome = async function (selectedCategory = null) {
             behavior: "smooth"
         });
     }
+    setupImageLoadHandlers();
 };
 // ========= Related Products ===========
 // Helper function for generating HTML for a horizontally scrolling product card
@@ -238,7 +239,7 @@ function generateRelatedCardHTML(p) {
                     : ""
             }
             <a href="/product/${p.id}" data-link> 
-                <div class="product-image-wrapper">
+                <div class="product-image-wrapper placeholder">
                     <img src="${p.image}" alt="${p.name}" loading="lazy">
                 </div>
                 <div class="card-content">
@@ -378,9 +379,9 @@ window.loadProduct = async function (id) {
 
     imagesDiv.innerHTML = `
         <div class="gallery-main">
-            <img id="main-gallery-image" src="${allImages[0]}" alt="${
+            <img id="main-gallery-image placeholder" src="${allImages[0]}" alt="${
                 product.name
-            }">
+            }" loading="lazy">
         </div>
         ${
             allImages.length > 1
@@ -389,7 +390,7 @@ window.loadProduct = async function (id) {
                 ${allImages
                     .map(
                         (src, i) => `
-                    <img src="${src}" alt="thumb" class="${
+                    <img src="${src}" alt="thumb" loading="lazy" class="${
                         i === 0 ? "active" : ""
                     }" onclick="
                         document.getElementById('main-gallery-image').src = this.src;
@@ -529,7 +530,8 @@ window.loadProduct = async function (id) {
             
         // 3. Assemble the full section HTML and inject with new classes
         relatedProductsSection.innerHTML = `
-            <h3 class="products-section-title">Related Products</h3>
+            <h3 class="products-section-title"><i class="fas fa-box"></i>
+Related Products</h3>
             <div class="related-products-carousel">
                 ${relatedProductsHTML}
             </div>
@@ -538,6 +540,7 @@ window.loadProduct = async function (id) {
         // Clear section if no related products are found
         relatedProductsSection.innerHTML = "";
     }
+    setupImageLoadHandlers();
     updateTitle(product.name);
 };
 // ===== CHECKOUT VALIDATION =====
@@ -1048,4 +1051,31 @@ function showToast(message, type = "") {
     setTimeout(() => {
         toast.classList.remove("show");
     }, 2500);
+}
+// New function to handle the image loading completion
+function setupImageLoadHandlers() {
+    // Select all images intended for lazy loading/placeholders
+    document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+        // Prevent setting the handler multiple times
+        if (img.getAttribute('data-load-handled')) return;
+        img.setAttribute('data-load-handled', 'true');
+
+        // Check if the image is already in the browser cache (loads instantly)
+        if (img.complete) {
+            img.setAttribute('data-loaded', 'true');
+            // This triggers the CSS rule: .placeholder:has(img[data-loaded="true"])
+        } else {
+            // Set the handler for when the network fetch completes
+            img.addEventListener('load', () => {
+                img.setAttribute('data-loaded', 'true');
+            });
+            
+            // Optional: Handle broken images to stop the loading animation
+            img.addEventListener('error', () => {
+                img.setAttribute('data-loaded', 'true');
+                img.style.opacity = '1'; 
+                img.style.backgroundColor = 'var(--danger)'; // Show a broken image indicator
+            });
+        }
+    });
 }
