@@ -153,7 +153,7 @@ window.loadHome = async function (selectedCategory = null) {
                         : ""
                 }
                 <a href="/product/${p.id}" data-link> 
-                    <div class="product-image-wrapper placeholder">
+                    <div class="product-image-wrapper image-placeholder">
                         <img src="${p.image}" alt="${p.name}" loading="lazy">
                     </div>
                     <div class="card-content">
@@ -239,7 +239,7 @@ function generateRelatedCardHTML(p) {
                     : ""
             }
             <a href="/product/${p.id}" data-link> 
-                <div class="product-image-wrapper placeholder">
+                <div class="product-image-wrapper image-placeholder">
                     <img src="${p.image}" alt="${p.name}" loading="lazy">
                 </div>
                 <div class="card-content">
@@ -379,9 +379,11 @@ window.loadProduct = async function (id) {
 
     imagesDiv.innerHTML = `
         <div class="gallery-main">
-            <img id="main-gallery-image placeholder" src="${allImages[0]}" alt="${
+          <div class="main-image-wrapper">
+            <img id="main-gallery-image" src="${allImages[0]}" alt="${
                 product.name
             }" loading="lazy">
+            </div>
         </div>
         ${
             allImages.length > 1
@@ -390,13 +392,18 @@ window.loadProduct = async function (id) {
                 ${allImages
                     .map(
                         (src, i) => `
-                    <img src="${src}" alt="thumb" loading="lazy" class="${
-                        i === 0 ? "active" : ""
-                    }" onclick="
-                        document.getElementById('main-gallery-image').src = this.src;
-                        this.parentElement.querySelectorAll('img').forEach(t => t.classList.remove('active'));
-                        this.classList.add('active');
-                    ">
+                    <div class="thumbnail-wrapper ${i === 0 ? "active-thumb" : ""}">
+                    <img 
+                        src="${src}" 
+                        alt="thumb" 
+                        loading="lazy" 
+                        onclick="
+                            document.getElementById('main-gallery-image').src = this.src;
+                            document.querySelectorAll('.gallery-thumbs .thumbnail-wrapper').forEach(t => t.classList.remove('active-thumb'));
+                            this.parentElement.classList.add('active-thumb');
+                        "
+                    >
+                </div>
                 `
                     )
                     .join("")}
