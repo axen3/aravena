@@ -226,40 +226,109 @@ img { max-width:100%; display:block; }
     padding-right: 1rem;
   }
 }
-
-.gallery-main img {
-  width: 100%;
-  height: auto;
-  max-height: 600px;
-  object-fit: contain;
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+/* ======= PRODUCT GALLERY ======== */
+@keyframes pulse-bg {
+    0% {
+        opacity: 0.8; /* Subtle pulsing effect */
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 0.8;
+    }
 }
 
+/* ------ MAIN GALLERY IMAGE ---- */
+.gallery-main {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.main-image-wrapper {
+    /* Enforce 1:1 Aspect Ratio and reserve space */
+    width: 100%;
+    padding-top: 100%; /* Forces height to equal width */
+    height: 0;
+    position: relative;
+    overflow: hidden;
+    
+    /* Placeholder styles */
+    background-color: #e2e8f0; 
+    animation: pulse-bg 1.5s infinite ease-in-out;
+}
+
+/* ---- MAIN IMAGE STYLING -------- */
+.main-image-wrapper img {
+    /* Position image absolutely to fill the reserved space */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: var(--radius);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+
+/* ---------------- 3. THUMBNAIL WRAPPER (Aspect Ratio & Placeholder) ---------------- */
 .gallery-thumbs {
-  display: flex;
-  gap: 0.8rem;
-  margin-top: 1rem;
-  overflow-x: auto;
-  padding: 0.5rem 0;
+    /* Use Grid Layout (better for fixed columns) */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 thumbnails per row */
+    gap: 10px;
+    margin-top: 1rem;
+    padding: 0.5rem 0; /* Clear padding from old styles */
 }
 
-.gallery-thumbs img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  cursor: pointer;
-  opacity: 0.6;
-  transition: var(--transition);
-  border: 3px solid transparent;
+.thumbnail-wrapper {
+    /* Enforce 1:1 Aspect Ratio and reserve space (e.g., 80px by 80px) */
+    width: 100%; 
+    padding-top: 100%; 
+    height: 0;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px; /* Apply radius to wrapper */
+    cursor: pointer;
+    border: 3px solid transparent; /* Reserve space for border */
+    transition: var(--transition);
+    
+    /* Placeholder styles */
+    background-color: #e2e8f0;
+    animation: pulse-bg 1.5s infinite ease-in-out;
 }
 
-.gallery-thumbs img.active,
-.gallery-thumbs img:hover {
-  opacity: 1;
-  border-color: var(--accent);
+.thumbnail-wrapper img {
+    /* Position image absolutely to fill the reserved space */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    
+    /* Placeholder transition */
+    opacity: 0.6; /* Slight opacity for thumbnails when not loaded */
+    transition: var(--transition);
+}
+
+
+/* ---------------- 4. FINAL STATE (Active/Loaded) ---------------- */
+
+/* Active Thumbnail State (targets the wrapper div, as set in the JS) */
+.thumbnail-wrapper.active-thumb {
+    border-color: var(--accent);
+    border-width: 3px;
+    opacity: 1; /* Ensure active thumbnail is fully opaque */
+}
+
+/* Hover state on the wrapper for consistency */
+.thumbnail-wrapper:hover {
+    border-color: var(--accent);
 }
 
 /* Product Info */
@@ -1180,49 +1249,54 @@ img { max-width:100%; display:block; }
     color: #94a3b8;
     text-decoration: line-through;
 }
-/* ================= Image Placeholder (Skeleton Loader) ================= */
+/* ========= Image Placeholder ==== */
+/* ================= Universal Image Placeholder with Logo ================= */
 
-/* 1. Define the pulsing animation */
-@keyframes pulse-bg {
-    0% {
-        background-color: #e2e8f0; /* var(--border) */
-    }
-    50% {
-        background-color: #f8fafc; /* var(--light-bg) */
-    }
-    100% {
-        background-color: #e2e8f0;
-    }
-}
+/* 1. Update the Animation (Optional: Make it pulse color instead of background) */
 
-/* 2. Apply the placeholder styles */
-.placeholder {
-    /* Apply a default background and animation to the wrapper DIV */
-    background-color: #e2e8f0;
-    animation: pulse-bg 1.5s infinite ease-in-out;
+/* 2. Reusable Placeholder Class */
+.image-placeholder, 
+.main-image-wrapper, 
+.thumbnail-wrapper {
+    /* Base background color (use a light tone) */
+    background-color: #f8fafc; /* var(--light-bg) */
+    
+    /* ADD YOUR LOGO HERE: Replace the URL with the actual path to your logo/icon */
+    background-image: url('https://i.ibb.co/YFTYgSMY/shopping-cart-icon-shopping-basket-on-transparent-background-free-png-1.png'); 
+    background-repeat: no-repeat;
+    background-position: center center;
+    
+    /* Set logo size relative to the placeholder block (e.g., 30% of the block's size) */
+    background-size: 45%; 
+    
     position: relative;
-    /* Ensure no visual overflow from the image */
     overflow: hidden; 
+    
+    /* Apply opacity animation to the background logo */
+    animation: pulse-bg 1.5s infinite ease-in-out; 
 }
 
-/* 3. Hide the image until it loads */
-.placeholder img {
-    /* Initially hide the image while the placeholder runs */
+/* 3. Logic to stop animation when loaded */
+/* This ensures the logo and animation disappear when the image loads */
+.image-placeholder:has(img[data-loaded="true"]),
+.main-image-wrapper:has(img[data-loaded="true"]),
+.thumbnail-wrapper:has(img[data-loaded="true"]) {
+    animation: none;
+    background-image: none; /* Crucial: removes the logo */
+    background-color: transparent;
+}
+
+/* Ensure ALL images start hidden */
+.image-placeholder img,
+.main-image-wrapper img,
+.thumbnail-wrapper img {
     opacity: 0;
     transition: opacity 0.5s ease;
 }
 
-/* 4. When the image loads, display it and stop the placeholder effect */
-.placeholder img:not([src=""]) {
-    opacity: 1; /* Show the image */
-}
-
-/* Special Case: When the image is fully loaded, remove the animation from the parent */
-.placeholder img[data-loaded="true"] { 
-    /* This requires a JS trigger, see step 3 */
-    opacity: 1;
-}
-.placeholder:has(img[data-loaded="true"]) {
-    animation: none;
-    background-color: transparent;
+/* Show the loaded image */
+.image-placeholder img[data-loaded="true"],
+.main-image-wrapper img[data-loaded="true"],
+.thumbnail-wrapper img[data-loaded="true"] {
+    opacity: 1; /* Shows the image over the empty space */
 }
