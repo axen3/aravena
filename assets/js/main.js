@@ -144,7 +144,13 @@ window.loadHome = async function (selectedCategory = null) {
             const discount = hasDiscount
                 ? Math.round((1 - p.price / p.originalPrice) * 100)
                 : 0;
-
+            const isFreeShipping = p.shipping && p.shipping.toLowerCase() === "free";
+            const ratingHtml = p.rating 
+        ? `<span class="product-rating-value"><i class="fas fa-star"></i> ${p.rating}</span>` 
+        : "";
+    const shippingHtml = isFreeShipping 
+        ? `<span class="shipping-badge"><i class="fas fa-shipping-fast"></i> Free Shipping</span>` 
+        : "";
             return `
             <div class="product-card">
                 ${
@@ -158,7 +164,12 @@ window.loadHome = async function (selectedCategory = null) {
                     </div>
                     <div class="card-content">
                         <h3 style="color:#000">${p.name}</h3>
-                        <p class="category-badge"><i class="fas fa-tag"></i> ${p.category}</p>
+<div class="category-rating-row">
+                    <span class="category-badge"><i class="fas fa-tag"></i> ${p.category}</span>
+                    
+                    ${ratingHtml}
+                    ${shippingHtml}
+                </div>
                         <div class="price-row">
                             <span class="price">${(p.price / 100).toFixed(
                                 2
