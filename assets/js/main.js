@@ -1100,27 +1100,27 @@ function setupImageLoadHandlers() {
 // ============ Sticky Header Fix on Scroll ============
 function handleScrollHeader() {
     const header = document.querySelector(".site-header");
-    // Only apply shrinking on mobile (e.g., screens <= 768px wide)
+    if (!header) return; // Exit if element doesn't exist
+
+    // Only apply shrinking on mobile (screens <= 768px)
     if (window.innerWidth <= 768) { 
-        if (window.scrollY > 200) {
+        if (window.scrollY >= 300) {
             header.classList.add("scrolled");
         } else {
             header.classList.remove("scrolled");
         }
     } else {
-         // Ensure the class is removed on desktop in case the window is resized
+        // Ensure the class is removed on desktop in case the window is resized
         header.classList.remove("scrolled");
     }
 }
 
+// Add scroll listener
+window.addEventListener("load", handleScrollHeader);
+// Optional: update on resize
+window.addEventListener("resize", handleScrollHeader);
 // Attach the scroll listener
 window.addEventListener("scroll", handleScrollHeader);
-
-// Also run it on window load in case the user loads the page mid-scroll (e.g., from a saved state)
-window.addEventListener("load", handleScrollHeader);
-
-// Run on resize to apply/remove the logic correctly
-window.addEventListener("resize", handleScrollHeader);
 // ============ FAQ Accordion Setup ============
 window.loadFaqPage = function() {
     // This function runs after faq.html is loaded into the DOM
