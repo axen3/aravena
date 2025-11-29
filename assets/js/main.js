@@ -1121,3 +1121,41 @@ window.addEventListener("load", handleScrollHeader);
 
 // Run on resize to apply/remove the logic correctly
 window.addEventListener("resize", handleScrollHeader);
+// ============ FAQ Accordion Setup ============
+window.loadFaqPage = function() {
+    // This function runs after faq.html is loaded into the DOM
+    setupFaqAccordion();
+};
+
+window.setupFaqAccordion = function() {
+    document.querySelectorAll(".faq-question").forEach(button => {
+        // Only attach if not already handled
+        if (button.hasAttribute('data-faq-handled')) return;
+        
+        button.onclick = function() {
+            const answer = this.nextElementSibling;
+            const parent = this.parentElement;
+            
+            // Close other open items
+            document.querySelectorAll(".faq-item.active").forEach(item => {
+                if (item !== parent) {
+                    item.classList.remove("active");
+                    item.querySelector('.faq-answer').style.maxHeight = "0";
+                    item.querySelector('.faq-question i').classList.replace('fa-minus', 'fa-plus');
+                }
+            });
+
+            parent.classList.toggle("active");
+            
+            // Toggle visibility for smooth height transition
+            if (parent.classList.contains("active")) {
+                answer.style.maxHeight = answer.scrollHeight + 30 + "px"; // +30px buffer
+                this.querySelector('i').classList.replace('fa-plus', 'fa-minus');
+            } else {
+                answer.style.maxHeight = "0";
+                this.querySelector('i').classList.replace('fa-minus', 'fa-plus');
+            }
+        }
+        button.setAttribute('data-faq-handled', 'true');
+    });
+};
