@@ -93,7 +93,7 @@ async function router() {
         if (window.loadContact) {
         window.loadContact(); 
     }
-    if (param === 'faq' && typeof window.setupFaqAccordion === 'function') {
+    if (window.setupFaqAccordion) {
             window.setupFaqAccordion();
         }
   /*  if (window.loadCheckout) {
