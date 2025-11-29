@@ -393,7 +393,6 @@ img { max-width:100%; display:block; }
     position: sticky;
     top: 5%;
     align-self: start;
-    max-height: calc(100vh - 120px);
     padding-right: 1rem;
   }
 }
