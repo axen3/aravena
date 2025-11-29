@@ -1097,3 +1097,27 @@ function setupImageLoadHandlers() {
         }
     });
 }
+// ============ Sticky Header Fix on Scroll ============
+function handleScrollHeader() {
+    const header = document.querySelector(".site-header");
+    // Only apply shrinking on mobile (e.g., screens <= 768px wide)
+    if (window.innerWidth <= 768) { 
+        if (window.scrollY > 200) {
+            header.classList.add("scrolled");
+        } else {
+            header.classList.remove("scrolled");
+        }
+    } else {
+         // Ensure the class is removed on desktop in case the window is resized
+        header.classList.remove("scrolled");
+    }
+}
+
+// Attach the scroll listener
+window.addEventListener("scroll", handleScrollHeader);
+
+// Also run it on window load in case the user loads the page mid-scroll (e.g., from a saved state)
+window.addEventListener("load", handleScrollHeader);
+
+// Run on resize to apply/remove the logic correctly
+window.addEventListener("resize", handleScrollHeader);
