@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed! 🎉</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* --- GENERAL SETUP --- */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            text-align: center; 
+            padding: 0; 
+            margin: 0;
+            background-color: #f0f2f5; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* --- MAIN CARD --- */
+        .card { 
+            max-width: 90%;
+            width: 450px;
+            background: white; 
+            padding: 40px 30px 20px; 
+            border-radius: 15px; 
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15); 
+            opacity: 0;
+            animation: fade-in 0.5s forwards 0.3s;
+        }
+
+        /* --- HEADINGS & STATUS --- */
+        .icon { 
+            font-size: 60px; 
+            color: #28a745; 
+            margin-bottom: 15px; 
+            opacity: 0;
+            animation: bounce 1s ease-in-out forwards 0.6s; 
+        }
+        h1 { 
+            margin-bottom: 5px; 
+            color: #333; 
+            font-size: 26px; 
+            opacity: 0;
+            animation: fade-in 0.5s forwards 0.9s; 
+        }
+        .order-id {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 25px;
+            opacity: 0;
+            animation: fade-in 0.5s forwards 1.0s;
+        }
+        .order-id strong {
+            color: #007bff;
+            font-weight: 700;
+        }
+        
+        /* --- SUMMARY BOX --- */
+        .summary {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin: 25px 0;
+            text-align: left;
+            opacity: 0;
+            animation: fade-in 0.5s forwards 1.3s;
+        }
+        .summary h3 {
+            font-size: 15px;
+            color: #555;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            font-weight: 700;
+        }
+        .summary div {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            padding: 5px 0;
+        }
+        .summary span:first-child { color: #555; }
+        .summary span:last-child { font-weight: 600; color: #333; }
+
+        /* --- COD INSTRUCTIONS BOX --- */
+        .instructions {
+            border: 2px solid #ffc107; /* Amber for attention */
+            background-color: #fffde7; /* Soft yellow background */
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            opacity: 0;
+            animation: fade-in 0.5s forwards 1.6s;
+        }
+        .instructions p {
+            margin: 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .instructions strong { 
+            color: #d32f2f; /* Red for emphasis */
+        }
+        .instructions i {
+            margin-right: 5px;
+            color: #ffc107;
+        }
+
+        /* --- BUTTON --- */
+        .btn { 
+            display: inline-block; 
+            padding: 12px 30px; 
+            background: #007bff; 
+            color: white; 
+            text-decoration: none; 
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 25px;
+            opacity: 0;
+            animation: fade-in 0.5s forwards 1.9s;
+        }
+        .btn:hover { background: #0056b3; transform: scale(1.05); }
+
+        /* --- KEYFRAMES --- */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); opacity: 1; }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
+        <h1>Thank You!</h1>
+        <p class="order-id">Order Reference: <strong>#<span id="order-ref">COD-</span></strong></p>
+        
+        <div class="summary">
+            <h3><i class="fa-solid fa-receipt"></i> Your Order Summary</h3>
+            <div><span>Product:</span> <span id="summary-product">Product</span></div>
+            <div><span>Size/Color:</span> <span id="summary-options">N/A</span></div>
+            <div style="font-size: 16px; border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
+                <span>Total Price:</span> 
+                <span id="summary-price" style="color: #d32f2f;">0.00</span>
+            </div>
+        </div>
+
+        <div class="instructions">
+            <p><i class="fa-solid fa-phone-volume"></i> **Next Step: Phone Confirmation**</p>
+            <p>A representative will **call the number provided** within 24 hours to confirm your address and payment (Cash on Delivery). Please ensure your line is available!</p>
+        </div>
+
+        <a href="index.html" class="btn">Continue Shopping</a>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Function to get parameters from the URL
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                const regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                const results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+            
+            // --- DATA RETRIEVAL ---
+            const product = getUrlParameter('product_name') || 'Product Item';
+            const price = getUrlParameter('product_price') || 'N/A';
+            const size = getUrlParameter('final_size') || 'N/A';
+            const color = getUrlParameter('final_color') || 'N/A';
+            const phone = getUrlParameter('phone') || '1234';
+
+            // Generate a simple, deterministic order reference based on time and phone number suffix
+            const timestamp = new Date().getTime().toString().slice(-4);
+            const refNumber = `COD-${timestamp}${phone.slice(-3)}`;
+
+            // --- POPULATE UI ---
+            document.getElementById('order-ref').innerText = refNumber;
+            document.getElementById('summary-product').innerText = product;
+            document.getElementById('summary-options').innerText = `${size} / ${color}`;
+            document.getElementById('summary-price').innerText = `${price} TND`; // Use TND (Tunisian Dinar/Placeholder)
+            
+            // Log for debugging
+            console.log("Thank You Page loaded. Order Ref:", refNumber);
+        });
+    </script>
+</body>
+</html>

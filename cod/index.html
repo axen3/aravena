@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Landing Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- RESET & BASICS --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f4f4; 
+            color: #333;
+            padding-bottom: 80px; /* Space for sticky bar */
+        }
+        
+        /* --- CONTAINER (Max 800px) --- */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            min-height: 100vh;
+        }
+
+        /* --- ANIMATED TOP BAR (Step-based vertical change) --- */
+        .top-bar {
+            background-color: #d32f2f; /* Red alert color */
+            color: white;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+            height: 40px; /* Fixed height to hide overflow */
+            position: relative;
+        }
+        
+        .vertical-marquee {
+            position: absolute;
+            width: 100%;
+            top: 0;
+            left: 0;
+            /* Animation details are calculated and inserted by JS below */
+        }
+
+        .marquee-item {
+            text-align: center;
+            height: 40px;
+            line-height: 40px; 
+        }
+
+        /* --- GALLERY --- */
+        .gallery-section { padding: 15px; }
+        .main-image {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            object-fit: cover;
+            aspect-ratio: 1/1;
+        }
+        .thumbs-row {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+        .thumb {
+            min-width: 70px; 
+            height: 70px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            object-fit: cover;
+        }
+        .thumb.active { border-color: #007bff; }
+
+        /* --- PRODUCT DETAILS & HORIZONTAL OPTIONS --- */
+        .product-details { padding: 0 20px 20px; }
+        .product-title { font-size: 24px; font-weight: 700; margin-bottom: 5px; }
+        .product-price { font-size: 28px; color: #d32f2f; font-weight: bold; margin-bottom: 15px; }
+        
+        .options-group { margin-bottom: 15px; }
+        .options-label { font-weight: 600; display: block; margin-bottom: 5px; }
+        
+        /* Make options horizontal */
+        .options-wrapper {
+            display: flex;
+            flex-wrap: wrap; 
+            gap: 8px;
+        }
+
+        .option-btn {
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        .option-btn.selected {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* --- MODERN FORM SECTION --- */
+        .form-section {
+            background-color: #f9f9f9;
+            padding: 30px 20px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+        .form-title { margin-bottom: 20px; text-align: center; color: #007bff; }
+        .form-group { 
+            margin-bottom: 20px; 
+            position: relative;
+        }
+        .form-group label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: 600; 
+            color: #555;
+            font-size: 14px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+        .submit-btn:hover { background-color: #218838; }
+
+        /* --- CONTENT IMAGES --- */
+        .content-images { width: 100%; }
+        .content-images img {
+            width: 100%;
+            display: block;
+            height: auto;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #333;
+            color: #fff;
+            font-size: 12px;
+        }
+
+        /* --- STICKY BOTTOM BAR --- */
+        .sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            padding: 10px;
+            z-index: 1000;
+            justify-content: center;
+        }
+        .sticky-inner {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            gap: 10px;
+        }
+        .sticky-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: transform 0.1s;
+        }
+        .sticky-btn:active { transform: scale(0.98); }
+        
+        .btn-whatsapp {
+            background-color: #25D366;
+            color: white;
+            flex: 0.3; 
+            font-size: 20px;
+        }
+        .btn-buy {
+            background-color: #d32f2f;
+            color: white;
+            flex: 0.7; 
+            box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="top-bar">
+        <div class="vertical-marquee" id="vertical-marquee">
+            </div>
+    </div>
+
+    <div class="gallery-section">
+        <img id="main-img" class="main-image" src="" alt="Product Image">
+        <div class="thumbs-row" id="thumbs-container">
+            </div>
+    </div>
+
+    <div class="product-details">
+        <h1 class="product-title" id="product-name">Loading...</h1>
+        <div class="product-price" id="product-price">...</div>
+        
+        <input type="hidden" id="selected-size" name="size">
+        <input type="hidden" id="selected-color" name="color">
+
+        <div class="options-group" id="size-options">
+            <span class="options-label">Size:</span>
+            <div class="options-wrapper">
+                </div>
+        </div>
+
+        <div class="options-group" id="color-options">
+            <span class="options-label">Color:</span>
+            <div class="options-wrapper">
+                </div>
+        </div>
+    </div>
+
+    <div id="order-section" class="form-section">
+        <h2 class="form-title"><i class="fa-solid fa-check-to-slot"></i> Quick Order - Cash on Delivery</h2>
+        
+        <form id="cod-form" action="thankyou.html" method="GET">
+            
+            <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" name="fullname" required placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="0123456789">
+            </div>
+
+            <div class="form-group">
+                <label for="city">City</label>
+                <input type="text" id="city" name="city" required placeholder="Casablanca">
+            </div>
+
+            <div class="form-group">
+                <label for="address">Full Address</label>
+                <textarea id="address" name="address" rows="3" required placeholder="Street, Building, Apartment, Landmark..."></textarea>
+            </div>
+
+            <input type="hidden" name="product_name" id="form-product-name">
+            <input type="hidden" name="product_price" id="form-product-price">
+            <input type="hidden" name="final_size" id="form-size">
+            <input type="hidden" name="final_color" id="form-color">
+
+            <button type="submit" class="submit-btn">CONFIRM ORDER & PAY ON DELIVERY</button>
+        </form>
+    </div>
+
+    <div class="content-images" id="content-list">
+        </div>
+
+    <footer>
+        <p>&copy; 2024 Your Brand Name. All rights reserved.</p>
+    </footer>
+
+</div>
+
+<div class="sticky-bar">
+    <div class="sticky-inner">
+        <a href="#" id="whatsapp-link" class="sticky-btn btn-whatsapp" target="_blank" title="Order via WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+        </a>
+        <a href="#order-section" class="sticky-btn btn-buy">
+            BUY NOW &nbsp; <i class="fa-solid fa-bag-shopping"></i> 
+        </a>
+    </div>
+</div>
+
+<script>
+    // --- TOP BAR CONFIG ---
+    const MARQUEE_ITEMS = [
+        '🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!', 
+        '🎁 LIMITED STOCK - ORDER BEFORE IT’S GONE!', 
+        '⭐ 4.9/5 Star Customer Rating!'
+    ];
+    const ANIMATION_DURATION = MARQUEE_ITEMS.length * 4; // 4 seconds per item
+    const ITEM_COUNT = MARQUEE_ITEMS.length;
+    const SINGLE_ITEM_HEIGHT = 40; // Defined in CSS
+
+    // --- 1. FETCH DATA & INIT ---
+    fetch('data.json')
+    .then(response => response.json())
+    .then(data => {
+        
+        // --- TOP BAR (Vertical Stepped Animation) ---
+        const marqueeContainer = document.getElementById('vertical-marquee');
+        
+        // Create Keyframes for smooth stepping
+        const styleSheet = document.styleSheets[0];
+        
+        let keyframes = `@keyframes vertical-scroll-stepped {`;
+        for (let i = 0; i < ITEM_COUNT; i++) {
+            // Start of item: (i * 4s) / total duration
+            let startPercent = (i * 4 / ANIMATION_DURATION) * 100;
+            // End of item/start of next slide: ((i + 1) * 4s - 0.5s for transition) / total duration
+            let endPercent = ((i + 1) * 4 - 0.5) / ANIMATION_DURATION * 100;
+            
+            let translateY = i * SINGLE_ITEM_HEIGHT;
+
+            keyframes += `
+                ${startPercent}% { transform: translateY(-${translateY}px); }
+            `;
+            // If it's the last item, loop back to the first step
+            if (i === ITEM_COUNT - 1) {
+                keyframes += `
+                    99.99% { transform: translateY(-${translateY}px); }
+                    100% { transform: translateY(0px); } 
+                `;
+            } else {
+                keyframes += `
+                    ${endPercent}% { transform: translateY(-${translateY}px); }
+                `;
+            }
+        }
+        keyframes += `}`;
+        
+        // Add Keyframes to stylesheet
+        styleSheet.insertRule(keyframes, styleSheet.cssRules.length);
+        
+        // Apply Animation to Marquee Container
+        marqueeContainer.style.animation = `vertical-scroll-stepped ${ANIMATION_DURATION}s infinite`;
+
+        // Populate Items (only one set needed, as keyframes handle the jump back)
+        MARQUEE_ITEMS.forEach(text => {
+            const item = document.createElement('div');
+            item.classList.add('marquee-item');
+            item.innerText = text;
+            marqueeContainer.appendChild(item);
+        });
+
+        // --- DETAILS & FORM SETUP ---
+        document.getElementById('product-name').innerText = data.productName;
+        document.getElementById('product-price').innerText = data.currency + data.price;
+        
+        document.getElementById('form-product-name').value = data.productName;
+        document.getElementById('form-product-price').value = data.price;
+
+        const waMsg = `Hello, I want to confirm my order for the ${data.productName}.`;
+        document.getElementById('whatsapp-link').href = `https://wa.me/${data.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
+
+        // --- GALLERY LOGIC ---
+        const mainImg = document.getElementById('main-img');
+        const thumbsContainer = document.getElementById('thumbs-container');
+        
+        if(data.gallery.length > 0) {
+            mainImg.src = data.gallery[0];
+        }
+
+        data.gallery.forEach((imgSrc, index) => {
+            const thumb = document.createElement('img');
+            thumb.src = imgSrc;
+            thumb.classList.add('thumb');
+            if(index === 0) thumb.classList.add('active');
+            
+            thumb.addEventListener('click', () => {
+                mainImg.src = imgSrc;
+                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+                thumb.classList.add('active');
+            });
+            thumbsContainer.appendChild(thumb);
+        });
+
+        // --- OPTIONS (Sizes & Colors) ---
+        renderOptions('size-options', data.sizes, 'selected-size', 'form-size');
+        renderOptions('color-options', data.colors, 'selected-color', 'form-color');
+
+        // --- CONTENT IMAGES ---
+        const contentList = document.getElementById('content-list');
+        data.contentImages.forEach(imgSrc => {
+            const img = document.createElement('img');
+            img.src = imgSrc;
+            contentList.appendChild(img);
+        });
+    })
+    .catch(err => console.error('Error loading data:', err));
+
+    // Helper to render buttons
+    function renderOptions(containerId, optionsArray, hiddenInputId, formInputId) {
+        const container = document.getElementById(containerId).querySelector('.options-wrapper');
+        const hiddenInput = document.getElementById(hiddenInputId);
+        const formInput = document.getElementById(formInputId); 
+
+        if(!optionsArray || optionsArray.length === 0) {
+            document.getElementById(containerId).style.display = 'none';
+            return;
+        }
+
+        hiddenInput.value = optionsArray[0];
+        formInput.value = optionsArray[0];
+
+        optionsArray.forEach((opt, index) => {
+            const btn = document.createElement('div');
+            btn.innerText = opt;
+            btn.classList.add('option-btn');
+            if(index === 0) btn.classList.add('selected');
+
+            btn.addEventListener('click', () => {
+                container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+                hiddenInput.value = opt;
+                formInput.value = opt;
+            });
+            container.appendChild(btn);
+        });
+    }
+
+</script>
+
+</body>
+</html>
