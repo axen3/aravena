@@ -288,10 +288,8 @@
                 <textarea id="address" name="address" rows="3" required placeholder="Street, Building, Apartment, Landmark..."></textarea>
             </div>
 
-            <input type="hidden" name="product_name" id="form-product-name">
-            <input type="hidden" name="product_price" id="form-product-price">
-            <input type="hidden" name="final_size" id="form-size">
-            <input type="hidden" name="final_color" id="form-color">
+              <input type="hidden" name="itemOptions" value="">
+  <input type="hidden" name="total" value="">
 
             <button type="submit" class="submit-btn">CONFIRM ORDER & PAY ON DELIVERY</button>
         </form>
@@ -454,7 +452,23 @@
             container.appendChild(btn);
         });
     }
+//handle form.
+document.getElementById("cod-form").addEventListener("submit", async function (e) {
+  e.preventDefault();
 
+  const form = document.getElementById("cod-form");
+  const formData = new FormData(form);
+
+  const response = await fetch("https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec", {
+    method: "POST",
+    body: formData // no headers needed
+  });
+
+  const text = await response.text();
+  console.log(text);
+
+  alert("Form submitted successfully!");
+});
 </script>
 
 </body>
