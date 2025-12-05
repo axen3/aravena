@@ -17,18 +17,37 @@ body {
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
-
 .top-banner {
-    background: linear-gradient(90deg, #ff6b6b, #ee5a6f, #ff6b6b);
+    background: linear-gradient(90deg, #ff6b6b, #ee5a9c, #ff6b6a);
     background-size: 200% 100%;
     animation: gradient 3s ease infinite;
     color: white;
-    padding: 12px 20px;
-    text-align: center;
     font-weight: 600;
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: 0.5px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    
+    /* CRITICAL FOR SLIDING UP */
+    height: 36px;             /* 1. Fixed height */
+    overflow: hidden;         /* 2. Hide other messages */
+    position: relative;
+    padding: 0;               /* 3. Remove padding so math works */
+}
+
+.ticker {
+    display: flex;
+    flex-direction: column;   /* 4. Stack messages vertically */
+    width: 100%;
+    /* Transition is handled by JS, but we set a default here */
+    transform: translateY(0);
+}
+
+.message {
+    height: 36px;             /* 5. Must match banner height exactly */
+    display: flex;            /* 6. Center text vertically */
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;           /* 7. Prevent shrinking */
 }
 
 .container {
@@ -125,7 +144,52 @@ body {
     font-weight: 700;
     letter-spacing: 0.5px;
 }
+/* Container for the color buttons */
+.color-options-container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
 
+/* The circular color button */
+.color-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid #e0e0e0;
+    position: relative;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Hover effect */
+.color-btn:hover {
+    transform: scale(1.1);
+    border-color: #999;
+}
+
+/* Selected state - adds a ring around the color */
+.color-btn.selected {
+    transform: scale(1.15);
+    border-color: white; /* Inner whitespace */
+    box-shadow: 0 0 0 2px #667eea; /* Outer selection ring */
+}
+
+/* Update the option label to allow the selected name to sit next to it */
+.option-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.selected-color-text {
+    color: #333;
+    font-weight: 700;
+    font-size: 14px;
+}
 .option-group {
     margin-bottom: 24px;
 }
@@ -486,6 +550,23 @@ footer {
 
 .container {
     animation: fadeInUp 0.6s ease;
+}
+/* Add to styles.css */
+
+/* Style for the error message text */
+.error-message {
+    color: #ff6b6b; /* Red color */
+    font-size: 13px;
+    margin-top: 4px;
+    min-height: 18px; /* Reserves space to prevent layout shifting */
+    font-weight: 500;
+}
+
+/* Style to highlight the input/select/textarea border when an error is present */
+.form-group input.error,
+.form-group textarea.error,
+.form-group select.error {
+    border-color: #ff6b6b !important;
 }
 @media (max-width: 768px) {
     body {
