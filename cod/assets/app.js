@@ -5,6 +5,10 @@ const messages = [
 ];
 
 const banner = document.getElementById('top-banner');
+
+// 1. Clear any existing HTML (like ticker-wrapper) to ensure clean structure
+banner.innerHTML = '';
+
 const ticker = document.createElement('div');
 ticker.className = 'ticker';
 banner.appendChild(ticker);
@@ -13,32 +17,34 @@ banner.appendChild(ticker);
 messages.forEach(msg => {
     const div = document.createElement('div');
     div.className = 'message';
-    div.textContent = msg;
+    div.innerHTML = msg; // Use innerHTML to allow icons if needed
     ticker.appendChild(div);
 });
 
 // Clone first message for seamless loop
 ticker.appendChild(ticker.firstElementChild.cloneNode(true));
 
-const messageHeight = 24; // same as CSS height
+// 2. THIS MUST MATCH CSS HEIGHT EXACTLY (36px)
+const messageHeight = 36; 
 let index = 0;
 
 function slideNext() {
     index++;
-    ticker.style.transition = 'transform 0.5s ease-in-out';
+    ticker.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
     ticker.style.transform = `translateY(-${messageHeight * index}px)`;
 
+    // Reset loop
     if (index >= messages.length) {
         setTimeout(() => {
-            ticker.style.transition = 'none';
-            ticker.style.transform = `translateY(0)`;
+            ticker.style.transition = 'none'; // Remove animation for instant jump
             index = 0;
-        }, 500); // match transition duration
+            ticker.style.transform = `translateY(0)`;
+        }, 500); // Wait for animation to finish
     }
 }
 
 // Start interval
-setInterval(slideNext, 3000); // every 3 seconds
+setInterval(slideNext, 3000);
 
 const MOROCCAN_CITIES = [
     "Casablanca", "Rabat", "Marrakech", "Fes", "Tangier", "Agadir",
@@ -156,8 +162,7 @@ function initProduct(data) {
     state.selectedPromoPrice = state.unitPrice;
     state.selectedPromoQty = 1;
 
-    document.getElementById('top-banner').textContent =
-        data.topBarText || '🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!';
+    // document.getElementById('top-banner').textContent = data.topBarText || '🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!'; // REMOVED: Conflicted with the sliding banner
     document.getElementById('product-name').textContent = data.productName;
 
     // Gallery
@@ -204,18 +209,41 @@ function initProduct(data) {
     // Colors
     if (data.colors && data.colors.length > 0) {
         document.getElementById('color-group').style.display = 'block';
-        state.color = data.colors[0];
+        
+        // Helper to extract key/value from the specific JSON format: {"Red": "#FF0000"}
+        const getFirstColorData = (colorObj) => {
+            const name = Object.keys(colorObj)[0];
+            return { name: name, hex: colorObj[name] };
+        };
+
+        // Set initial state
+        const firstColor = getFirstColorData(data.colors[0]);
+        state.color = firstColor.name;
+        document.getElementById('selected-color-name').textContent = `: ${firstColor.name}`;
+
         const container = document.getElementById('color-buttons');
         container.innerHTML = '';
-        data.colors.forEach((color, i) => {
+
+        data.colors.forEach((colorObj, i) => {
+            const { name, hex } = getFirstColorData(colorObj);
+            
             const btn = document.createElement('div');
-            btn.textContent = color;
-            btn.classList.add('option-btn');
+            btn.classList.add('color-btn'); // Use the new CSS class
+            btn.style.backgroundColor = hex; // Apply Hex code
+            btn.title = name; // Tooltip on hover
+            
             if (i === 0) btn.classList.add('selected');
+
             btn.addEventListener('click', () => {
-                container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                state.color = color;
+                
+                // Update State
+                state.color = name;
+                
+                // Update the text label next to "Color"
+                document.getElementById('selected-color-name').textContent = `: ${name}`;
+                
                 updateUI();
             });
             container.appendChild(btn);
@@ -269,7 +297,7 @@ function initProduct(data) {
     }
 
     // Cities
-    const citySelect = document.getElementById('city-select');
+    const citySelect = document.getElementById('city');
     citySelect.innerHTML = '<option value="" disabled selected>Select your city</option>';
     MOROCCAN_CITIES.forEach(city => {
         const option = document.createElement('option');
@@ -316,6 +344,7 @@ document.getElementById('buy-now-btn').addEventListener('click', (e) => {
 });
 
 document.getElementById('cod-form').addEventListener('submit', (e) => {
+    // Keep this line for UI updates, but the main submission logic is below
     updateUI();
 });
 
@@ -331,3 +360,133 @@ fetch('data/data.json')
         document.getElementById('product-name').textContent = 'Error loading product';
         document.getElementById('current-price').textContent = 'Please use a web server';
     });
+
+
+// =========================================================================
+// NEW VALIDATION AND FORM SUBMISSION LOGIC
+// =========================================================================
+
+/**
+ * Displays or clears an error message for a given field.
+ * @param {string} fieldId - The ID of the input field (e.g., 'fullname').
+ * @param {string} message - The error message to display. Clears if empty.
+ */
+function validateField(fieldId, message) {
+    const inputElement = document.getElementById(fieldId);
+    const errorElement = document.getElementById(`error-${fieldId}`);
+    
+    if (message) {
+        errorElement.textContent = message;
+        inputElement.classList.add('error');
+        // Scroll to the first error
+        if (!document.querySelector('.order-section .error-message:not(:empty)')) {
+             inputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+    } else {
+        errorElement.textContent = '';
+        inputElement.classList.remove('error');
+    }
+}
+
+/**
+ * Validates all form fields based on specified rules.
+ * @returns {boolean} True if the form is valid, otherwise false.
+ */
+function validateForm() {
+    let isValid = true;
+    
+    // 1. Full Name Validation (No numbers/special chars, remove leading/trailing space)
+    const fullnameInput = document.getElementById('fullname');
+    let fullnameValue = fullnameInput.value.trim(); // Trim leading/trailing spaces
+    fullnameInput.value = fullnameValue; // Update the input value with the trimmed version
+
+    // Regex: /^[a-zA-Z\s]{3,}$/ - minimum 3 characters, only letters and spaces allowed.
+    const fullnameRegex = /^[a-zA-Z\s]{3,}$/;
+    
+    if (!fullnameValue) {
+        validateField('fullname', 'Full Name is required.');
+        isValid = false;
+    } else if (!fullnameRegex.test(fullnameValue)) {
+        validateField('fullname', 'Name can only contain letters and spaces.');
+        isValid = false;
+    } else {
+        validateField('fullname', '');
+    }
+
+    // 2. Phone Number Validation (10 digits, starts with 0)
+    const phoneValue = document.getElementById('phone').value.trim();
+    // Regex: /^0\d{9}$/ - starts with 0, followed by exactly 9 digits, total 10 digits.
+    const phoneRegex = /^0\d{9}$/; 
+    
+    if (!phoneRegex.test(phoneValue)) {
+        validateField('phone', 'Phone must be 10 digits and start with 0 (e.g., 06XXXXXXXX).');
+        isValid = false;
+    } else {
+        validateField('phone', '');
+    }
+    
+    // 3. City Selection Validation (Must select a city)
+    const cityValue = document.getElementById('city').value;
+    
+    if (!cityValue) {
+        validateField('city', 'Please select your city.');
+        isValid = false;
+    } else {
+        validateField('city', '');
+    }
+    
+    // 4. Delivery Address Validation (Must be filled, min 10 chars for detail)
+    const addressValue = document.getElementById('address').value.trim();
+    
+    if (addressValue.length < 10) {
+        validateField('address', 'Please enter a detailed delivery address (min 10 characters).');
+        isValid = false;
+    } else {
+        validateField('address', '');
+    }
+
+    return isValid;
+}
+
+
+// handle form submission
+document.getElementById('cod-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    updateUI(); // Update final summary before validation/submission
+
+    // --- Validation Check ---
+    if (!validateForm()) {
+        // If validation fails, stop the submission
+        return; 
+    }
+    // --- Validation Passed ---
+
+    const formData = new FormData();
+    formData.append('fullname', document.getElementById('fullname').value.trim());
+    formData.append('phone', document.getElementById('phone').value.trim());
+    formData.append('city', document.getElementById('city').value);
+    formData.append('address', document.getElementById('address').value.trim());
+    formData.append('itemOptions', `Size: ${state.size}, Color: ${state.color}, Qty: ${state.quantity}`);
+    formData.append('totalPrice', document.getElementById('summary-total').textContent);
+
+    const webAppUrl = 'YOUR_WEB_APP_URL_HERE'; // replace with your Web App URL
+
+    try {
+        const response = await fetch(webAppUrl, {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.text();
+        if(result === 'success'){
+            alert('Order placed successfully!');
+            window.location.href = 'thankyou.html';
+        } else {
+            alert('Error submitting order: ' + result);
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert('Failed to submit order');
+    }
+});
