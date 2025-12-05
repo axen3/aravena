@@ -38,10 +38,12 @@
             <div class="option-buttons" id="size-buttons"></div>
         </div>
 
-        <div class="option-group" id="color-group" style="display:none;">
-            <span class="option-label">Color</span>
-            <div class="option-buttons" id="color-buttons"></div>
-        </div>
+<div class="option-group" id="color-group" style="display:none;">
+    <span class="option-label">
+        Color <span id="selected-color-name" class="selected-color-text"></span>
+    </span>
+    <div class="color-options-container" id="color-buttons"></div>
+</div>
 
         <div class="option-group" id="promo-group">
             <span class="option-label">Select Quantity</span>
@@ -87,27 +89,31 @@
             </div>
         </div>
 
-        <form id="cod-form" action="thankyou.html" method="GET">
+      <form id="cod-form" action="thankyou.html" method="GET">
             <div class="form-group">
                 <label for="fullname">Full Name</label>
                 <input type="text" id="fullname" name="fullname" required placeholder="John Doe">
+                <div class="error-message" id="error-fullname"></div>
             </div>
 
             <div class="form-group">
                 <label for="phone">Phone Number</label>
                 <input type="tel" id="phone" name="phone" required placeholder="06XXXXXXXX">
+                <div class="error-message" id="error-phone"></div>
             </div>
 
             <div class="form-group">
-                <label for="city-select">City</label>
-                <select id="city-select" name="city" required>
+                <label for="city">City</label>
+                <select id="city" name="city" required>
                     <option value="" disabled selected>Select your city</option>
                 </select>
+                <div class="error-message" id="error-city"></div>
             </div>
 
             <div class="form-group">
                 <label for="address">Delivery Address</label>
                 <textarea id="address" name="address" rows="3" required placeholder="Street, Building, Apartment..."></textarea>
+                <div class="error-message" id="error-address"></div>
             </div>
 
             <input type="hidden" name="product_name" id="form-product-name">
