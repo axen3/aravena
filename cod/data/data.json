@@ -1,19 +1,21 @@
 {
   "productName": "Ultra Comfort Smart Watch",
+  "originalPrice": "70",
   "price": "49.99",
-  "currency": "$",
-  "whatsappNumber": "1234567890",
+  "currency": "Dhs",
+  "whatsappNumber": "212661000000",
   "topBarText": "🔥 FREE SHIPPING ON ALL ORDERS TODAY ONLY! 🔥",
   "gallery": [
-    "https://picsum.photos/200?id=7",
-    "https://picsum.photos/200",
-    "https://picsum.photos/200",
-    "https://picsum.photos/200"
+    "https://picsum.photos/600/600?random=24",
+    "https://picsum.photos/600/600?random=26",
+    "https://picsum.photos/600/600?random=28",
+    "https://picsum.photos/600/600?random=29"
   ],
   "sizes": ["S", "M", "L", "XL"],
   "colors": ["Black", "Silver", "Rose Gold"],
   "contentImages": [
-    "https://picsum.photos/200/?ksk",
-    "https://picsum.photos/300?kska"
-  ]
+    "https://picsum.photos/600/600?random=33",
+    "https://picsum.photos/600/600?random=35"
+  ],
+  "promotions":[{"quantity":2,"price":68}]
 }
