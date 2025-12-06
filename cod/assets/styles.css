@@ -59,43 +59,100 @@ body {
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
 }
 
-.gallery {
-    position: relative;
-    background: #f8f9fa;
-}
-
+/* ========== MAIN IMAGE (FADE) ======= */
 .main-image {
     width: 100%;
+    max-height: 450px;
+    max-width: 480px;
     aspect-ratio: 1/1;
-    object-fit: cover;
-    background: white;
-}
-
-.thumbs {
-    display: flex;
-    gap: 8px;
-    padding: 12px;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-.thumbs::-webkit-scrollbar { display: none; }
-
-.thumb {
-    min-width: 60px;
-    height: 60px;
-    border-radius: 12px;
-    cursor: pointer;
-    border: 3px solid transparent;
-    object-fit: cover;
-    transition: all 0.3s ease;
-    opacity: 0.6;
-}
-.thumb.active { 
-    border-color: #667eea;
+    display: block;
     opacity: 1;
-    transform: scale(1.05);
+    transition: opacity 0.45s ease;
 }
-.thumb:hover { opacity: 1; }
+
+.main-image.fade-out {
+    opacity: 0;
+}
+
+.main-image.fade-in {
+    opacity: 1;
+}
+
+
+/* ========== PLACEHOLDER ========== */
+img.placeholder {
+    background: #f0f0f0;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+}
+
+img.placeholder::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(100%); }
+}
+
+img.loaded {
+    background: none !important;
+}
+
+
+/* ========== THUMBNAILS ========== */
+.thumbs {
+    margin-top: 12px;
+    margin-left: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.thumbs img.thumb {
+    width: 65px;
+    height: 65px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 6px;
+
+    opacity: 0.65;
+    transition:
+        opacity 0.25s ease,
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border 0.25s ease;
+
+    animation: thumbFadeIn 0.25s ease both;
+}
+
+@keyframes thumbFadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 0.65; transform: scale(1); }
+}
+
+.thumbs img.thumb:hover {
+    opacity: 1;
+    transform: scale(1.08);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.thumbs img.thumb.active {
+    opacity: 1;
+    transform: scale(1.15);
+    border: 2px solid #222;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+}
 
 .product-info {
     padding: 24px;
@@ -138,7 +195,7 @@ body {
 .discount-badge {
     background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
     color: white;
-    padding: 6px 12px;
+    padding: 8px 12px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 700;
