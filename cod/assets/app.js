@@ -165,25 +165,85 @@ function initProduct(data) {
     // document.getElementById('top-banner').textContent = data.topBarText || '🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!'; // REMOVED: Conflicted with the sliding banner
     document.getElementById('product-name').textContent = data.productName;
 
-    // Gallery
-    const mainImg = document.getElementById('main-img');
-    const thumbsContainer = document.getElementById('thumbs-container');
-    thumbsContainer.innerHTML = '';
-    if (data.gallery && data.gallery.length > 0) {
-        mainImg.src = data.gallery[0];
-        data.gallery.forEach((src, i) => {
-            const thumb = document.createElement('img');
-            thumb.src = src;
-            thumb.classList.add('thumb');
-            if (i === 0) thumb.classList.add('active');
-            thumb.addEventListener('click', () => {
-                mainImg.src = src;
-                document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
-                thumb.classList.add('active');
-            });
-            thumbsContainer.appendChild(thumb);
+/* ============================================================
+   UNIVERSAL PLACEHOLDER FOR ALL IMAGES ON THE PAGE
+   ============================================================ */
+function applyImagePlaceholders() {
+    const images = document.querySelectorAll('img');
+
+    images.forEach(img => {
+        if (img.dataset.placeholderApplied) return;
+
+        img.dataset.placeholderApplied = "true";
+        img.classList.add("placeholder");
+
+        img.addEventListener("load", () => {
+            img.classList.remove("placeholder");
+            img.classList.add("loaded");
         });
-    }
+
+        img.addEventListener("error", () => {
+            img.classList.add("placeholder");
+        });
+    });
+}
+
+// Apply on load
+applyImagePlaceholders();
+
+// Apply to any new images added later
+const observer = new MutationObserver(applyImagePlaceholders);
+observer.observe(document.body, { childList: true, subtree: true });
+
+
+
+/* ============================================================
+   GALLERY WITH FADE + PLACEHOLDER + THUMB UPDATES
+   ============================================================ */
+const mainImg = document.getElementById('main-img');
+const thumbsContainer = document.getElementById('thumbs-container');
+
+if (data.gallery?.length) {
+    thumbsContainer.innerHTML = "";
+
+    // Initial main image
+    mainImg.src = data.gallery[0];
+
+    data.gallery.forEach((src, i) => {
+        const thumb = document.createElement("img");
+        thumb.src = src;
+        thumb.className = "thumb";
+        if (i === 0) thumb.classList.add("active");
+
+        // Preload for smooth switching
+        new Image().src = src;
+
+        thumb.addEventListener("click", () => {
+            if (mainImg.src === thumb.src) return;
+
+            // Fade out old image
+            mainImg.classList.add("fade-out");
+
+            // Swap to new img when faded
+            setTimeout(() => {
+                mainImg.src = src;
+
+                // Fade-in new image
+                mainImg.classList.remove("fade-out");
+                mainImg.classList.add("fade-in");
+
+                setTimeout(() => mainImg.classList.remove("fade-in"), 250);
+            }, 200);
+
+            // Update active thumb
+            Array.from(thumbsContainer.children)
+                .forEach(t => t.classList.remove("active"));
+            thumb.classList.add("active");
+        });
+
+        thumbsContainer.appendChild(thumb);
+    });
+}
 
     // Sizes
     if (data.sizes && data.sizes.length > 0) {
