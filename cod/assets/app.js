@@ -1,7 +1,7 @@
 const messages = [
-  "🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!",
-  "🔥 Limited Stock! Order Now!",
-  "💳 Pay with Credit Card or COD"
+    "🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!",
+    "🔥 Limited Stock! Order Now!",
+    "💳 Pay with Credit Card or COD"
 ];
 
 const banner = document.getElementById('top-banner');
@@ -25,7 +25,7 @@ messages.forEach(msg => {
 ticker.appendChild(ticker.firstElementChild.cloneNode(true));
 
 // 2. THIS MUST MATCH CSS HEIGHT EXACTLY (36px)
-const messageHeight = 36; 
+const messageHeight = 36;
 let index = 0;
 
 function slideNext() {
@@ -209,7 +209,7 @@ function initProduct(data) {
     // Colors
     if (data.colors && data.colors.length > 0) {
         document.getElementById('color-group').style.display = 'block';
-        
+
         // Helper to extract key/value from the specific JSON format: {"Red": "#FF0000"}
         const getFirstColorData = (colorObj) => {
             const name = Object.keys(colorObj)[0];
@@ -226,24 +226,24 @@ function initProduct(data) {
 
         data.colors.forEach((colorObj, i) => {
             const { name, hex } = getFirstColorData(colorObj);
-            
+
             const btn = document.createElement('div');
             btn.classList.add('color-btn'); // Use the new CSS class
             btn.style.backgroundColor = hex; // Apply Hex code
             btn.title = name; // Tooltip on hover
-            
+
             if (i === 0) btn.classList.add('selected');
 
             btn.addEventListener('click', () => {
                 container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-                
+
                 // Update State
                 state.color = name;
-                
+
                 // Update the text label next to "Color"
                 document.getElementById('selected-color-name').textContent = `: ${name}`;
-                
+
                 updateUI();
             });
             container.appendChild(btn);
@@ -374,13 +374,13 @@ fetch('data/data.json')
 function validateField(fieldId, message) {
     const inputElement = document.getElementById(fieldId);
     const errorElement = document.getElementById(`error-${fieldId}`);
-    
+
     if (message) {
         errorElement.textContent = message;
         inputElement.classList.add('error');
         // Scroll to the first error
         if (!document.querySelector('.order-section .error-message:not(:empty)')) {
-             inputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            inputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     } else {
         errorElement.textContent = '';
@@ -394,7 +394,7 @@ function validateField(fieldId, message) {
  */
 function validateForm() {
     let isValid = true;
-    
+
     // 1. Full Name Validation (No numbers/special chars, remove leading/trailing space)
     const fullnameInput = document.getElementById('fullname');
     let fullnameValue = fullnameInput.value.trim(); // Trim leading/trailing spaces
@@ -402,7 +402,7 @@ function validateForm() {
 
     // Regex: /^[a-zA-Z\s]{3,}$/ - minimum 3 characters, only letters and spaces allowed.
     const fullnameRegex = /^[a-zA-Z\s]{3,}$/;
-    
+
     if (!fullnameValue) {
         validateField('fullname', 'Full Name is required.');
         isValid = false;
@@ -416,28 +416,28 @@ function validateForm() {
     // 2. Phone Number Validation (10 digits, starts with 0)
     const phoneValue = document.getElementById('phone').value.trim();
     // Regex: /^0\d{9}$/ - starts with 0, followed by exactly 9 digits, total 10 digits.
-    const phoneRegex = /^0\d{9}$/; 
-    
+    const phoneRegex = /^0\d{9}$/;
+
     if (!phoneRegex.test(phoneValue)) {
         validateField('phone', 'Phone must be 10 digits and start with 0 (e.g., 06XXXXXXXX).');
         isValid = false;
     } else {
         validateField('phone', '');
     }
-    
+
     // 3. City Selection Validation (Must select a city)
     const cityValue = document.getElementById('city').value;
-    
+
     if (!cityValue) {
         validateField('city', 'Please select your city.');
         isValid = false;
     } else {
         validateField('city', '');
     }
-    
+
     // 4. Delivery Address Validation (Must be filled, min 10 chars for detail)
     const addressValue = document.getElementById('address').value.trim();
-    
+
     if (addressValue.length < 10) {
         validateField('address', 'Please enter a detailed delivery address (min 10 characters).');
         isValid = false;
@@ -457,8 +457,16 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
     // --- Validation Check ---
     if (!validateForm()) {
         // If validation fails, stop the submission
-        return; 
+        return;
     }
+
+    const submitBtn = document.querySelector('.submit-btn');
+    const originalHTML = submitBtn.innerHTML;
+
+    // 🔄 Change icon to spinner
+    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+    submitBtn.disabled = true;
+
     // --- Validation Passed ---
 
     const formData = new FormData();
@@ -466,10 +474,10 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
     formData.append('phone', document.getElementById('phone').value.trim());
     formData.append('city', document.getElementById('city').value);
     formData.append('address', document.getElementById('address').value.trim());
-    formData.append('itemOptions', `Size: ${state.size}, Color: ${state.color}, Qty: ${state.quantity}`);
+    formData.append('itemOptions', `${state.size} • ${state.color} • Qty: ${state.quantity}`);
     formData.append('totalPrice', document.getElementById('summary-total').textContent);
 
-    const webAppUrl = 'YOUR_WEB_APP_URL_HERE'; // replace with your Web App URL
+    const webAppUrl = 'https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec'; // replace with your Web App URL
 
     try {
         const response = await fetch(webAppUrl, {
@@ -477,11 +485,23 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
             body: formData
         });
 
-        const result = await response.text();
-        if(result === 'success'){
-            alert('Order placed successfully!');
-            window.location.href = 'thankyou.html';
+        const result = await response.json();
+        if (result.status === 'success') {
+            const orderId = result.data[1]; // "ORD-32ccdb36b8c2"
+
+            const params = new URLSearchParams({
+                product_name: state.productName,
+                product_price: document.getElementById('summary-total').textContent.replace(state.currency, '').trim(),
+                final_size: state.size,
+                final_color: state.color,
+                phone: document.getElementById('phone').value.trim(),
+                quantity: state.quantity,
+                order_id: orderId
+            });
+
+            window.location.href = `thankyou.html?${params.toString()}`;
         } else {
+            console.log(result);
             alert('Error submitting order: ' + result);
         }
 
