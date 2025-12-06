@@ -1,56 +1,128 @@
-const messages = [
-    "🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!",
-    "🔥 Limited Stock! Order Now!",
-    "💳 Pay with Credit Card or COD"
-];
+function initMessages(data) {
+    const messages = data.topBarText || [];
+    const banner = document.getElementById('top-banner');
+    const messageHeight = 36;
+    let index = 0;
+    let intervalId;
 
-const banner = document.getElementById('top-banner');
+    // Clear banner
+    banner.innerHTML = '';
 
-// 1. Clear any existing HTML (like ticker-wrapper) to ensure clean structure
-banner.innerHTML = '';
+    // Create ticker container
+    const ticker = document.createElement('div');
+    ticker.className = 'ticker';
+    banner.appendChild(ticker);
 
-const ticker = document.createElement('div');
-ticker.className = 'ticker';
-banner.appendChild(ticker);
+    // Add messages
+    messages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'message';
+        div.innerHTML = msg;
+        ticker.appendChild(div);
+    });
 
-// Add messages
-messages.forEach(msg => {
-    const div = document.createElement('div');
-    div.className = 'message';
-    div.innerHTML = msg; // Use innerHTML to allow icons if needed
-    ticker.appendChild(div);
-});
-
-// Clone first message for seamless loop
-ticker.appendChild(ticker.firstElementChild.cloneNode(true));
-
-// 2. THIS MUST MATCH CSS HEIGHT EXACTLY (36px)
-const messageHeight = 36;
-let index = 0;
-
-function slideNext() {
-    index++;
-    ticker.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-    ticker.style.transform = `translateY(-${messageHeight * index}px)`;
-
-    // Reset loop
-    if (index >= messages.length) {
-        setTimeout(() => {
-            ticker.style.transition = 'none'; // Remove animation for instant jump
-            index = 0;
-            ticker.style.transform = `translateY(0)`;
-        }, 500); // Wait for animation to finish
+    // Clone first message for seamless loop
+    if (messages.length > 0) {
+        ticker.appendChild(ticker.firstElementChild.cloneNode(true));
     }
+
+    function slideNext() {
+        index++;
+        ticker.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+        ticker.style.transform = `translateY(-${messageHeight * index}px)`;
+
+        if (index >= messages.length) {
+            setTimeout(() => {
+                ticker.style.transition = 'none';
+                index = 0;
+                ticker.style.transform = `translateY(0)`;
+            }, 500);
+        }
+    }
+
+    intervalId = setInterval(slideNext, 3000);
 }
 
-// Start interval
-setInterval(slideNext, 3000);
-
 const MOROCCAN_CITIES = [
-    "Casablanca", "Rabat", "Marrakech", "Fes", "Tangier", "Agadir",
-    "Meknes", "Oujda", "Kenitra", "Tetouan", "Safi", "Mohammedia",
-    "Laayoune", "Khouribga", "Beni Mellal", "El Jadida", "Taza", "Nador"
-];
+        "Agadir",
+        "Ahfir",
+        "Aïn Bni Mathar",
+        "Aïn Defali",
+        "Aïn El Aouda",
+        "Aït Benhaddou",
+        "Aït Iaaza",
+        "Al Hoceïma",
+        "Arbaoua",
+        "Asilah",
+        "Bab Berred",
+        "Béni Mellal",
+        "Ben Slimane",
+        "Berkane",
+        "Berrechid",
+        "Bhalil",
+        "Boujdour",
+        "Boulemane",
+        "Boumia",
+        "Bouznika",
+        "Casablanca",
+        "Chefchaouen",
+        "Chichaoua",
+        "Dakhla",
+        "Dar Gueddari",
+        "Dar Kebdani",
+        "Demnate",
+        "Driouch",
+        "El Aioun Sidi Mellouk",
+        "El Guerdane",
+        "El Hajeb",
+        "El Jadida",
+        "Erfoud",
+        "Errachidia",
+        "Essaouira",
+        "Fès",
+        "Figuig",
+        "Fnideq",
+        "Fquih Ben Salah",
+        "Guelmim",
+        "Goulmima",
+        "Guercif",
+        "Had Kourt",
+        "Ifrane",
+        "Imilchil",
+        "Imouzzer Kandar",
+        "Inezgane",
+        "Issaouen (Ketama)",
+        "Jerada",
+        "Kénitra",
+        "Khémisset",
+        "Khouribga",
+        "Khénifra",
+        "Ksar El Kébir",
+        "Laâyoune",
+        "Larache",
+        "Marrakech",
+        "Martil",
+        "M'diq",
+        "Mohammédia",
+        "Midelt",
+        "Moulay Idriss Zerhoun",
+        "Nador",
+        "Ouarzazate",
+        "Oualidia",
+        "Oujda",
+        "Oulad Teïma",
+        "Rabat",
+        "Safi",
+        "Saïdia",
+        "Salé",
+        "Témara",
+        "Tanger",
+        "Tarfaya",
+        "Taza",
+        "Tétouan",
+        "Tiznit",
+        "Taroudant"
+    ];
 
 const state = {
     productName: '',
@@ -145,6 +217,7 @@ function selectPromo(id, price, qty) {
 }
 
 function initProduct(data) {
+  //initMessages(data);
     state.productName = data.productName;
     state.unitPrice = parseFloat(data.price);
     state.originalPrice = data.originalPrice ? parseFloat(data.originalPrice) : state.unitPrice;
@@ -414,7 +487,9 @@ fetch('data/data.json')
         if (!response.ok) throw new Error('Failed to load data');
         return response.json();
     })
-    .then(data => initProduct(data))
+    .then(data => {
+      initMessages(data);
+      initProduct(data);})
     .catch(error => {
         console.error('Error loading product data:', error);
         document.getElementById('product-name').textContent = 'Error loading product';
