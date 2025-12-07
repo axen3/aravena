@@ -42,6 +42,26 @@ function initMessages(data) {
 
     intervalId = setInterval(slideNext, 3000);
 }
+// languages
+let translations = {};
+
+async function loadTranslations() {
+    const response = await fetch("data/langs.json");
+    translations = await response.json();   // step 1: load JSON
+
+    applyLanguage();  // step 2: update all text AFTER JSON is ready
+}
+
+function applyLanguage() {
+    const lang = document.documentElement.lang;  // "en" or "ar"
+    const dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = dir;
+
+    document.querySelectorAll("[data-key]").forEach(el => {
+        const key = el.getAttribute("data-key");
+        el.textContent = translations[lang][key] || key;
+    });
+}
 
 const MOROCCAN_CITIES = [
         "Agadir",
@@ -136,7 +156,8 @@ const state = {
     selectedPromoId: 'single',
     selectedPromoPrice: 0,
     selectedPromoQty: 1,
-    whatsappNumber: ''
+    whatsappNumber: '',
+    whatsappMsg: ''
 };
 
 function calculateTotal() {
@@ -183,7 +204,7 @@ function updateUI() {
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
 
     const waMsg =
-        `Hello! I want to order ${state.productName} (Size: ${state.size}, Color: ${state.color}, Qty: ${result.quantity}). Total: ${result.total} ${state.currency}`;
+        `${state.whatsappMsg} ${state.productName} (Size: ${state.size}, Color: ${state.color}, Qty: ${result.quantity}). Total: ${result.total} ${state.currency}`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
 }
@@ -222,7 +243,8 @@ function initProduct(data) {
     state.unitPrice = parseFloat(data.price);
     state.originalPrice = data.originalPrice ? parseFloat(data.originalPrice) : state.unitPrice;
     state.currency = data.currency;
-    state.whatsappNumber = data.whatsappNumber || '212661000000';
+    state.whatsappNumber = data.whatsappNumber || '+21206';
+    state.whatsappMsg = data.whatsappMsg || '';
 
     state.promotions = Array.isArray(data.promotions)
         ? data.promotions.map((p, i) => ({
@@ -431,7 +453,7 @@ if (data.gallery?.length) {
 
     // Cities
     const citySelect = document.getElementById('city');
-    citySelect.innerHTML = '<option value="" disabled selected>Select your city</option>';
+    citySelect.innerHTML = '<option value="" disabled selected data-key="select_city">Select your city</option>';
     MOROCCAN_CITIES.forEach(city => {
         const option = document.createElement('option');
         option.value = city;
@@ -489,7 +511,9 @@ fetch('data/data.json')
     })
     .then(data => {
       initMessages(data);
-      initProduct(data);})
+      initProduct(data);
+      loadTranslations();
+    })
     .catch(error => {
         console.error('Error loading product data:', error);
         document.getElementById('product-name').textContent = 'Error loading product';
