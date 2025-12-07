@@ -124,14 +124,12 @@ img.loaded {
     object-fit: cover;
     cursor: pointer;
     border-radius: 6px;
-
     opacity: 0.65;
     transition:
         opacity 0.25s ease,
         transform 0.25s ease,
         box-shadow 0.25s ease,
         border 0.25s ease;
-
     animation: thumbFadeIn 0.25s ease both;
 }
 
@@ -141,7 +139,7 @@ img.loaded {
 }
 
 .thumbs img.thumb:hover {
-    opacity: 1;
+    opacity: 1 !important;
     transform: scale(1.08);
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
@@ -245,6 +243,7 @@ img.loaded {
     color: #333;
     font-weight: 700;
     font-size: 14px;
+    margin: 0 12px;
 }
 .option-group {
     margin-bottom: 24px;
@@ -539,7 +538,7 @@ img.loaded {
     color: white;
     border: none;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -618,6 +617,7 @@ footer {
     background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
     color: white;
     flex: 0.7;
+    gap: 10px;
     box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
 }
 
@@ -670,11 +670,13 @@ footer {
 }
 /* === RTL OVERRIDES ================ */
 
-html[dir="rtl"] body {
+html[dir="rtl"] body, html[dir="rtl"] *:not(i) {
     direction: rtl;
     font-family: "Tajawal", sans-serif;
 }
-
+html[dir="rtl"] .summary-row{display: table}
+html[dir="rtl"] .summary-label{padding: 12px;font-weight:bold;color: #667eea;}
+html[dir="rtl"] .submit-btn{font-family:'Tajawal'};
 /* Headings & text blocks */
 /*
 html[dir="rtl"] .product-title,
