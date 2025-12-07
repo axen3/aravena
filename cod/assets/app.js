@@ -374,7 +374,7 @@ if (data.gallery?.length) {
         // Set initial state
         const firstColor = getFirstColorData(data.colors[0]);
         state.color = firstColor.name;
-        document.getElementById('selected-color-name').textContent = `: ${firstColor.name}`;
+        document.getElementById('selected-color-name').textContent = `${firstColor.name}`;
 
         const container = document.getElementById('color-buttons');
         container.innerHTML = '';
@@ -397,7 +397,7 @@ if (data.gallery?.length) {
                 state.color = name;
 
                 // Update the text label next to "Color"
-                document.getElementById('selected-color-name').textContent = `: ${name}`;
+                document.getElementById('selected-color-name').textContent = `${name}`;
 
                 updateUI();
             });
