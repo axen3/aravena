@@ -112,8 +112,7 @@ img.loaded {
 
 /* ========== THUMBNAILS ========== */
 .thumbs {
-    margin-top: 12px;
-    margin-left: 12px;
+    margin: 13px 24px 0 24px;
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -668,4 +667,71 @@ footer {
         padding-bottom: 50px;
     }
     .container {margin-top: 0px;border-radius: 0px;}
+}
+/* === RTL OVERRIDES ================ */
+
+html[dir="rtl"] body {
+    direction: rtl;
+    font-family: "Tajawal", sans-serif;
+}
+
+/* Headings & text blocks */
+/*
+html[dir="rtl"] .product-title,
+html[dir="rtl"] .summary-label,
+html[dir="rtl"] .summary-value,
+html[dir="rtl"] .promo-price,
+html[dir="rtl"] .promo-desc,
+html[dir="rtl"] .promo-label {
+    text-align: right;
+}*/
+
+/* Flex sections that rely on start/end */
+/*
+html[dir="rtl"] .price-section,
+html[dir="rtl"] .summary-row,
+html[dir="rtl"] .quantity-section,
+html[dir="rtl"] .sticky-inner {
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+    gap: 12px;
+}*/
+
+/* Labels + icons where spacing is left-based */
+html[dir="rtl"] .form-title i {
+    margin-left: 8px;
+    margin-right: 0;
+}
+
+/* Summary rows spacing fix */
+/*html[dir="rtl"] .summary-row {
+    justify-content: space-between;
+}*/
+
+/* Option label (the small title above buttons) */
+html[dir="rtl"] .option-label {
+    text-align: right;
+}
+
+/* Inputs keep padding but flip direction for text */
+html[dir="rtl"] input,
+html[dir="rtl"] textarea,
+html[dir="rtl"] select {
+    text-align: right;
+}
+
+/* Dropdown arrow position */
+html[dir="rtl"] #city {
+    background-position: left 16px center;
+    padding: 12px 16px 12px 40px; /* reverse padding */
+}
+
+/* Footer */
+html[dir="rtl"] footer {
+    text-align: center;
+}
+
+/* Sticky bar must stay correct direction */
+html[dir="rtl"] .sticky-btn {
+    text-align: center;
 }
