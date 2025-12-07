@@ -1,0 +1,42 @@
+{
+    "en": {
+        "product_details": "Product Details",
+        "fast_delivery": "Fast delivery available.",
+        "product": "Product:",
+        "size": "Size:",
+        "color": "Color:",
+        "quantity": "Quantity:",
+        "total": "Total:",
+        "promotions": "promotions:",
+        "complete_your_order": "Complete Your Order",
+        "full_name": "Full Name",
+        "phone_number": "Phone Number",
+        "city": "City",
+        "select_city": "Select your city",
+        "address": "Delivery Address",
+        "place_order": "Place Order",
+        "buy_now": "Buy Now",
+        "total_price": "Total Price",
+        "copyright": "&copy; 2026 Promoland. All rights reserved."
+    },
+    "ar": {
+        "product_details": "تفاصيل المنتج",
+        "fast_delivery": "التوصيل السريع متوفر.",
+        "product": "المنتج :",
+        "size": "الحجم :",
+        "color": "اللون :",
+        "quantity": "الكمية :",
+        "total": "المجموع :",
+        "promotions": "برومو :",
+        "complete_your_order": "أتمم طلبيتك",
+        "full_name": "الإسم الكامل",
+        "phone_number": "رقم الهاتف",
+        "city": "المدينة",
+        "select_city": "اختر المدينة",
+        "address": "العنوان",
+        "place_order":"اطلب الآن",
+        "buy_now": "اشتري الآن ",
+        "total_price": "السعر الإجمالي",
+        "copyright": "© 2026 جميع الحقوق محفوظة"
+    }
+}
