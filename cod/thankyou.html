@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Order Confirmed! 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
     body { 
@@ -83,34 +86,59 @@
 
     @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
     @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateY(0); opacity: 1; } 40% { transform: translateY(-10px); } 60% { transform: translateY(-5px); } }
+  html[dir="rtl"] body, html[dir="rtl"] *:not(i) {
+    direction: rtl;
+    font-family: "Tajawal", sans-serif;
+}
 </style>
 </head>
 <body>
     <div class="card">
         <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
-        <h1>Thank You!</h1>
-        <p class="order-id">Order Reference: <strong>#<span id="order-ref">COD-</span></strong></p>
+        <h1 data-key="thankyou_h1">
+        </h1>
+        <p class="order-id"><span data-key="order_ref">Order Reference:</span> <strong>#<span id="order-ref">ORD-</span></strong></p>
         
         <div class="summary">
-            <h3><i class="fa-solid fa-receipt"></i> Your Order Summary</h3>
-            <div><span>Product:</span> <span id="summary-product">Product</span></div>
-            <div><span>Size/Color:</span> <span id="summary-options">N/A</span></div>
-            <div><span>Quantity:</span> <span id="summary-quantity">0</span></div>
+            <h3><i class="fa-solid fa-receipt"></i><span data-key="order_summary"> Your Order Summary</span></h3>
+            <div><span data-key="product">Product:</span> <span id="summary-product">Product</span></div>
+            <div><span data-key="size_color">Size/Color:</span> <span id="summary-options">N/A</span></div>
+            <div><span data-key="quantity">Quantity:</span> <span id="summary-quantity">0</span></div>
             <div style="font-size: 16px; border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
-                <span>Total Price:</span> 
+                <span style="font-weight:bold" data-key="total">Total Price:</span> 
                 <span id="summary-price" style="color: #d32f2f;">0.00</span>
             </div>
         </div>
 
         <div class="instructions">
-            <p><i class="fa-solid fa-phone-volume"></i> <strong>Next Step: Phone Confirmation</strong></p>
-            <p>A representative will <strong>call the number provided</strong> within 24 hours to confirm your address and payment (Cash on Delivery). Please ensure your line is available!</p>
+            <p><i class="fa-solid fa-phone-volume"></i> <strong data-key="next_step">Next Step: Phone Confirmation</strong></p>
+            <p data-key="step_text">A representative will <strong>call the number provided</strong> within 24 hours to confirm your address and payment (Cash on Delivery). Please ensure your line is available!</p>
         </div>
 
-        <a href="index.html" class="btn">Continue Shopping</a>
+        <a href="index.html" class="btn" data-key="continue_shop">Continue Shopping</a>
     </div>
 
     <script>
+      // languages
+let translations = {};
+
+async function loadTranslations() {
+    const response = await fetch("data/langs.json");
+    translations = await response.json();   // step 1: load JSON
+
+    applyLanguage();  // step 2: update all text AFTER JSON is ready
+}
+
+function applyLanguage() {
+    const lang = document.documentElement.lang;  // "en" or "ar"
+    const dir = lang === "ar" ? "rtl" : "ltr";
+    document.documentElement.dir = dir;
+
+    document.querySelectorAll("[data-key]").forEach(el => {
+        const key = el.getAttribute("data-key");
+        el.textContent = translations[lang][key] || key;
+    });
+}
         document.addEventListener('DOMContentLoaded', function() {
             function getUrlParameter(name) {
                 name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -125,7 +153,7 @@
             const size = getUrlParameter('final_size') || 'N/A';
             const color = getUrlParameter('final_color') || 'N/A';
             const quantity = getUrlParameter('quantity') || '1';
-            const orderId = getUrlParameter('order_id') || `COD-${new Date().getTime().toString().slice(-4)}`;
+            const orderId = getUrlParameter('order_id') || `COD-xxxxxx`;
 
             // Populate the UI
             document.getElementById('order-ref').innerText = orderId;
@@ -134,7 +162,8 @@
             document.getElementById('summary-quantity').innerText = quantity;
             document.getElementById('summary-price').innerText = `${price} Dhs`;
 
-            console.log("Thank You Page loaded. Order Ref:", orderId);
+            history.replaceState({}, "", "/");
+            loadTranslations();
         });
     </script>
 </body>
