@@ -62,7 +62,36 @@ function applyLanguage() {
         el.textContent = translations[lang][key] || key;
     });
 }
+// countdown
+let time = 3 * 60 * 60; // 3 hours in seconds
+const timer = document.getElementById("timer");
 
+setInterval(() => {
+  let hrs = Math.floor(time / 3600);
+  let mins = Math.floor((time % 3600) / 60);
+  let secs = time % 60;
+
+  timer.innerText = 
+    `${hrs < 10 ? "0" + hrs : hrs}:` +
+    `${mins < 10 ? "0" + mins : mins}:` +
+    `${secs < 10 ? "0" + secs : secs}`;
+
+  if (time > 0) time--;
+}, 1000);
+// Fake live viewers
+setInterval(() => {
+  document.getElementById("viewers").innerText =
+    Math.floor(25 + Math.random() * 15);
+}, 3000);
+
+// Fake decreasing stock (stops at 3)
+let stock = 6;
+setInterval(() => {
+  if (stock > 3) {
+    stock--;
+    document.getElementById("stock").innerText = stock;
+  }
+}, 15000);
 const MOROCCAN_CITIES = [
         "Agadir",
         "Ahfir",
