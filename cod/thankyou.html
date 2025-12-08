@@ -90,6 +90,9 @@
     direction: rtl;
     font-family: "Tajawal", sans-serif;
 }
+html[dir="rtl"] .summary{text-align:right}
+html[dir="rtl"] .summary h3 span{margin-right:12px}
+html[dir="rtl"] .instructions{text-align:right}
 </style>
 </head>
 <body>
@@ -162,7 +165,7 @@ function applyLanguage() {
             document.getElementById('summary-quantity').innerText = quantity;
             document.getElementById('summary-price').innerText = `${price} Dhs`;
 
-            history.replaceState({}, "", "/");
+            history.replaceState({}, "", "location.pathname");
             loadTranslations();
         });
     </script>
