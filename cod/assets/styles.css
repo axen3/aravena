@@ -676,7 +676,7 @@ html[dir="rtl"] body, html[dir="rtl"] *:not(i) {
 }
 html[dir="rtl"] .summary-row{display: flex;justify-content:flex-start;}
 html[dir="rtl"] .summary-label{margin-inline-end: 12px;font-weight:bold;color: #667eea;white-space:nowrap;}
-html[dir="rtl"] .summary-value{line-height:1}
+html[dir="rtl"] .summary-total{align-items:center;}
 html[dir="rtl"] .submit-btn{font-family:'Tajawal'};
 /* Headings & text blocks */
 /*
