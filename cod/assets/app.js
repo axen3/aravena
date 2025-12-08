@@ -202,9 +202,8 @@ function updateUI() {
     document.getElementById('form-color').value = state.color;
     document.getElementById('form-quantity').value = result.quantity;
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
-
-    const waMsg =
-        `${state.whatsappMsg} ${state.productName} (Size: ${state.size}, Color: ${state.color}, Qty: ${result.quantity}). Total: ${result.total} ${state.currency}`;
+const waMsg =
+    `${state.whatsappMsg}\n📦 *${state.productName}*\n🎨 Color: *${state.color}*\n📏 Size: *${state.size}*\n🔢 Qty: *${result.quantity}*\n💰 Total: *${result.total} ${state.currency}*`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
 }
@@ -651,6 +650,7 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
             const params = new URLSearchParams({
                 product_name: state.productName,
                 product_price: document.getElementById('summary-total').textContent.replace(state.currency, '').trim(),
+                currency: state.currency,
                 final_size: state.size,
                 final_color: state.color,
                 phone: document.getElementById('phone').value.trim(),
