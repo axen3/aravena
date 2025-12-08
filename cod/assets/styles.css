@@ -674,8 +674,9 @@ html[dir="rtl"] body, html[dir="rtl"] *:not(i) {
     direction: rtl;
     font-family: "Tajawal", sans-serif;
 }
-html[dir="rtl"] .summary-row{display: table}
-html[dir="rtl"] .summary-label{padding: 12px;font-weight:bold;color: #667eea;}
+html[dir="rtl"] .summary-row{display: flex;justify-content:flex-start;}
+html[dir="rtl"] .summary-label{margin-inline-end: 12px;font-weight:bold;color: #667eea;white-space:nowrap;}
+html[dir="rtl"] .summary-value{line-height:1}
 html[dir="rtl"] .submit-btn{font-family:'Tajawal'};
 /* Headings & text blocks */
 /*
