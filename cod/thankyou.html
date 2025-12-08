@@ -100,7 +100,7 @@ html[dir="rtl"] .instructions{text-align:right}
         <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
         <h1 data-key="thankyou_h1">
         </h1>
-        <p class="order-id"><span data-key="order_ref">Order Reference:</span> <strong>#<span id="order-ref">ORD-</span></strong></p>
+        <p class="order-id"><span data-key="order_ref">Order Reference:</span> <strong style="text-align:right">#<span id="order-ref">ORD-</span></strong></p>
         
         <div class="summary">
             <h3><i class="fa-solid fa-receipt"></i><span data-key="order_summary"> Your Order Summary</span></h3>
@@ -153,17 +153,18 @@ function applyLanguage() {
             // Retrieve order details from URL
             const product = getUrlParameter('product_name') || 'Product Item';
             const price = getUrlParameter('product_price') || '0.00';
+            const currency = getUrlParameter('currency') || 'Dhs';
             const size = getUrlParameter('final_size') || 'N/A';
             const color = getUrlParameter('final_color') || 'N/A';
             const quantity = getUrlParameter('quantity') || '1';
-            const orderId = getUrlParameter('order_id') || `COD-xxxxxx`;
+            const orderId = getUrlParameter('order_id') || `ORD-xxxxxx`;
 
             // Populate the UI
             document.getElementById('order-ref').innerText = orderId;
             document.getElementById('summary-product').innerText = product;
             document.getElementById('summary-options').innerText = `${size} / ${color}`;
             document.getElementById('summary-quantity').innerText = quantity;
-            document.getElementById('summary-price').innerText = `${price} Dhs`;
+            document.getElementById('summary-price').innerText = `${price} ${currency}`;
 
             history.replaceState({}, "", "location.pathname");
             loadTranslations();
