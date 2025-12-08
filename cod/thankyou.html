@@ -51,8 +51,8 @@
         animation: fade-in 0.5s forwards 1.3s;
     }
     .summary h3 { font-size: 15px; color: #555; margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 8px; font-weight: 700; }
-    .summary div { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0; }
-    .summary span:first-child { color: #555; }
+    .summary div { display: flex; justify-content: space-between; font-size: 14px; padding: 5px 0;gap:9px }
+    .summary span:first-child { color: #555;white-space:nowrap;}
     .summary span:last-child { font-weight: 600; color: #333; }
 
     .instructions {
@@ -100,7 +100,7 @@ html[dir="rtl"] .instructions{text-align:right}
         <div class="icon"><i class="fa-solid fa-check-circle"></i></div>
         <h1 data-key="thankyou_h1">
         </h1>
-        <p class="order-id"><span data-key="order_ref">Order Reference:</span> <strong style="text-align:right">#<span id="order-ref">ORD-</span></strong></p>
+        <p class="order-id"><span data-key="order_ref">Order Reference:</span> <strong style="text-align:right;direction:ltr;unicode-bidi:isolate;">#<span id="order-ref">ORD-</span></strong></p>
         
         <div class="summary">
             <h3><i class="fa-solid fa-receipt"></i><span data-key="order_summary"> Your Order Summary</span></h3>
