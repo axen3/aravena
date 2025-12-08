@@ -167,8 +167,9 @@ function applyLanguage() {
             document.getElementById('summary-price').innerText = `${price} ${currency}`;
 
             history.replaceState({}, "", '/cod');
-            loadTranslations();
+            
         });
+        loadTranslations();
     </script>
 </body>
 </html>
