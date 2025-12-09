@@ -419,7 +419,7 @@ img.loaded {
   color: #cc0000;
   padding: 12px;
   border-radius: 10px;
-  font-size: 14px;
+  font-size: 15px;
   margin: 15px 0;
   text-align: center;
   line-height: 1.8;
@@ -459,11 +459,12 @@ img.loaded {
 .summary-row {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 12px;
+    margin-bottom: 15px;
     font-size: 14px;
 }
 
 .summary-label {
+  flex: 0 0 50px;
     color: #666;
     font-weight: 500;
 }
@@ -471,6 +472,7 @@ img.loaded {
 .summary-value {
     font-weight: 600;
     color: #333;
+    flex: 1;
 }
 
 .summary-total {
@@ -710,6 +712,11 @@ footer {
 .form-group textarea.error,
 .form-group select.error {
     border-color: #ff6b6b !important;
+}
+.form-group input.success,
+.form-group textarea.success,
+.form-group select.success {
+    border-color: green !important;
 }
 @media (max-width: 768px) {
     body {
