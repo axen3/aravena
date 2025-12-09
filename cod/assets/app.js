@@ -320,48 +320,56 @@ observer.observe(document.body, { childList: true, subtree: true });
 
 
 
-/* ============================================================
-   GALLERY WITH FADE + PLACEHOLDER + THUMB UPDATES
-   ============================================================ */
+// ====== GALLERY ==============
 const mainImg = document.getElementById('main-img');
+const wrapper = document.getElementById('main-img-wrapper'); // Get the wrapper
 const thumbsContainer = document.getElementById('thumbs-container');
+
+// Helper function to safely switch images with shimmer
+function setMainImage(url) {
+    // 1. Reset state: Show shimmer, hide image
+    wrapper.classList.add('placeholder');
+    mainImg.classList.remove('loaded');
+
+    // 2. Set new source
+    mainImg.src = url;
+
+    // 3. Listen for load event
+    // Note: If image is cached, this fires almost instantly
+    mainImg.onload = () => {
+        wrapper.classList.remove('placeholder'); // Stop shimmer
+        mainImg.classList.add('loaded'); // Fade in image
+    };
+
+    // Handle error case (optional but recommended)
+    mainImg.onerror = () => {
+        wrapper.classList.remove('placeholder');
+        // You could set a placeholder error image here
+    };
+}
 
 if (data.gallery?.length) {
     thumbsContainer.innerHTML = "";
 
-    // Initial main image
-    mainImg.src = data.gallery[0];
+    // 1. Load the first image using our helper
+    setMainImage(data.gallery[0]);
 
+    // 2. Build Thumbnails
     data.gallery.forEach((src, i) => {
         const thumb = document.createElement("img");
         thumb.src = src;
         thumb.className = "thumb";
         if (i === 0) thumb.classList.add("active");
 
-        // Preload for smooth switching
-        new Image().src = src;
-
         thumb.addEventListener("click", () => {
-            if (mainImg.src === thumb.src) return;
+            if (mainImg.src.includes(src)) return; // Prevent clicking same image
 
-            // Fade out old image
-            mainImg.classList.add("fade-out");
-
-            // Swap to new img when faded
-            setTimeout(() => {
-                mainImg.src = src;
-
-                // Fade-in new image
-                mainImg.classList.remove("fade-out");
-                mainImg.classList.add("fade-in");
-
-                setTimeout(() => mainImg.classList.remove("fade-in"), 250);
-            }, 200);
-
-            // Update active thumb
-            Array.from(thumbsContainer.children)
-                .forEach(t => t.classList.remove("active"));
+            // Update active state visuals
+            Array.from(thumbsContainer.children).forEach(t => t.classList.remove("active"));
             thumb.classList.add("active");
+
+            // Load the new image with shimmer effect
+            setMainImage(src);
         });
 
         thumbsContainer.appendChild(thumb);
@@ -530,7 +538,7 @@ document.getElementById('cod-form').addEventListener('submit', (e) => {
     // Keep this line for UI updates, but the main submission logic is below
     updateUI();
 });
-
+let webhook;
 // Load JSON
 fetch('data/data.json')
     .then(response => {
@@ -541,6 +549,7 @@ fetch('data/data.json')
       initMessages(data);
       initProduct(data);
       loadTranslations();
+      webhook = data.webhook;
     })
     .catch(error => {
         console.error('Error loading product data:', error);
@@ -685,10 +694,10 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
     formData.append('itemOptions', `${state.size} • ${state.color} • Qty: ${state.quantity}`);
     formData.append('totalPrice', document.getElementById('summary-total').textContent);
 
-    const webAppUrl = 'https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec'; // replace with your Web App URL
+   /* const webAppUrl = 'https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec'; */
 
     try {
-        const response = await fetch(webAppUrl, {
+        const response = await fetch(webhook, {
             method: 'POST',
             body: formData
         });
