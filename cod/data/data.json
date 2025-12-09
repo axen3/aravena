@@ -5,9 +5,11 @@
     "currency": "درهم",
     "whatsappNumber": "+212618500275",
     "whatsappMsg": "Salam bghit nechri had produit ",
-    "topBarText": ["🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!",
-    "🔥 Limited Stock! Order Now!",
-    "💳 Pay with Credit Card or COD"],
+    "topBarText": [
+        "شحن سريع ومجاني 🚚 ",
+        "الكمية محدودة! اطلب الآن! 🔥",
+        "الدفع عند الاستلام 📦"
+    ],
     "gallery": [
         "https://picsum.photos/600/600?random=24",
         "https://picsum.photos/600/600?random=26",
@@ -15,10 +17,17 @@
         "https://picsum.photos/600/600?random=29"
     ],
     "sizes": ["S", "M", "L", "XL"],
-    "colors": [{ "Black": "#000000" }, { "Red": "#FF0000" }, { "Yellow": "#dd6612" }],
+    "colors": [
+        { "Black": "#000000" },
+        { "Red": "#FF0000" },
+        { "Yellow": "#dd6612" }
+    ],
     "contentImages": [
         "https://picsum.photos/600/600?random=33",
         "https://picsum.photos/600/600?random=35"
     ],
-    "promotions": [{ "quantity": 2, "price": 68 ,"label":"Chri jouj b taman wahed"}]
+    "promotions": [
+        { "quantity": 2, "price": 68, "label": "Chri jouj b taman wahed" }
+    ],
+    "webhook": "https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec"
 }
