@@ -547,95 +547,116 @@ fetch('data/data.json')
         document.getElementById('product-name').textContent = 'Error loading product';
         document.getElementById('current-price').textContent = 'Please use a web server';
     });
-
-
-// =========================================================================
-// NEW VALIDATION AND FORM SUBMISSION LOGIC
-// =========================================================================
-
-/**
- * Displays or clears an error message for a given field.
- * @param {string} fieldId - The ID of the input field (e.g., 'fullname').
- * @param {string} message - The error message to display. Clears if empty.
- */
-function validateField(fieldId, message) {
+// ======== Form Validation =============
+function debounce(fn, delay = 500) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fn.apply(null, args), delay);
+    };
+}
+function validateField(fieldId, message, scroll = false) {
     const inputElement = document.getElementById(fieldId);
     const errorElement = document.getElementById(`error-${fieldId}`);
 
     if (message) {
         errorElement.textContent = message;
+        inputElement.classList.remove('success');
         inputElement.classList.add('error');
-        // Scroll to the first error
-        if (!document.querySelector('.order-section .error-message:not(:empty)')) {
+
+        // Only scroll when asked (used on submit only)
+        if (scroll) {
             inputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     } else {
         errorElement.textContent = '';
         inputElement.classList.remove('error');
+        inputElement.classList.add('success');
     }
 }
+function validateFullname() {
+    const input = document.getElementById('fullname');
+    const value = input.value.trim();
+    const regex = /^[a-zA-Z\s]{4,}$/;
 
-/**
- * Validates all form fields based on specified rules.
- * @returns {boolean} True if the form is valid, otherwise false.
- */
-function validateForm() {
-    let isValid = true;
-
-    // 1. Full Name Validation (No numbers/special chars, remove leading/trailing space)
-    const fullnameInput = document.getElementById('fullname');
-    let fullnameValue = fullnameInput.value.trim(); // Trim leading/trailing spaces
-    fullnameInput.value = fullnameValue; // Update the input value with the trimmed version
-
-    // Regex: /^[a-zA-Z\s]{3,}$/ - minimum 3 characters, only letters and spaces allowed.
-    const fullnameRegex = /^[a-zA-Z\s]{3,}$/;
-
-    if (!fullnameValue) {
+    if (!value) {
         validateField('fullname', 'Full Name is required.');
-        isValid = false;
-    } else if (!fullnameRegex.test(fullnameValue)) {
+        return false;
+    }
+    if (!regex.test(value)) {
         validateField('fullname', 'Name can only contain letters and spaces.');
-        isValid = false;
-    } else {
-        validateField('fullname', '');
+        return false;
     }
 
-    // 2. Phone Number Validation (10 digits, starts with 0)
-    const phoneValue = document.getElementById('phone').value.trim();
-    // Regex: /^0\d{9}$/ - starts with 0, followed by exactly 9 digits, total 10 digits.
-    const phoneRegex = /^0\d{9}$/;
-
-    if (!phoneRegex.test(phoneValue)) {
-        validateField('phone', 'Phone must be 10 digits and start with 0 (e.g., 06XXXXXXXX).');
-        isValid = false;
-    } else {
-        validateField('phone', '');
-    }
-
-    // 3. City Selection Validation (Must select a city)
-    const cityValue = document.getElementById('city').value;
-
-    if (!cityValue) {
-        validateField('city', 'Please select your city.');
-        isValid = false;
-    } else {
-        validateField('city', '');
-    }
-
-    // 4. Delivery Address Validation (Must be filled, min 10 chars for detail)
-    const addressValue = document.getElementById('address').value.trim();
-
-    if (addressValue.length < 10) {
-        validateField('address', 'Please enter a detailed delivery address (min 10 characters).');
-        isValid = false;
-    } else {
-        validateField('address', '');
-    }
-
-    return isValid;
+    validateField('fullname', '');
+    return true;
 }
+function validatePhone() {
+    const input = document.getElementById('phone');
+    const value = input.value.trim();
+    const regex = /^0\d{9}$/;
 
+    if (!regex.test(value)) {
+        validateField('phone', 'Phone must be 10 digits and start with 0 (e.g., 06XXXXXXXX).');
+        return false;
+    }
 
+    validateField('phone', '');
+    return true;
+}
+function validateCity() {
+    const value = document.getElementById('city').value;
+
+    if (!value) {
+        validateField('city', 'Please select your city.');
+        return false;
+    }
+
+    validateField('city', '');
+    return true;
+}
+function validateAddress() {
+    const input = document.getElementById('address');
+    const value = input.value.trim();
+
+    if (value.length < 10) {
+        validateField('address', 'Please enter a detailed delivery address (min 10 characters).');
+        return false;
+    }
+
+    validateField('address', '');
+    return true;
+}
+function validateForm() {
+    let firstError = false;
+
+    function run(fn, id) {
+        const valid = fn();
+        if (!valid && !firstError) {
+            validateField(id, document.getElementById(`error-${id}`).textContent, true);
+            firstError = true;
+        }
+        return valid;
+    }
+
+    const a = run(validateFullname, 'fullname');
+    const b = run(validatePhone, 'phone');
+    const c = run(validateCity, 'city');
+    const d = run(validateAddress, 'address');
+
+    return a && b && c && d;
+}
+document.getElementById('fullname')
+    .addEventListener('blur', debounce(validateFullname, 50));
+
+document.getElementById('phone')
+    .addEventListener('blur', debounce(validatePhone, 500));
+
+document.getElementById('address')
+    .addEventListener('blur', debounce(validateAddress, 500));
+
+document.getElementById('city')
+    .addEventListener('change', validateCity);
 // handle form submission
 document.getElementById('cod-form').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -686,15 +707,15 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
                 quantity: state.quantity,
                 order_id: orderId
             });
-
+document.getElementById('cod-form').reset();
             window.location.href = `thankyou.html?${params.toString()}`;
         } else {
             console.log(result);
-            alert('Error submitting order: ' + result);
+           
         }
 
     } catch (err) {
         console.error(err);
-        alert('Failed to submit order');
+       
     }
 });
