@@ -1,11 +1,12 @@
-* { 
-    box-sizing: border-box; 
-    margin: 0; 
-    padding: 0; 
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-body { 
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+        Ubuntu, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #1a1a1a;
     padding-bottom: 80px;
@@ -13,9 +14,15 @@ body {
 }
 
 @keyframes gradient {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 .top-banner {
     background: linear-gradient(90deg, #ff6b6b, #ee5a9c, #ff6b6a);
@@ -25,29 +32,29 @@ body {
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.5px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+
     /* CRITICAL FOR SLIDING UP */
-    height: 36px;             /* 1. Fixed height */
-    overflow: hidden;         /* 2. Hide other messages */
+    height: 36px; /* 1. Fixed height */
+    overflow: hidden; /* 2. Hide other messages */
     position: relative;
-    padding: 0;               /* 3. Remove padding so math works */
+    padding: 0; /* 3. Remove padding so math works */
 }
 
 .ticker {
     display: flex;
-    flex-direction: column;   /* 4. Stack messages vertically */
+    flex-direction: column; /* 4. Stack messages vertically */
     width: 100%;
     /* Transition is handled by JS, but we set a default here */
     transform: translateY(0);
 }
 
 .message {
-    height: 36px;             /* 5. Must match banner height exactly */
-    display: flex;            /* 6. Center text vertically */
+    height: 36px; /* 5. Must match banner height exactly */
+    display: flex; /* 6. Center text vertically */
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;           /* 7. Prevent shrinking */
+    flex-shrink: 0; /* 7. Prevent shrinking */
 }
 
 .container {
@@ -56,7 +63,7 @@ body {
     background: white;
     border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 /* ========== WRAPPER & SHIMMER ========== */
 .img-wrapper {
@@ -86,8 +93,12 @@ body {
 }
 
 @keyframes shimmer {
-    from { transform: translateX(-100%); }
-    to   { transform: translateX(100%); }
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(100%);
+    }
 }
 
 /* ========== MAIN IMAGE ========== */
@@ -104,7 +115,7 @@ body {
 
 /* Class added by JS when image is ready */
 .main-image.loaded {
-    opacity: 1; 
+    opacity: 1;
 }
 
 /* ========== THUMBNAILS (Your existing styles) ========== */
@@ -199,7 +210,7 @@ body {
     border: 2px solid #e0e0e0;
     position: relative;
     transition: all 0.3s ease;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 /* Hover effect */
@@ -348,7 +359,7 @@ body {
     background: white;
     padding: 8px 16px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .qty-btn {
@@ -384,35 +395,44 @@ body {
     font-weight: 700;
     background: transparent;
 }
+.free-shipping {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.free-shipping img {
+    background: transparent;
+    max-width: 390px;
+}
 .countdown-box {
-  background: #fff3cd;
-  color: #b76e00;
-  padding: 12px 15px;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 700;
-  text-align: center;
-  margin: 15px 0;
+    background: #fff3cd;
+    color: #b76e00;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    margin: 15px 0;
 }
 .countdown-box i {
-  color: #b76e00; /* same as text */
-  font-size: 18px;
+    color: #b76e00; /* same as text */
+    font-size: 18px;
 }
 .scarcity {
-  background: #ffeaea;
-  color: #cc0000;
-  padding: 12px;
-  border-radius: 10px;
-  font-size: 15px;
-  margin: 15px 0;
-  text-align: center;
-  line-height: 1.8;
-  font-weight: 600;
+    background: #ffeaea;
+    color: #cc0000;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    margin: 15px 0;
+    text-align: center;
+    line-height: 1.8;
+    font-weight: 600;
 }
 
 .scarcity .icon {
-  margin-left: 6px;
-  color: #cc0000;
+    margin-left: 6px;
+    color: #cc0000;
 }
 .order-section {
     padding: 24px;
@@ -437,7 +457,7 @@ body {
     padding: 20px;
     border-radius: 16px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .summary-row {
@@ -448,7 +468,7 @@ body {
 }
 
 .summary-label {
-  flex: 0 0 50px;
+    flex: 0 0 50px;
     color: #666;
     font-weight: 500;
 }
@@ -479,26 +499,46 @@ body {
 
 .form-group {
     margin-bottom: 16px;
-  position: relative;
-  margin-bottom: 12px;
+    position: relative;
+    margin-bottom: 12px;
 }
 
 .form-group .icon {
-  position: absolute;
-  right: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  color: #777;
-  font-size: 18px;
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+    font-size: 18px;
+}
+.check-icon {
+    color: green;
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+        opacity 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+}
+.form-group input.success + .check-icon,
+.form-group textarea.success + .check-icon,
+.form-group select.success + .check-icon {
+    opacity: 1;
 }
 .form-group:has(textarea) .icon {
-top: 35%}
+    top: 35%;
+}
 .form-group input,
 .form-group textarea,
 .form-group select {
-  width: 100%;
-  padding: 12px 45px 12px 45px;
-  border: 2px solid #e0e0e0;
+    width: 100%;
+    padding: 12px 45px 12px 45px;
+    border: 2px solid #e0e0e0;
     border-radius: 12px;
     font-size: 15px;
     transition: all 0.3s ease;
@@ -537,22 +577,26 @@ top: 35%}
     border: 1px solid #ddd;
     border-radius: 8px;
     cursor: pointer;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
+    transition:
+        border 0.3s ease,
+        box-shadow 0.3s ease;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 16px center;
     background-size: 10px 6px;
 }
-#city option{margin-right: 25px}
+#city option {
+    margin-right: 25px;
+}
 #city:focus {
-    border-color: #007BFF;
+    border-color: #007bff;
     box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
     outline: none;
 }
 
 /* Optional: hover effect */
 #city:hover {
-    border-color: #007BFF;
+    border-color: #007bff;
 }
 
 /* Placeholder option styling */
@@ -612,7 +656,7 @@ footer {
     width: 100%;
     background: white;
     padding: 12px 16px;
-    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     backdrop-filter: blur(10px);
 }
@@ -638,7 +682,7 @@ footer {
 }
 
 .btn-whatsapp {
-    background: #25D366;
+    background: #25d366;
     color: white;
     flex: 0.3;
     font-size: 20px;
@@ -662,7 +706,8 @@ footer {
     box-shadow: 0 6px 20px rgba(255, 107, 107, 0.5);
 }
 
-.btn-buy:active, .btn-whatsapp:active {
+.btn-buy:active,
+.btn-whatsapp:active {
     transform: translateY(0);
 }
 
@@ -707,18 +752,34 @@ footer {
         background: #ffffff;
         padding-bottom: 50px;
     }
-    .container {margin-top: 0px;border-radius: 0px;}
+    .container {
+        margin-top: 0px;
+        border-radius: 0px;
+    }
 }
 /* === RTL OVERRIDES ================ */
 
-html[dir="rtl"] body, html[dir="rtl"] *:not(i) {
+html[dir="rtl"] body,
+html[dir="rtl"] *:not(i) {
     direction: rtl;
     font-family: "Tajawal", sans-serif;
 }
-html[dir="rtl"] .summary-row{display: flex;justify-content:flex-start;}
-html[dir="rtl"] .summary-label{margin-inline-end: 12px;font-weight:bold;color: #667eea;white-space:nowrap;}
-html[dir="rtl"] .summary-total{align-items:center;}
-html[dir="rtl"] .submit-btn{font-family:'Tajawal'};
+html[dir="rtl"] .summary-row {
+    display: flex;
+    justify-content: flex-start;
+}
+html[dir="rtl"] .summary-label {
+    margin-inline-end: 12px;
+    font-weight: bold;
+    color: #667eea;
+    white-space: nowrap;
+}
+html[dir="rtl"] .summary-total {
+    align-items: center;
+}
+html[dir="rtl"] .submit-btn {
+    font-family: "Tajawal";
+}
 /* Headings & text blocks */
 /*
 html[dir="rtl"] .product-title,
