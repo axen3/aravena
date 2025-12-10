@@ -586,7 +586,7 @@ function validateField(fieldId, message, scroll = false) {
 function validateFullname() {
     const input = document.getElementById('fullname');
     const value = input.value.trim();
-    const regex = /^[a-zA-Z\s]{4,}$/;
+    const regex = /^(?=.{3,})[\u0600-\u06FFA-Za-z]+(?:[ '-][\u0600-\u06FFA-Za-z]+)*$/;
 
     if (!value) {
         validateField('fullname', 'Full Name is required.');
@@ -628,7 +628,7 @@ function validateAddress() {
     const input = document.getElementById('address');
     const value = input.value.trim();
 
-    if (value.length < 10) {
+    if (value.length < 5) {
         validateField('address', 'Please enter a detailed delivery address (min 10 characters).');
         return false;
     }
@@ -659,10 +659,10 @@ document.getElementById('fullname')
     .addEventListener('blur', debounce(validateFullname, 50));
 
 document.getElementById('phone')
-    .addEventListener('blur', debounce(validatePhone, 500));
+    .addEventListener('blur', debounce(validatePhone, 50));
 
 document.getElementById('address')
-    .addEventListener('blur', debounce(validateAddress, 500));
+    .addEventListener('blur', debounce(validateAddress, 50));
 
 document.getElementById('city')
     .addEventListener('change', validateCity);
