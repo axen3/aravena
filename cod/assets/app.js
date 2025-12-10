@@ -232,7 +232,8 @@ function updateUI() {
     document.getElementById('form-quantity').value = result.quantity;
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
 const waMsg =
-    `${state.whatsappMsg}\n📦 *${state.productName}*\n🎨 Color: *${state.color}*\n📏 Size: *${state.size}*\n🔢 Qty: *${result.quantity}*\n💰 Total: *${result.total} ${state.currency}*`;
+    `${state.whatsappMsg}\n *${state.productName}*\n Color: *${state.color}*\n📏 Size: *${state.size}*\n🔢 Qty: *${result.quantity}*\n
+    Total: *${result.total} ${state.currency}*`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
 }
@@ -450,9 +451,9 @@ if (data.gallery?.length) {
     singleBtn.classList.add('promo-card');
     singleBtn.setAttribute('data-id', 'single');
     singleBtn.innerHTML = `
-        <div class="promo-label">Single Unit</div>
+        <div class="promo-label" data-key="single_unit">Single Unit</div>
         <div class="promo-price">${state.unitPrice.toFixed(2)} ${state.currency}</div>
-        <div class="promo-desc">Per item</div>
+        <div class="promo-desc" data-key="per_item">Per item</div>
     `;
     singleBtn.addEventListener('click', () => selectPromo('single', state.unitPrice, 1));
     promoContainer.appendChild(singleBtn);
@@ -465,9 +466,9 @@ if (data.gallery?.length) {
             btn.classList.add('promo-card');
             btn.setAttribute('data-id', promo.id);
             btn.innerHTML = `
-                <div class="promo-label">${promo.quantity}x Bundle</div>
+                <div class="promo-label">${promo.label}</div>
                 <div class="promo-price">${promo.price.toFixed(2)} ${state.currency}</div>
-                <div class="promo-desc">${unitCost} ${state.currency}/item</div>
+                <div class="promo-desc">${unitCost} ${state.currency}<span data-key="item"></span></div>
             `;
             btn.addEventListener('click', () => selectPromo(promo.id, promo.price, promo.quantity));
             promoContainer.appendChild(btn);
@@ -569,7 +570,10 @@ function validateField(fieldId, message, scroll = false) {
     const errorElement = document.getElementById(`error-${fieldId}`);
 
     if (message) {
-        errorElement.textContent = message;
+       // errorElement.textContent = message;
+       errorElement.dataset.key = message;
+      //  errorElement.setAttribute("data-key", message);
+      applyLanguage();
         inputElement.classList.remove('success');
         inputElement.classList.add('error');
 
@@ -578,7 +582,9 @@ function validateField(fieldId, message, scroll = false) {
             inputElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
     } else {
-        errorElement.textContent = '';
+        //errorElement.textContent = '';
+        errorElement.dataset.key = '';
+        applyLanguage();
         inputElement.classList.remove('error');
         inputElement.classList.add('success');
     }
@@ -589,11 +595,11 @@ function validateFullname() {
     const regex = /^(?=.{3,})[\u0600-\u06FFA-Za-z]+(?:[ '-][\u0600-\u06FFA-Za-z]+)*$/;
 
     if (!value) {
-        validateField('fullname', 'Full Name is required.');
+        validateField('fullname', 'required_name');
         return false;
     }
     if (!regex.test(value)) {
-        validateField('fullname', 'Name can only contain letters and spaces.');
+        validateField('fullname', 'name_regx');
         return false;
     }
 
@@ -604,9 +610,12 @@ function validatePhone() {
     const input = document.getElementById('phone');
     const value = input.value.trim();
     const regex = /^0\d{9}$/;
-
+    if (!value) {
+        validateField('phone', 'required_phone');
+        return false;
+    }
     if (!regex.test(value)) {
-        validateField('phone', 'Phone must be 10 digits and start with 0 (e.g., 06XXXXXXXX).');
+        validateField('phone', 'phone_regx');
         return false;
     }
 
@@ -617,7 +626,7 @@ function validateCity() {
     const value = document.getElementById('city').value;
 
     if (!value) {
-        validateField('city', 'Please select your city.');
+        validateField('city', 'select_city');
         return false;
     }
 
@@ -627,9 +636,12 @@ function validateCity() {
 function validateAddress() {
     const input = document.getElementById('address');
     const value = input.value.trim();
-
+    if (!value) {
+        validateField('address', 'required_address');
+        return false;
+    }
     if (value.length < 5) {
-        validateField('address', 'Please enter a detailed delivery address (min 10 characters).');
+        validateField('address', 'address_regx');
         return false;
     }
 
@@ -694,8 +706,6 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
     formData.append('itemOptions', `${state.size} • ${state.color} • Qty: ${state.quantity}`);
     formData.append('totalPrice', document.getElementById('summary-total').textContent);
 
-   /* const webAppUrl = 'https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec'; */
-
     try {
         const response = await fetch(webhook, {
             method: 'POST',
@@ -704,7 +714,7 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
 
         const result = await response.json();
         if (result.status === 'success') {
-            const orderId = result.data[1]; // "ORD-32ccdb36b8c2"
+            const orderId = result.data[1];
 
             const params = new URLSearchParams({
                 product_name: state.productName,
