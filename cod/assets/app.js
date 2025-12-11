@@ -92,86 +92,33 @@ setInterval(() => {
     document.getElementById("stock").innerText = stock;
   }
 }, 15000);
-const MOROCCAN_CITIES = [
-        "Agadir",
-        "Ahfir",
-        "Aïn Bni Mathar",
-        "Aïn Defali",
-        "Aïn El Aouda",
-        "Aït Benhaddou",
-        "Aït Iaaza",
-        "Al Hoceïma",
-        "Arbaoua",
-        "Asilah",
-        "Bab Berred",
-        "Béni Mellal",
-        "Ben Slimane",
-        "Berkane",
-        "Berrechid",
-        "Bhalil",
-        "Boujdour",
-        "Boulemane",
-        "Boumia",
-        "Bouznika",
-        "Casablanca",
-        "Chefchaouen",
-        "Chichaoua",
-        "Dakhla",
-        "Dar Gueddari",
-        "Dar Kebdani",
-        "Demnate",
-        "Driouch",
-        "El Aioun Sidi Mellouk",
-        "El Guerdane",
-        "El Hajeb",
-        "El Jadida",
-        "Erfoud",
-        "Errachidia",
-        "Essaouira",
-        "Fès",
-        "Figuig",
-        "Fnideq",
-        "Fquih Ben Salah",
-        "Guelmim",
-        "Goulmima",
-        "Guercif",
-        "Had Kourt",
-        "Ifrane",
-        "Imilchil",
-        "Imouzzer Kandar",
-        "Inezgane",
-        "Issaouen (Ketama)",
-        "Jerada",
-        "Kénitra",
-        "Khémisset",
-        "Khouribga",
-        "Khénifra",
-        "Ksar El Kébir",
-        "Laâyoune",
-        "Larache",
-        "Marrakech",
-        "Martil",
-        "M'diq",
-        "Mohammédia",
-        "Midelt",
-        "Moulay Idriss Zerhoun",
-        "Nador",
-        "Ouarzazate",
-        "Oualidia",
-        "Oujda",
-        "Oulad Teïma",
-        "Rabat",
-        "Safi",
-        "Saïdia",
-        "Salé",
-        "Témara",
-        "Tanger",
-        "Tarfaya",
-        "Taza",
-        "Tétouan",
-        "Tiznit",
-        "Taroudant"
-    ];
+// Function to load cities and initialize searchable select
+function initCitySelect() {
+    fetch("data/cities.json")
+        .then(response => response.json())
+        .then(cities => {
+            const select = document.getElementById("city");
+
+            // Reset options
+            select.innerHTML = `<option value="" disabled selected>Select a city</option>`;
+
+            // Add each city
+            cities.forEach(name => {
+                const option = document.createElement("option");
+                option.value = name;
+                option.textContent = name;
+                select.appendChild(option);
+            });
+
+            // Activate Select2
+            $("#city").select2({
+                placeholder: "Select a city",
+                allowClear: true,
+                width: "100%"
+            });
+        })
+        .catch(err => console.error("Error loading cities:", err));
+}
 
 const state = {
     productName: '',
@@ -489,14 +436,14 @@ if (data.gallery?.length) {
     }
 
     // Cities
-    const citySelect = document.getElementById('city');
+ /*   const citySelect = document.getElementById('city');
     citySelect.innerHTML = '<option value="" disabled selected data-key="select_city">Select your city</option>';
     MOROCCAN_CITIES.forEach(city => {
         const option = document.createElement('option');
         option.value = city;
         option.textContent = city;
         citySelect.appendChild(option);
-    });
+    });*/
 
     // Content images
     const contentContainer = document.getElementById('content-images');
@@ -551,6 +498,7 @@ fetch('data/data.json')
       initProduct(data);
       loadTranslations();
       webhook = data.webhook;
+      initCitySelect();
     })
     .catch(error => {
         console.error('Error loading product data:', error);
