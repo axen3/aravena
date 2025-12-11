@@ -741,7 +741,30 @@ body {
 .submit-btn:active {
     transform: translateY(0);
 }
-
+  .fancy-divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 30px 0;
+  }
+  .fancy-divider span {
+    padding: 0 15px;
+    font-weight: bold;
+    color: #764ba2;
+    font-size: 18px;
+  }
+  .fancy-divider.wave::before,
+  .fancy-divider.wave::after {
+    content: "";
+    flex: 1;
+    border-bottom: 4px dotted #667eea;
+  }
+  .fancy-divider.wave span {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    padding: 0 10px;
+  }
 .content-images img {
     width: 100%;
     display: block;
