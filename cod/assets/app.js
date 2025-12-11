@@ -93,31 +93,35 @@ setInterval(() => {
   }
 }, 15000);
 // Function to load cities and initialize searchable select
-function initCitySelect() {
-    fetch("data/cities.json")
-        .then(response => response.json())
-        .then(cities => {
-            const select = document.getElementById("city");
+async function loadCities() {
+  const select = document.getElementById('city'); // corrected ID
 
-            // Reset options
-            select.innerHTML = `<option value="" disabled selected>Select a city</option>`;
+  try {
+    const resp = await fetch('data/cities.json');
+    if (!resp.ok) throw new Error("Failed to load cities.json");
 
-            // Add each city
-            cities.forEach(name => {
-                const option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                select.appendChild(option);
-            });
+    const cities = await resp.json(); // array of strings
 
-            // Activate Select2
-            $("#city").select2({
-                placeholder: "Select a city",
-                allowClear: true,
-                width: "100%"
-            });
-        })
-        .catch(err => console.error("Error loading cities:", err));
+    // Populate <select>
+    cities.forEach(name => {
+      const opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      select.appendChild(opt);
+    });
+
+    // Initialize Choices.js
+    new Choices(select, {
+      searchEnabled: true,
+      placeholderValue: 'Select a city',
+      searchPlaceholderValue: 'ابحث عن مدينة...',
+      shouldSort: false,
+      itemSelectText: '',
+    });
+
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 const state = {
@@ -149,10 +153,10 @@ function calculateTotal() {
         };
     }
 }
-
+let globalPrice = 0;
 function updateUI() {
     const result = calculateTotal();
-
+    globalPrice = result.total;
     // Price: value before currency
     document.getElementById('current-price').textContent =
         `${result.total} ${state.currency}`;
@@ -498,7 +502,7 @@ fetch('data/data.json')
       initProduct(data);
       loadTranslations();
       webhook = data.webhook;
-      initCitySelect();
+      loadCities();
     })
     .catch(error => {
         console.error('Error loading product data:', error);
@@ -652,7 +656,8 @@ document.getElementById('cod-form').addEventListener('submit', async (e) => {
     formData.append('city', document.getElementById('city').value);
     formData.append('address', document.getElementById('address').value.trim());
     formData.append('itemOptions', `${state.size} • ${state.color} • Qty: ${state.quantity}`);
-    formData.append('totalPrice', document.getElementById('summary-total').textContent);
+   formData.append('totalPrice',globalPrice );
+   /* formData.append('totalPrice', document.getElementById('summary-total').textContent);*/
 
     try {
         const response = await fetch(webhook, {
