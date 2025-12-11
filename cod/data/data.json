@@ -1,5 +1,5 @@
 {
-    "productName": "ساعة ذكية بثمن لا يصدق سارع االفوات الأوان قبل الجمعية العامة العالمية",
+    "productName": "ساعة ذكية متعددة الاستخدامات تحتوي على مكان الشريحة وتعمل مزامنة مع أقمار صناعية مختلفة",
     "originalPrice": "70",
     "price": "49.99",
     "currency": "درهم",
@@ -27,7 +27,8 @@
         "https://picsum.photos/600/600?random=35"
     ],
     "promotions": [
-        { "quantity": 2, "price": 68, "label": "Chri jouj b taman wahed" }
+        { "quantity": 2, "price": 75, "label": "منتجين x2" },
+        { "quantity": 3, "price": 115, "label": "منتجات x3" }
     ],
     "webhook": "https://script.google.com/macros/s/AKfycbwprpx9UDjPUmUs8NdPWql6Y-hchnAc4RBmp5H9XNHPhKsRtV1LCqaiCtaJ8H8EV1pmdw/exec"
 }
