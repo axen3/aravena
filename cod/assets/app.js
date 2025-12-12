@@ -129,6 +129,8 @@ const state = {
     unitPrice: 0,
     originalPrice: 0,
     currency: '',
+    rate: '',
+    count: '',
     promotions: [],
     size: '',
     color: '',
@@ -183,7 +185,7 @@ function updateUI() {
     document.getElementById('form-quantity').value = result.quantity;
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
 const waMsg =
-    `${state.whatsappMsg}\n *${state.productName}*\n Color: *${state.color}*\n📏 Size: *${state.size}*\n🔢 Qty: *${result.quantity}*\n
+    `${state.whatsappMsg}\n *${state.productName}*\n Color: *${state.color}*\n Size: *${state.size}*\n Qty: *${result.quantity}*\n
     Total: *${result.total} ${state.currency}*`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
@@ -222,6 +224,8 @@ function initProduct(data) {
     state.productName = data.productName;
     state.unitPrice = parseFloat(data.price);
     state.originalPrice = data.originalPrice ? parseFloat(data.originalPrice) : state.unitPrice;
+    state.rate = data.reviews.rate || 0;
+    state.count = data.reviews.count || 0;
     state.currency = data.currency;
     state.whatsappNumber = data.whatsappNumber || '+21206';
     state.whatsappMsg = data.whatsappMsg || '';
@@ -240,6 +244,23 @@ function initProduct(data) {
     // document.getElementById('top-banner').textContent = data.topBarText || '🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!'; // REMOVED: Conflicted with the sliding banner
     document.getElementById('product-name').textContent = data.productName;
 
+// add reviews
+const reviewContainer = document.getElementById('review-container');
+
+    // Create star elements
+    let starsHTML = '';
+    for (let i = 1; i <= 5; i++) {
+        if (state.rate >= i) {
+            starsHTML += '<i class="fas fa-star"></i>'; // Full star
+        } else if (state.rate >= i - 0.5) {
+            starsHTML += '<i class="fas fa-star-half-alt"></i>'; // Half star
+        } else {
+            starsHTML += '<i class="far fa-star"></i>'; // Empty star
+        }
+    }
+
+    // Add star rating and count
+    reviewContainer.innerHTML = starsHTML + `<span class="review-count">(${state.count})</span>`;
 /* ============================================================
    UNIVERSAL PLACEHOLDER FOR ALL IMAGES ON THE PAGE
    ============================================================ */
