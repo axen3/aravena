@@ -194,10 +194,8 @@ body {
 }
 /* Container */
 #review-container.stars {
-    display: inline-flex;
-    flex-direction: row;
+    display: inline;
     align-items: center;
-    gap: 4px;
     white-space: nowrap;
     font-size: 1rem;     /* star size */
     color: #f5b301;        /* star color (gold) */
@@ -552,7 +550,7 @@ body {
 .error-icon{color:red}
 .form-group input.success + .check-icon,
 .form-group textarea.success + .check-icon,
-.form-group select.success + .check-icon {
+.form-group .choices .choices__inner select.success ~ .check-icon {
     opacity: 1;
 }
 .form-group input.error ~ .error-icon,
@@ -565,7 +563,7 @@ body {
 }
 .form-group input,
 .form-group textarea,
-.form-group select {
+.form-group .choices__inner{
     width: 100%;
     padding: 12px 45px 12px 45px;
     border: 2px solid #e0e0e0;
@@ -624,121 +622,12 @@ body {
 
 .form-group input:focus,
 .form-group textarea:focus,
-.form-group select:focus {
+.form-group .choices.is-focused{
     border-color: #667eea;
     outline: none;
     box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
 }
-/* ---------------------------------------
-   BASE SELECT2 override to match your input
----------------------------------------- */
 
-/* Replace native select with Select2 */
-.select2-container--default .select2-selection--single {
-    background-color: #fff;
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    height: 48px;
-    padding-left: 45px !important; /* space for left icons */
-    padding-right: 45px !important; /* space for right icon */
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-/* Selected text inside */
-.select2-selection__rendered {
-    font-size: 16px;
-    color: #333;
-    line-height: 48px !important;
-    padding-left: 0 !important; 
-}
-
-/* Hide the default Select2 arrow */
-.select2-selection__arrow {
-    display: none !important;
-}
-
-/* Use your existing custom arrow (same as native select) */
-.select2-container--default .select2-selection--single {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 10 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 16px center;
-    background-size: 10px 6px;
-}
-
-/* Hover effect (same as your input) */
-.select2-container--default .select2-selection--single:hover {
-    border-color: #007bff;
-}
-
-/* Focus effect (same as your input) */
-.select2-container--default.select2-container--focus .select2-selection--single {
-    border-color: #667eea !important;
-    outline: none;
-    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
-}
-
-/* ---------------------------------------
-    Dropdown Panel 
----------------------------------------- */
-
-.select2-dropdown {
-    border: 2px solid #e0e0e0;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-/* Search field */
-.select2-search--dropdown .select2-search__field {
-    padding: 10px 12px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 15px;
-}
-
-/* Options */
-.select2-results__option {
-    padding: 10px 14px;
-    font-size: 15px;
-}
-
-/* Highlighted option */
-.select2-results__option--highlighted {
-    background-color: #f0f0f0 !important;
-    color: #000 !important;
-}
-
-/* Selected option */
-.select2-results__option[aria-selected="true"] {
-    background-color: #e9ecef !important;
-    color: #333 !important;
-}
-
-/* ---------------------------------------
-    SUCCESS / ERROR ICON COMPATIBILITY 
----------------------------------------- */
-
-/* When the select has .success or .error applied externally */
-.form-group .select2-selection--single.success ~ .check-icon,
-.form-group select.success ~ .check-icon {
-    opacity: 1;
-}
-
-.form-group .select2-selection--single.error ~ .error-icon,
-.form-group select.error ~ .error-icon {
-    opacity: 1;
-}
-
-/* Force success border */
-.select2-selection--single.success {
-    border-color: green !important;
-}
-
-/* Force error border */
-.select2-selection--single.error {
-    border-color: red !important;
-}
 .submit-btn {
     width: 100%;
     padding: 18px;
@@ -762,6 +651,58 @@ body {
 
 .submit-btn:active {
     transform: translateY(0);
+}
+/* ====== tabs ======= */
+.tab-container {
+  width: 100%;
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+  background: #fff;
+  overflow: hidden;
+}
+
+/* TAB HEADERS */
+.tabs {
+  display: flex;
+  /*border-bottom: 1px solid #d7d7d7;*/
+}
+
+.tab {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  background: #f9f9f9;
+  border: none;
+  font-size: 16px;
+  border-right: 1px solid #e4e4e4;
+  transition: 0.15s;
+  font-weight: bold;
+}
+
+.tab:last-child {
+  border-right: none;
+}
+.tab:not(.active){border-bottom: 1px solid #d7d7d7;background: linear-gradient(
+  135deg,
+  rgba(102, 126, 234, 0.15) 0%,
+  rgba(118, 75, 162, 0.15) 100%
+);}
+/* ACTIVE TAB LOOK */
+.tab.active {
+  background: #fff;
+  border-bottom: none;    /* removes bottom so it connects */
+  border-radius: 12px 12px 0 0; /* rounded top corners */
+}
+
+/* CONTENT AREA */
+.tab-content {
+  padding: 0px;
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
 }
   .fancy-divider {
     display: flex;
@@ -798,7 +739,56 @@ body {
     width: 100%;
     display: block;
 }
+    .reviews-grid{ display:grid; grid-template-columns:1fr; gap:16px;}
+    @media (min-width:720px){ .reviews-grid{ grid-template-columns:1fr 1fr; } }
+    .review-card{ background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px; display:flex; gap:12px; align-items:flex-start; border:1px solid rgba(17,24,39,0.04);}
+    .avatar{ min-width:56px; min-height:56px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; font-size:20px; flex-shrink:0; }
+    .review-body{ flex:1; display:flex; flex-direction:column; gap:6px; }
+    .meta{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+    .name{ font-weight:600; font-size:15px; }
+    .date{ color:var(--muted); font-size:13px; }
+    .rating{ margin-left:auto; color:#f59e0b; font-size:14px; font-weight:700; }
+    .text{ color:#111827; font-size:14px; line-height:1.45; margin-top:4px; }
+    footer{ margin-top:20px; color:var(--muted); font-size:13px; text-align:center; }
 
+    /* Load More Button */
+    .load-more-container{
+      margin-top:20px;
+      display:flex;
+      justify-content:center;
+    }
+    .load-more-btn{
+      padding:10px 24px;
+      font-size:14px;
+      border:none;
+      border-radius:6px;
+      background:#3b82f6;
+      color:white;
+      cursor:pointer;
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      transition:background 0.2s;
+    }
+    .load-more-btn:hover{ background:#2563eb; }
+
+    /* Spinner inside button */
+    .spinner{
+      width:16px;
+      height:16px;
+      border:2px solid rgba(255,255,255,0.4);
+      border-top-color:white;
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+      display:none; /* hidden by default */
+    }
+    @keyframes spin{
+      0%{ transform:rotate(0deg); }
+      100%{ transform:rotate(360deg); }
+    }
+    .loading .spinner{ display:inline-block; }
+    .loading .btn-text{ opacity:0.6; }
 footer {
     text-align: center;
     padding: 24px;
