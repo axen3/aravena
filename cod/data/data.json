@@ -3,8 +3,9 @@
     "originalPrice": "70",
     "price": "49.99",
     "currency": "درهم",
+    "reviews": { "count": 92, "rate": 4.8 },
     "whatsappNumber": "+212618500275",
-    "whatsappMsg": "Salam bghit nechri had produit ",
+    "whatsappMsg": "مرحبًا، أنا مهتم بهذا المنتج.",
     "topBarText": [
         "شحن سريع ومجاني 🚚 ",
         "الكمية محدودة! اطلب الآن! 🔥",
