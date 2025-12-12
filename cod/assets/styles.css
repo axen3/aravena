@@ -192,6 +192,28 @@ body {
     font-weight: 700;
     letter-spacing: 0.5px;
 }
+/* Container */
+#review-container.stars {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    font-size: 1rem;     /* star size */
+    color: #f5b301;        /* star color (gold) */
+}
+
+/* Icons */
+#review-container.stars i {
+    transition: transform 0.15s ease;
+}
+
+/* Review count text */
+#review-container .review-count {
+    font-size: 0.95rem;
+    color: #555;
+    margin-inline-start: 4px;
+}
 /* Container for the color buttons */
 .color-options-container {
     display: flex;
@@ -899,6 +921,10 @@ html[dir="rtl"] body,
 html[dir="rtl"] *:not(i) {
     direction: rtl;
     font-family: "Tajawal", sans-serif;
+}
+html[dir="rtl"] .fa-star-half-alt {
+    transform: scaleX(-1);
+    display: inline-block;
 }
 html[dir="rtl"] .summary-row {
     display: flex;
