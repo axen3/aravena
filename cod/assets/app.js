@@ -712,3 +712,68 @@ document.getElementById('cod-form').reset();
        
     }
 });
+// tabs handler.
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    // Remove active states
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+
+    // Apply new active states
+    tab.classList.add("active");
+    document.getElementById(tab.dataset.target).classList.add("active");
+  });
+});
+// reviews
+const reviewsData = [
+      { name: "Alicia Moran", date: "2025-02-14", rating: 4, text: "Works as expected in our test environment. Smooth interactions, no complaints so far." },
+      { name: "Derrick Shaw", date: "2025-01-29", rating: 4, text: "Clean interface and quick responses. Curious to see how it performs with heavier use." },
+      { name: "Lena Ortiz", date: "2024-12-03", rating: 3, text: "Setup was straightforward. Everything behaved consistently during our mock run." },
+      { name: "Milo Grant", date: "2025-03-01", rating: 4, text: "Testing went smoothly. Would like to try more advanced features next." },
+      { name: "Priya Singh", date: "2025-04-08", rating: 5, text: "Excellent for a prototype — visuals and spacing are great for our mockups." }
+    ];
+
+    const colors = ['#ef4444','#f97316','#f59e0b','#eab308','#10b981','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#ec4899','#84cc16','#06b6d4'];
+
+    function nameToIndex(name){
+      let h=0;
+      for(let i=0;i<name.length;i++){ h=(h<<5)-h+name.charCodeAt(i); h|=0; }
+      return Math.abs(h) % colors.length;
+    }
+
+    function renderReviews(){
+      const container = document.getElementById('reviewsContainer');
+      reviewsData.forEach((r, idx) => {
+        const card = document.createElement('article');
+        card.className='review-card';
+        card.setAttribute('aria-labelledby',`review-${idx}-name`);
+
+        const avatar = document.createElement('div');
+        avatar.className='avatar';
+        const initial = r.name ? r.name.split(' ')[0][0].toUpperCase() : '?';
+        avatar.textContent=initial;
+        avatar.style.background=colors[nameToIndex(r.name||'?')];
+        avatar.setAttribute('aria-label',`Avatar for ${r.name}`);
+
+        const body=document.createElement('div'); body.className='review-body';
+        const meta=document.createElement('div'); meta.className='meta';
+        const nameEl=document.createElement('div'); nameEl.className='name'; nameEl.id=`review-${idx}-name`; nameEl.textContent=r.name;
+        const dateEl=document.createElement('div'); dateEl.className='date'; dateEl.textContent=new Date(r.date).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'});
+        const ratingEl=document.createElement('div'); ratingEl.className='rating'; ratingEl.textContent='★'.repeat(r.rating)+'☆'.repeat(5-r.rating);
+        meta.append(nameEl,dateEl,ratingEl);
+
+        const textEl=document.createElement('p'); textEl.className='text'; textEl.textContent=r.text;
+        body.append(meta,textEl);
+        card.append(avatar,body);
+        container.appendChild(card);
+      });
+    }
+
+    renderReviews();
+
+    // Load More button spinning behavior
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    loadMoreBtn.addEventListener('click', () => {
+      loadMoreBtn.classList.add('loading');
+      // spinning continues indefinitely without fetching any data
+    });
