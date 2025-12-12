@@ -170,7 +170,31 @@
 </div>
 
 <div class="fancy-divider wave"><span data-key="product_details"></span></div>
-    <div class="content-images" id="content-images"></div>
+<div class="tab-container">
+<div class="tabs">
+      <button class="tab active" data-target="desc">Product Description</button>
+      <button class="tab" data-target="reviews">Product Reviews</button>
+    </div>
+     <!-- PANELS -->
+    <div id="desc" class="tab-content active">
+      <h2>Description</h2>
+      <div class="content-images" id="content-images"></div>
+    </div>
+
+    <div id="reviews" class="tab-content">
+
+    <section class="reviews-grid" id="reviewsContainer" aria-label="Placeholder reviews list">
+      <!-- Reviews will be injected here via JS -->
+    </section>
+
+    <div class="load-more-container">
+      <button class="load-more-btn" id="loadMoreBtn">
+        <span class="spinner"></span>
+        <span class="btn-text">Load More</span>
+      </button>
+    </div>
+    </div>
+  </div>  
 
     <footer>
         <p data-key="copyright"></p>
