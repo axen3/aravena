@@ -94,13 +94,13 @@ setInterval(() => {
 }, 15000);
 // Function to load cities and initialize searchable select
 async function loadCities() {
-  const select = document.getElementById('city'); // corrected ID
+  const select = document.getElementById('city'); // specific select
 
   try {
     const resp = await fetch('data/cities.json');
     if (!resp.ok) throw new Error("Failed to load cities.json");
 
-    const cities = await resp.json(); // array of strings
+    const cities = await resp.json();
 
     // Populate <select>
     cities.forEach(name => {
@@ -111,12 +111,24 @@ async function loadCities() {
     });
 
     // Initialize Choices.js
-    new Choices(select, {
+    const choices = new Choices(select, {
       searchEnabled: true,
       placeholderValue: 'Select a city',
       searchPlaceholderValue: 'ابحث عن مدينة...',
       shouldSort: false,
       itemSelectText: '',
+    });
+
+    // Get the check icon inside the same form-group
+    const checkIcon = select.closest('.form-group').querySelector('.check-icon');
+
+    // Toggle check icon when selection changes
+    select.addEventListener('change', () => {
+      if (choices.getValue(true)) {
+        checkIcon.style.opacity = '1';
+      } else {
+        checkIcon.style.opacity = '0';
+      }
     });
 
   } catch (err) {
@@ -185,9 +197,9 @@ function updateUI() {
     document.getElementById('form-quantity').value = result.quantity;
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
 const waMsg =
-    `${state.whatsappMsg}\n *${state.productName}*\n Color: *${state.color}*\n Size: *${state.size}*\n Qty: *${result.quantity}*\n
-    ----------------\n
-    Total: *${state.currency} ${result.total}*`;
+    `${state.whatsappMsg}\n *${state.productName}*\n• Color: *${state.color}*\n• Size: *${state.size}*\n• Qty: *${result.quantity}*\n
+    ----------------------\n
+    Total: *${result.total} Dhs*`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
 }
@@ -741,11 +753,11 @@ document.querySelectorAll(".tab").forEach(tab => {
 });
 // reviews
 const reviewsData = [
-      { name: "نعيمة سكاسيك", date: "2025-02-14", rating: 4, text: "Works as expected in our test environment. Smooth interactions, no complaints so far." },
-      { name: "حميد برشان", date: "2025-01-29", rating: 4, text: "Clean interface and quick responses. Curious to see how it performs with heavier use." },
-      { name: "طارق زعتان", date: "2024-12-03", rating: 4, text: "Setup was straightforward. Everything behaved consistently during our mock run." },
-      { name: "Milo Grant", date: "2025-03-01", rating: 4, text: "Testing went smoothly. Would like to try more advanced features next." },
-      { name: "Priya Singh", date: "2025-04-08", rating: 5, text: "Excellent for a prototype — visuals and spacing are great for our mockups." }
+      { name: "نعيمة سكاسيك", date: "2025-02-14", rating: 4, text: "برودوي زوين خديتو وغنعاود ناخذو لختي." },
+      { name: "حميد برشان", date: "2025-01-29", rating: 4, text: "برودوي غزال عجبني بزاف 💜❤" },
+      { name: "طارق زعتان", date: "2024-12-03", rating: 4, text: "شكرا. توصلت بيه ليوما " },
+      { name: "Milo Grant", date: "2025-03-01", rating: 4, text: "Top, Très satisfait" },
+      { name: "Priya Singh", date: "2025-04-08", rating: 5, text: "Je recommande ce produit. C'est très bien." }
     ];
 
     const colors = ['#ef4444','#f97316','#f59e0b','#eab308','#10b981','#06b6d4','#3b82f6','#6366f1','#8b5cf6','#ec4899','#84cc16','#06b6d4'];
