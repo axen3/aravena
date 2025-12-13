@@ -1,7 +1,7 @@
 {
     "productName": "ساعة ذكية متعددة الاستخدامات تحتوي على مكان الشريحة وتعمل مزامنة مع أقمار صناعية مختلفة",
-    "originalPrice": "70",
-    "price": "49.99",
+    "originalPrice": "190",
+    "price": "170",
     "currency": "درهم",
     "reviews": { "count": 92, "rate": 4.8 },
     "whatsappNumber": "+212618500275",
@@ -28,8 +28,8 @@
         "https://picsum.photos/600/600?random=35"
     ],
     "promotions": [
-        { "quantity": 2, "price": 75, "label": "منتجين x2" },
-        { "quantity": 3, "price": 115, "label": "منتجات x3" }
+        { "quantity": 2, "price": 310, "label": "منتجين x2" },
+        { "quantity": 3, "price": 460, "label": "منتجات x3" }
     ],
     "webhook": "https://script.google.com/macros/s/AKfycbzJxtrnQL_Y5iCiYdrYJ8y0SMdhWDFUwcTQQJDkEADtrmuo-6YTwEF01WlzNfpV6RCP2Q/exec"
 }
