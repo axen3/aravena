@@ -186,7 +186,8 @@ function updateUI() {
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
 const waMsg =
     `${state.whatsappMsg}\n *${state.productName}*\n Color: *${state.color}*\n Size: *${state.size}*\n Qty: *${result.quantity}*\n
-    Total: *${result.total} ${state.currency}*`;
+    ----------------\n
+    Total: *${state.currency} ${result.total}*`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
 }
@@ -240,8 +241,6 @@ function initProduct(data) {
 
     state.selectedPromoPrice = state.unitPrice;
     state.selectedPromoQty = 1;
-
-    // document.getElementById('top-banner').textContent = data.topBarText || '🚚 FREE SHIPPING ON ALL ORDERS TODAY ONLY!'; // REMOVED: Conflicted with the sliding banner
     document.getElementById('product-name').textContent = data.productName;
 
 // add reviews
@@ -417,7 +416,20 @@ if (data.gallery?.length) {
     // Promotions
     const promoContainer = document.getElementById('promo-buttons');
     promoContainer.innerHTML = '';
+    // calculate promotion percentage
+function getPromotionPercentage(unitPrice, promo) {
+  const normalTotal = unitPrice * promo.quantity;
 
+  // Guard against invalid data
+  if (normalTotal <= 0 || promo.price >= normalTotal) {
+    return 0;
+  }
+
+  const discountPercent =
+    ((normalTotal - promo.price) / normalTotal) * 100;
+
+  return Math.round(discountPercent);
+}
     // Always add single unit
     const singleBtn = document.createElement('div');
     singleBtn.classList.add('promo-card');
@@ -436,11 +448,14 @@ if (data.gallery?.length) {
             const unitCost = (promo.price / promo.quantity).toFixed(2);
             const btn = document.createElement('div');
             btn.classList.add('promo-card');
+            const promoPercent = getPromotionPercentage(state.unitPrice, promo);
+  
             btn.setAttribute('data-id', promo.id);
             btn.innerHTML = `
                 <div class="promo-label">${promo.label}</div>
                 <div class="promo-price">${promo.price.toFixed(2)} ${state.currency}</div>
                 <div class="promo-desc">${unitCost} ${state.currency}<span data-key="item"></span></div>
+                <div class="promo-percent">${promoPercent > 0 ? `-${promoPercent}%` : ''}</div>
             `;
             btn.addEventListener('click', () => selectPromo(promo.id, promo.price, promo.quantity));
             promoContainer.appendChild(btn);
@@ -726,9 +741,9 @@ document.querySelectorAll(".tab").forEach(tab => {
 });
 // reviews
 const reviewsData = [
-      { name: "Alicia Moran", date: "2025-02-14", rating: 4, text: "Works as expected in our test environment. Smooth interactions, no complaints so far." },
-      { name: "Derrick Shaw", date: "2025-01-29", rating: 4, text: "Clean interface and quick responses. Curious to see how it performs with heavier use." },
-      { name: "Lena Ortiz", date: "2024-12-03", rating: 3, text: "Setup was straightforward. Everything behaved consistently during our mock run." },
+      { name: "نعيمة سكاسيك", date: "2025-02-14", rating: 4, text: "Works as expected in our test environment. Smooth interactions, no complaints so far." },
+      { name: "حميد برشان", date: "2025-01-29", rating: 4, text: "Clean interface and quick responses. Curious to see how it performs with heavier use." },
+      { name: "طارق زعتان", date: "2024-12-03", rating: 4, text: "Setup was straightforward. Everything behaved consistently during our mock run." },
       { name: "Milo Grant", date: "2025-03-01", rating: 4, text: "Testing went smoothly. Would like to try more advanced features next." },
       { name: "Priya Singh", date: "2025-04-08", rating: 5, text: "Excellent for a prototype — visuals and spacing are great for our mockups." }
     ];
@@ -770,10 +785,7 @@ const reviewsData = [
     }
 
     renderReviews();
-
-    // Load More button spinning behavior
     const loadMoreBtn = document.getElementById('loadMoreBtn');
     loadMoreBtn.addEventListener('click', () => {
       loadMoreBtn.classList.add('loading');
-      // spinning continues indefinitely without fetching any data
     });
