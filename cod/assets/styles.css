@@ -214,6 +214,23 @@ body {
     color: #555;
     margin-inline-start: 4px;
 }
+/*====== free shipping ===*/
+.free-shipping {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0a7a3d;
+  background-color: #e9f7ef;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.free-shipping i {
+  font-size: 0.9em;
+}
 /* Container for the color buttons */
 .color-options-container {
     display: flex;
@@ -319,7 +336,14 @@ body {
     background: white;
     position: relative;
 }
-.promo-card .promo-percent{position:absolute;top:5px;left:5px;content:'-25%';color:#fff;background:#4A148C;border-radius:20px;padding:5px;
+.promo-card .promo-percent{position:absolute;top:5px;left:5px;color:#fff;background: linear-gradient(
+      45deg,
+      
+      
+      #8338ec,
+      #3a86ff
+    );
+   border-radius:20px;padding:5px;
   font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;font-size:12px}
 .promo-card:hover {
     border-color: #667eea;
@@ -420,13 +444,13 @@ body {
     font-weight: 700;
     background: transparent;
 }
-.free-shipping {
+.ship-banner {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
 }
-.free-shipping img {
+.ship-banner img {
   width: 100%;
   height: auto;
     background: transparent;
