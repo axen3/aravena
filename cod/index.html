@@ -48,7 +48,7 @@
         </div>
 
 <div class="option-group" id="color-group" style="display:none;">
-    <span style="display:inline-flex"><span class="option-label" data-key="color"></span> <span id="selected-color-name" class="selected-color-text"></span>
+    <span style="display:block;margin-bottom:12px"><span class="option-label" style="display:unset" data-key="color"></span> <span id="selected-color-name" class="selected-color-text"></span>
     </span>
     <div class="color-options-container" id="color-buttons"></div>
 </div>
@@ -173,20 +173,31 @@
 </div>
 
 <div class="fancy-divider wave"><span data-key="product_details"></span></div>
-<div class="tab-container">
-<div class="tabs">
-      <button class="tab active" data-target="desc">مواصفات المنتج</button>
-      <button class="tab" data-target="reviews">تقييمات الزبناء (92)</button>
-    </div>
-     <!-- PANELS -->
-    <div id="desc" class="tab-content active">
-      <div class="content-images" id="content-images"></div>
+<div class="tabs-container">
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="description">
+        <i class="fa-solid fa-file-lines"></i>
+        مواصفات المنتج
+        </button>
+      <button class="tab-btn" data-tab="reviews">
+        <i class="fa-solid fa-star"></i>
+        تقييمات الزبائن (92)
+      </button>
+      <span class="indicator"></span>
     </div>
 
+    <!-- Description -->
+    <div id="description" class="tab-content active">
+            <div class="content-images" id="content-images"></div>
+      
+    </div>
+
+    <!-- Reviews -->
     <div id="reviews" class="tab-content">
-
-    <section class="reviews-grid" id="reviewsContainer" aria-label="Placeholder reviews list">
-      <!-- Reviews will be injected here via JS -->
+      <div class="review">
+        <section class="reviews-grid" id="reviewsContainer" aria-label="Placeholder reviews list">
     </section>
 
     <div class="load-more-container">
@@ -195,9 +206,12 @@
         <span class="btn-text">Load More</span>
       </button>
     </div>
-    </div>
-  </div>  
+      </div>
 
+      
+    </div>
+
+  </div>
     <footer>
         <p data-key="copyright"></p>
     </footer>
