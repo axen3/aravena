@@ -740,17 +740,21 @@ document.getElementById('cod-form').reset();
     }
 });
 // tabs handler.
-document.querySelectorAll(".tab").forEach(tab => {
-  tab.addEventListener("click", () => {
-    // Remove active states
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+const tabs = document.querySelectorAll(".tab-btn");
+    const contents = document.querySelectorAll(".tab-content");
+    const indicator = document.querySelector(".indicator");
 
-    // Apply new active states
-    tab.classList.add("active");
-    document.getElementById(tab.dataset.target).classList.add("active");
-  });
-});
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.classList.remove("active"));
+
+        tab.classList.add("active");
+        document.getElementById(tab.dataset.tab).classList.add("active");
+
+        indicator.classList.toggle("right", index === 1);
+      });
+    });
 // reviews
 const reviewsData = [
       { name: "نعيمة سكاسيك", date: "2025-02-14", rating: 4, text: "برودوي زوين خديتو وغنعاود ناخذو لختي." },
