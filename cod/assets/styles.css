@@ -64,6 +64,7 @@ body {
     border-radius: 24px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: fadeInUp 0.6s ease;
 }
 /* ========== WRAPPER & SHIMMER ========== */
 .img-wrapper {
@@ -695,7 +696,7 @@ body {
     top: 54% !important;
 }
 .error-message {
-    color: #ff6b6b; 
+    color: #ff6b6b;
     font-size: 13px;
     margin-top: 4px;
     min-height: 18px;
@@ -736,111 +737,116 @@ body {
     transform: translateY(0);
 }
 /* ====== tabs ======= */
-    .tabs-container {
-      max-width: 480px;
-      width: 100%;
-    }
-
-    /* Tabs */
-    .tabs {
-      display: flex;
-      position: relative;
-      border-bottom: 1px solid #e6e6e6;
-    }
-
-    .tab-btn {
-      flex: 1;
-      background: none;
-      border: none;
-      padding: 14px 0;
-      font-size: 14px;
-      font-weight: 600;
-      color: #777;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-
-    .tab-btn i {
-      font-size: 17px;
-    }
-
-    .tab-btn:active {
-      opacity: 0.7;
-    }
-
-    .tab-btn.active {
-      color: #000;
-    }
-
-    /* Active indicator */
-.indicator {
-  position: absolute;
-  bottom: -1px;
-  inset-inline-start: 0;
-  width: 50%;
-  height: 2px;
-  background: #000;
-  transition: transform 0.25s ease;
+.tabs-container {
+    max-width: 480px;
+    width: 100%;
+}
+/* Tabs */
+.tabs {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    display: flex;
+    background: #fff;
+    /*  position: relative;*/
+    border-bottom: 1px solid #e6e6e6;
 }
 
-    .indicator.right {
-      transform: translateX(100%);
-    }
+.tab-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    padding: 14px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.tab-btn:active {
+    opacity: 0.7;
+}
+
+.tab-btn.active {
+    color: #000;
+}
+
+/* Active indicator */
+.indicator {
+    position: absolute;
+    bottom: -1px;
+    inset-inline-start: 0;
+    width: 50%;
+    height: 2px;
+    background: #000;
+    transition: transform 0.25s ease;
+}
+
 .indicator.right {
-  transform: translateX(100%);
+    transform: translateX(100%);
+}
+.indicator.right {
+    transform: translateX(100%);
 }
 
 html[dir="rtl"] .indicator.right {
-  transform: translateX(-100%);
+    transform: translateX(-100%);
 }
-    /* Content */
-    .tab-content {
-      display: none;
-      font-size: 14px;
-      line-height: 1.7;
-      color: #333;
-      animation: fadeIn 0.2s ease;
-    }
+/* Content */
+.tab-content {
+    display: none;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #333;
+    animation: fadeIn 0.2s ease;
+}
 
-    .tab-content.active {
-      display: block;
-    }
+.tab-content.active {
+    display: block;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
     }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-    /* Description */
-    .features {
-      margin-top: 12px;
-      padding-left: 18px;
-    }
+/* Description */
+.features {
+    margin-top: 12px;
+    padding-left: 18px;
+}
 
-    .features li {
-      margin-bottom: 6px;
-    }
+.features li {
+    margin-bottom: 6px;
+}
 
-    /* Reviews */
-    .review {
-      padding: 12px 0;
-      border-bottom: 1px solid #eee;
-    }
+/* Reviews */
+.review {
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
 
-    .stars {
-      color: #f5b400;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
+.stars {
+    color: #f5b400;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
 
-    .review p {
-      font-size: 13px;
-      color: #444;
-    }
+.review p {
+    font-size: 13px;
+    color: #444;
+}
 .fancy-divider {
     display: flex;
     align-items: center;
@@ -1065,10 +1071,6 @@ footer {
         transform: translateY(0);
     }
 }
-
-.container {
-    animation: fadeInUp 0.6s ease;
-}
 @media (max-width: 768px) {
     body {
         background: #ffffff;
@@ -1077,6 +1079,7 @@ footer {
     .container {
         margin-top: 0px;
         border-radius: 0px;
+        overflow: visible;
     }
 }
 /* === RTL OVERRIDES ================ */
