@@ -802,6 +802,14 @@ const reviewsData = [
 
     renderReviews();
     const loadMoreBtn = document.getElementById('loadMoreBtn');
-    loadMoreBtn.addEventListener('click', () => {
-      loadMoreBtn.classList.add('loading');
-    });
+
+if (loadMoreBtn) {
+  loadMoreBtn.addEventListener('click', () => {
+    loadMoreBtn.classList.add('loading');
+
+    const svg = loadMoreBtn.querySelector('svg');
+    if (svg) {
+      svg.style.display = 'none';
+    }
+  });
+}
