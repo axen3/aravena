@@ -1,1 +1,37 @@
-{"productName":"ساعة ذكية متعددة الاستخدامات تحتوي على مكان الشريحة وتعمل مزامنة مع أقمار صناعية مختلفة","originalPrice":"190","price":"170","currency":"درهم","reviews":{"count":92,"rate":4.8},"whatsappNumber":"+212618500275","whatsappMsg":"مرحبًا، أنا مهتم(ة) بهذا المنتج.","topBarText":["شحن سريع ومجاني 🚚 ","الكمية محدودة! اطلب الآن! 🔥","الدفع عند الاستلام 📦","الضمان على الجودة 🔖"],"gallery":["https://picsum.photos/600/600?random=24","https://picsum.photos/600/600?random=26","https://picsum.photos/600/600?random=28","https://picsum.photos/600/600?random=29"],"sizes":["S","M","L","XL"],"colors":[{"أسود":"#000000"},{"أحمر":"#FF0000"},{"أصفر":"#dd6612"}],"contentImages":["https://picsum.photos/600/600?random=33","https://picsum.photos/600/600?random=35"],"promotions":[{"quantity":2,"price":310,"label":"منتجين x2"},{"quantity":3,"price":460,"label":"منتجات x3"}],"webhook":"https://script.google.com/macros/s/AKfycbzJxtrnQL_Y5iCiYdrYJ8y0SMdhWDFUwcTQQJDkEADtrmuo-6YTwEF01WlzNfpV6RCP2Q/exec"}
+{
+    "productName": "ساعة ذكية متعددة الاستخدامات تحتوي على مكان الشريحة وتعمل مزامنة مع أقمار صناعية مختلفة",
+    "originalPrice": "190",
+    "price": "170",
+    "currency": "درهم",
+    "reviews": { "count": 92, "rate": 4.8 },
+    "whatsappNumber": "+212618500275",
+    "whatsappMsg": "مرحبًا، أنا مهتم(ة) بهذا المنتج.",
+    "topBarText": [
+        "شحن سريع ومجاني 🚚 ",
+        "الكمية محدودة! اطلب الآن! 🔥",
+        "الدفع عند الاستلام 📦",
+        "الضمان على الجودة 🔖"
+    ],
+    "gallery": [
+        "https://picsum.photos/600/600?random=24",
+        "https://picsum.photos/600/600?random=26",
+        "https://picsum.photos/600/600?random=28",
+        "https://picsum.photos/600/600?random=29"
+    ],
+    "sizes": ["S", "M", "L", "XL"],
+    "colors": [
+        { "أسود": "#000000" },
+        { "أحمر": "#FF0000" },
+        { "أصفر": "#dd6612" }
+    ],
+    "contentImages": [
+        "https://picsum.photos/600/600?random=33",
+        "https://picsum.photos/600/600?random=35"
+    ],
+    "quantityBreaks": [
+        { "quantity": 1, "pricePerItem": 170, "label": "قطعة واحدة", "badge": "" },
+        { "quantity": 2, "pricePerItem": 155, "label": "قطعتين", "badge": "الأكثر مبيعاً" },
+        { "quantity": 3, "pricePerItem": 140, "label": "3 قطع", "badge": "توفير 30%" }
+    ],
+    "webhook": "https://script.google.com/macros/s/AKfycbzJxtrnQL_Y5iCiYdrYJ8y0SMdhWDFUwcTQQJDkEADtrmuo-6YTwEF01WlzNfpV6RCP2Q/exec"
+}
