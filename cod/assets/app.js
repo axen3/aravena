@@ -4,16 +4,12 @@ function initMessages(data) {
     const messageHeight = 36;
     let index = 0;
     let intervalId;
-
-    // Clear banner
     banner.innerHTML = '';
 
-    // Create ticker container
     const ticker = document.createElement('div');
     ticker.className = 'ticker';
     banner.appendChild(ticker);
 
-    // Add messages
     messages.forEach(msg => {
         const div = document.createElement('div');
         div.className = 'message';
@@ -21,7 +17,6 @@ function initMessages(data) {
         ticker.appendChild(div);
     });
 
-    // Clone first message for seamless loop
     if (messages.length > 0) {
         ticker.appendChild(ticker.firstElementChild.cloneNode(true));
     }
@@ -47,13 +42,13 @@ let translations = {};
 
 async function loadTranslations() {
     const response = await fetch("data/langs.json");
-    translations = await response.json();   // step 1: load JSON
+    translations = await response.json();
 
-    applyLanguage();  // step 2: update all text AFTER JSON is ready
+    applyLanguage();
 }
 
 function applyLanguage() {
-    const lang = document.documentElement.lang;  // "en" or "ar"
+    const lang = document.documentElement.lang;
     const dir = lang === "ar" ? "rtl" : "ltr";
     document.documentElement.dir = dir;
 
@@ -63,7 +58,7 @@ function applyLanguage() {
     });
 }
 // countdown
-let time = 3 * 60 * 60; // 3 hours in seconds
+let time = 3 * 60 * 60;
 const timer = document.getElementById("timer");
 
 setInterval(() => {
@@ -136,6 +131,7 @@ async function loadCities() {
   }
 }
 
+/* ======== UPDATED STATE ========== */
 const state = {
     productName: '',
     unitPrice: 0,
@@ -143,46 +139,46 @@ const state = {
     currency: '',
     rate: '',
     count: '',
-    promotions: [],
+    quantityBreaks: [],
     size: '',
     color: '',
-    quantity: 1,
-    selectedPromoId: 'single',
-    selectedPromoPrice: 0,
-    selectedPromoQty: 1,
+    quantity: 1, 
+    currentPricePerItem: 0, // Changes based on Tier or Base Price
     whatsappNumber: '',
     whatsappMsg: ''
 };
 
 function calculateTotal() {
-    if (state.selectedPromoId === 'single') {
-        return {
-            total: (state.unitPrice * state.quantity).toFixed(2),
-            quantity: state.quantity
-        };
-    } else {
-        return {
-            total: state.selectedPromoPrice.toFixed(2),
-            quantity: state.selectedPromoQty
-        };
-    }
+    const total = state.quantity * state.currentPricePerItem;
+    return {
+        total: total.toFixed(2),
+        quantity: state.quantity
+    };
 }
+/* ======== UPDATED UI UPDATE ======== */
 let globalPrice = 0;
 function updateUI() {
     const result = calculateTotal();
     globalPrice = result.total;
-    // Price: value before currency
+
+    // Update Big Price Display
+    // We show the TOTAL price here, or you can show Price Per Item if you prefer
     document.getElementById('current-price').textContent =
         `${result.total} ${state.currency}`;
 
-    if (state.originalPrice > state.unitPrice) {
-        const discount = Math.round((1 - state.unitPrice / state.originalPrice) * 100);
+    // Calculate generic discount based on original price vs current effective unit price
+    if (state.originalPrice > state.currentPricePerItem) {
+        const discount = Math.round((1 - state.currentPricePerItem / state.originalPrice) * 100);
         document.getElementById('original-price').textContent =
-            `${state.originalPrice.toFixed(2)} ${state.currency}`;
+            `${(state.originalPrice * state.quantity).toFixed(2)} ${state.currency}`; // Show Total Original
         document.getElementById('discount-badge').textContent = `-${discount}%`;
         document.getElementById('discount-badge').style.display = 'inline-block';
+    } else {
+         document.getElementById('discount-badge').style.display = 'none';
+         document.getElementById('original-price').textContent = '';
     }
 
+    // Summary Section
     document.getElementById('summary-product').textContent = state.productName;
     document.getElementById('summary-size').textContent = state.size || 'N/A';
     document.getElementById('summary-color').textContent = state.color || 'N/A';
@@ -190,186 +186,203 @@ function updateUI() {
     document.getElementById('summary-total').textContent =
         `${result.total} ${state.currency}`;
 
+    // Hidden Form Inputs
     document.getElementById('form-product-name').value = state.productName;
-    document.getElementById('form-product-price').value = state.unitPrice.toFixed(2);
+    document.getElementById('form-product-price').value = state.currentPricePerItem.toFixed(2);
     document.getElementById('form-size').value = state.size;
     document.getElementById('form-color').value = state.color;
     document.getElementById('form-quantity').value = result.quantity;
     document.getElementById('form-total-amount').value = `${result.total} ${state.currency}`;
-const waMsg =
-    `${state.whatsappMsg}\n *${state.productName}*\n• Color: *${state.color}*\n• Size: *${state.size}*\n• Qty: *${result.quantity}*\n
+
+    // WhatsApp
+    const waMsg =
+        `${state.whatsappMsg}\n *${state.productName}*\n• Color: *${state.color}*\n• Size: *${state.size}*\n• Qty: *${result.quantity}*\n
     ----------------------\n
     Total: *${result.total} Dhs*`;
     document.getElementById('whatsapp-link').href =
         `https://wa.me/${state.whatsappNumber}?text=${encodeURIComponent(waMsg)}`;
 }
 
-function selectPromo(id, price, qty) {
-    state.selectedPromoId = id;
-    state.selectedPromoPrice = price;
-    state.selectedPromoQty = qty;
+/* ================= NEW TIER SELECTION LOGIC ================= */
+function selectTier(qty, pricePerItem) {
+    state.quantity = qty;
+    state.currentPricePerItem = pricePerItem;
 
-    document.querySelectorAll('.promo-card').forEach(b => b.classList.remove('selected'));
-    document.querySelector(`[data-id="${id}"]`).classList.add('selected');
-
-    const qtySection = document.getElementById('quantity-section');
-
-    if (state.promotions.length === 0) {
-        // No bundle promotions → always show quantity picker
-        qtySection.style.display = 'flex';
-        document.getElementById('quantity').value = state.quantity;
-    } else {
-        // Promotions exist → single = picker, bundle = hide picker
-        if (id === 'single') {
-            qtySection.style.display = 'flex';
-            document.getElementById('quantity').value = state.quantity;
-        } else {
-            qtySection.style.display = 'none';
-            state.quantity = qty;
+    // Visual Update for Cards
+    document.querySelectorAll('.qty-tier-card').forEach(card => {
+        card.classList.remove('selected');
+        // Check if this card matches the clicked quantity
+        if(parseInt(card.dataset.qty) === qty) {
+            card.classList.add('selected');
         }
-    }
+    });
+
+    // Hide the standard quantity picker because the tier selects quantity
+    const qtySection = document.getElementById('quantity-section');
+    if (qtySection) qtySection.classList.add('hidden');
 
     updateUI();
 }
-
 function initProduct(data) {
+    // 1. Initialize State
     state.productName = data.productName;
     state.unitPrice = parseFloat(data.price);
+    state.currentPricePerItem = state.unitPrice; // Default to base price
     state.originalPrice = data.originalPrice ? parseFloat(data.originalPrice) : state.unitPrice;
-    state.rate = data.reviews.rate || 0;
-    state.count = data.reviews.count || 0;
+    state.rate = data.reviews?.rate || 0;
+    state.count = data.reviews?.count || 0;
     state.currency = data.currency;
     state.whatsappNumber = data.whatsappNumber || '+21206';
     state.whatsappMsg = data.whatsappMsg || '';
+    state.quantityBreaks = Array.isArray(data.quantityBreaks) ? data.quantityBreaks : [];
 
-    state.promotions = Array.isArray(data.promotions)
-        ? data.promotions.map((p, i) => ({
-            ...p,
-            id: `promo_${i}`,
-            price: parseFloat(p.price)
-        }))
-        : [];
-
-    state.selectedPromoPrice = state.unitPrice;
-    state.selectedPromoQty = 1;
+    // Set Product Name
     document.getElementById('product-name').textContent = data.productName;
 
-// add reviews
-const reviewContainer = document.getElementById('review-container');
+    const promoContainer = document.getElementById('promo-buttons');
+    const qtySection = document.getElementById('quantity-section');
 
-    // Create star elements
+    // Reset container
+    promoContainer.innerHTML = '';
+
+    if (state.quantityBreaks.length > 0) {
+        qtySection.classList.add('hidden'); 
+        qtySection.style.display = 'none';
+
+        // Show the list container
+        document.getElementById('promo-group').style.display = 'block';
+        promoContainer.className = 'qty-break-container';
+        promoContainer.style.display = 'flex';
+
+        state.quantityBreaks.forEach((tier, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'qty-tier-card';
+            btn.dataset.qty = tier.quantity;
+
+            // Calculations for display
+            const totalPrice = tier.pricePerItem * tier.quantity;
+            // Calculate savings against the base unit price
+            const savings = (state.unitPrice - tier.pricePerItem) * tier.quantity;
+            
+            let badgeHTML = tier.badge ? `<div class="tier-badge">${tier.badge}</div>` : '';
+
+            btn.innerHTML = `
+                ${badgeHTML}
+                <div style="display:flex; align-items:center;">
+                    <div class="tier-radio"></div>
+                    <div class="tier-info">
+                        <span class="tier-title">${tier.label}</span>
+                        ${index > 0 && savings > 0 ? `<span class="tier-savings">وفر ${savings.toFixed(0)} ${state.currency}</span>` : ''}
+                    </div>
+                </div>
+                <div class="tier-pricing">
+                    <span class="tier-total">${totalPrice.toFixed(2)} ${state.currency}</span>
+                    <span class="tier-per-item">${tier.pricePerItem} ${state.currency} / للقطعة</span>
+                </div>
+            `;
+
+            btn.addEventListener('click', () => {
+                // Update State
+                state.quantity = tier.quantity;
+                state.currentPricePerItem = tier.pricePerItem;
+
+                // Update Visual Selection
+                document.querySelectorAll('.qty-tier-card').forEach(c => c.classList.remove('selected'));
+                btn.classList.add('selected');
+
+                updateUI();
+            });
+
+            promoContainer.appendChild(btn);
+        });
+
+        // Automatically select the first option
+        if (state.quantityBreaks.length > 0) {
+            const first = state.quantityBreaks[0];
+            state.quantity = first.quantity;
+            state.currentPricePerItem = first.pricePerItem;
+            // Manually add class to first element
+            promoContainer.firstChild.classList.add('selected');
+        }
+
+    } else {
+        qtySection.classList.remove('hidden');
+        qtySection.style.display = 'flex';
+        
+        // Hide the list container
+        document.getElementById('promo-group').style.display = 'none';
+        promoContainer.style.display = 'none';
+
+        // Reset to defaults
+        state.quantity = 1;
+        state.currentPricePerItem = state.unitPrice;
+        document.getElementById('quantity').value = 1;
+    }
+// reviews
+    const reviewContainer = document.getElementById('review-container');
     let starsHTML = '';
     for (let i = 1; i <= 5; i++) {
         if (state.rate >= i) {
-            starsHTML += '<i class="fas fa-star"></i>'; // Full star
+            starsHTML += '<i class="fas fa-star"></i>';
         } else if (state.rate >= i - 0.5) {
-            starsHTML += '<i class="fas fa-star-half-alt"></i>'; // Half star
+            starsHTML += '<i class="fas fa-star-half-alt"></i>';
         } else {
-            starsHTML += '<i class="far fa-star"></i>'; // Empty star
+            starsHTML += '<i class="far fa-star"></i>';
         }
     }
-
-    // Add star rating and count
     reviewContainer.innerHTML = starsHTML + `<span class="review-count">(${state.count})</span>`;
-/* ============================================================
-   UNIVERSAL PLACEHOLDER FOR ALL IMAGES ON THE PAGE
-   ============================================================ */
-function applyImagePlaceholders() {
-    const images = document.querySelectorAll('img');
+// gallery
+    const mainImg = document.getElementById('main-img');
+    const wrapper = document.getElementById('main-img-wrapper');
+    const thumbsContainer = document.getElementById('thumbs-container');
 
-    images.forEach(img => {
-        if (img.dataset.placeholderApplied) return;
+    function setMainImage(url) {
+        wrapper.classList.add('placeholder');
+        mainImg.classList.remove('loaded');
+        mainImg.src = url;
+        mainImg.onload = () => {
+            wrapper.classList.remove('placeholder');
+            mainImg.classList.add('loaded');
+        };
+    }
 
-        img.dataset.placeholderApplied = "true";
-        img.classList.add("placeholder");
+    if (data.gallery && data.gallery.length > 0) {
+        thumbsContainer.innerHTML = "";
+        
+        // Set first image
+        setMainImage(data.gallery[0]);
 
-        img.addEventListener("load", () => {
-            img.classList.remove("placeholder");
-            img.classList.add("loaded");
+        // Build Thumbs
+        data.gallery.forEach((src, i) => {
+            const thumb = document.createElement("img");
+            thumb.src = src;
+            thumb.className = "thumb";
+            if (i === 0) thumb.classList.add("active");
+
+            thumb.addEventListener("click", () => {
+                if (mainImg.src.includes(src)) return;
+                Array.from(thumbsContainer.children).forEach(t => t.classList.remove("active"));
+                thumb.classList.add("active");
+                setMainImage(src);
+            });
+
+            thumbsContainer.appendChild(thumb);
         });
-
-        img.addEventListener("error", () => {
-            img.classList.add("placeholder");
-        });
-    });
-}
-
-// Apply on load
-applyImagePlaceholders();
-
-// Apply to any new images added later
-const observer = new MutationObserver(applyImagePlaceholders);
-observer.observe(document.body, { childList: true, subtree: true });
-
-
-
-// ====== GALLERY ==============
-const mainImg = document.getElementById('main-img');
-const wrapper = document.getElementById('main-img-wrapper'); // Get the wrapper
-const thumbsContainer = document.getElementById('thumbs-container');
-
-// Helper function to safely switch images with shimmer
-function setMainImage(url) {
-    // 1. Reset state: Show shimmer, hide image
-    wrapper.classList.add('placeholder');
-    mainImg.classList.remove('loaded');
-
-    // 2. Set new source
-    mainImg.src = url;
-
-    // 3. Listen for load event
-    // Note: If image is cached, this fires almost instantly
-    mainImg.onload = () => {
-        wrapper.classList.remove('placeholder'); // Stop shimmer
-        mainImg.classList.add('loaded'); // Fade in image
-    };
-
-    // Handle error case (optional but recommended)
-    mainImg.onerror = () => {
-        wrapper.classList.remove('placeholder');
-        // You could set a placeholder error image here
-    };
-}
-
-if (data.gallery?.length) {
-    thumbsContainer.innerHTML = "";
-
-    // 1. Load the first image using our helper
-    setMainImage(data.gallery[0]);
-
-    // 2. Build Thumbnails
-    data.gallery.forEach((src, i) => {
-        const thumb = document.createElement("img");
-        thumb.src = src;
-        thumb.className = "thumb";
-        if (i === 0) thumb.classList.add("active");
-
-        thumb.addEventListener("click", () => {
-            if (mainImg.src.includes(src)) return; // Prevent clicking same image
-
-            // Update active state visuals
-            Array.from(thumbsContainer.children).forEach(t => t.classList.remove("active"));
-            thumb.classList.add("active");
-
-            // Load the new image with shimmer effect
-            setMainImage(src);
-        });
-
-        thumbsContainer.appendChild(thumb);
-    });
-}
-
-    // Sizes
+    }
+// Sizes
     if (data.sizes && data.sizes.length > 0) {
         document.getElementById('size-group').style.display = 'block';
-        state.size = data.sizes[0];
+        state.size = data.sizes[0]; // Select first by default
+        
         const container = document.getElementById('size-buttons');
         container.innerHTML = '';
+        
         data.sizes.forEach((size, i) => {
             const btn = document.createElement('div');
             btn.textContent = size;
             btn.classList.add('option-btn');
             if (i === 0) btn.classList.add('selected');
+            
             btn.addEventListener('click', () => {
                 container.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
@@ -378,13 +391,13 @@ if (data.gallery?.length) {
             });
             container.appendChild(btn);
         });
+    } else {
+        document.getElementById('size-group').style.display = 'none';
     }
-
-    // Colors
+// Colors
     if (data.colors && data.colors.length > 0) {
         document.getElementById('color-group').style.display = 'block';
 
-        // Helper to extract key/value from the specific JSON format: {"Red": "#FF0000"}
         const getFirstColorData = (colorObj) => {
             const name = Object.keys(colorObj)[0];
             return { name: name, hex: colorObj[name] };
@@ -400,121 +413,54 @@ if (data.gallery?.length) {
 
         data.colors.forEach((colorObj, i) => {
             const { name, hex } = getFirstColorData(colorObj);
-
             const btn = document.createElement('div');
-            btn.classList.add('color-btn'); // Use the new CSS class
-            btn.style.backgroundColor = hex; // Apply Hex code
-            btn.title = name; // Tooltip on hover
+            btn.classList.add('color-btn');
+            btn.style.backgroundColor = hex;
+            btn.title = name;
 
             if (i === 0) btn.classList.add('selected');
 
             btn.addEventListener('click', () => {
                 container.querySelectorAll('.color-btn').forEach(b => b.classList.remove('selected'));
                 btn.classList.add('selected');
-
-                // Update State
                 state.color = name;
-
-                // Update the text label next to "Color"
                 document.getElementById('selected-color-name').textContent = `${name}`;
-
                 updateUI();
             });
             container.appendChild(btn);
         });
-    }
-
-    // Promotions
-    const promoContainer = document.getElementById('promo-buttons');
-    promoContainer.innerHTML = '';
-    // calculate promotion percentage
-function getPromotionPercentage(unitPrice, promo) {
-  const normalTotal = unitPrice * promo.quantity;
-
-  // Guard against invalid data
-  if (normalTotal <= 0 || promo.price >= normalTotal) {
-    return 0;
-  }
-
-  const discountPercent =
-    ((normalTotal - promo.price) / normalTotal) * 100;
-
-  return Math.round(discountPercent);
-}
-    // Always add single unit
-    const singleBtn = document.createElement('div');
-    singleBtn.classList.add('promo-card');
-    singleBtn.setAttribute('data-id', 'single');
-    singleBtn.innerHTML = `
-        <div class="promo-label" data-key="single_unit">Single Unit</div>
-        <div class="promo-price">${state.unitPrice.toFixed(2)} ${state.currency}</div>
-        <div class="promo-desc" data-key="per_item">Per item</div>
-    `;
-    singleBtn.addEventListener('click', () => selectPromo('single', state.unitPrice, 1));
-    promoContainer.appendChild(singleBtn);
-
-    if (state.promotions.length > 0) {
-        // Show bundle options
-        state.promotions.forEach(promo => {
-            const unitCost = (promo.price / promo.quantity).toFixed(2);
-            const btn = document.createElement('div');
-            btn.classList.add('promo-card');
-            const promoPercent = getPromotionPercentage(state.unitPrice, promo);
-  
-            btn.setAttribute('data-id', promo.id);
-            btn.innerHTML = `
-                <div class="promo-label">${promo.label}</div>
-                <div class="promo-price">${promo.price.toFixed(2)} ${state.currency}</div>
-                <div class="promo-desc">${unitCost} ${state.currency}<span data-key="item"></span></div>
-                <div class="promo-percent">${promoPercent > 0 ? `-${promoPercent}%` : ''}</div>
-            `;
-            btn.addEventListener('click', () => selectPromo(promo.id, promo.price, promo.quantity));
-            promoContainer.appendChild(btn);
-        });
-
-        // Default select first promo
-        const firstPromoId = promoContainer.querySelector('.promo-card').getAttribute('data-id');
-        selectPromo(firstPromoId,
-            firstPromoId === 'single' ? state.unitPrice : state.promotions[0].price,
-            firstPromoId === 'single' ? 1 : state.promotions[0].quantity
-        );
-
-        document.getElementById('promo-group').style.display = 'block';
     } else {
-        // No promotions → hide promo section, show quantity picker
-        document.getElementById('promo-group').style.display = 'none';
-        document.getElementById('quantity-section').style.display = 'flex';
+        document.getElementById('color-group').style.display = 'none';
     }
-
-    // Content images
+// Description images
     const contentContainer = document.getElementById('content-images');
     contentContainer.innerHTML = '';
     if (data.contentImages && data.contentImages.length > 0) {
         data.contentImages.forEach(src => {
             const img = document.createElement('img');
             img.src = src;
+            img.classList.add('placeholder');
+            img.onload = () => img.classList.remove('placeholder');
             contentContainer.appendChild(img);
         });
     }
-
     updateUI();
 }
-
 // Quantity controls
 document.getElementById('qty-minus').addEventListener('click', () => {
-    if (state.selectedPromoId === 'single' && state.quantity > 1) {
+    if (state.quantity > 1) {
         state.quantity--;
         document.getElementById('quantity').value = state.quantity;
+        // In standard mode, pricePerItem stays the same (unitPrice)
         updateUI();
     }
 });
 
 document.getElementById('qty-plus').addEventListener('click', () => {
-    if (state.selectedPromoId === 'single') {
-        state.quantity++;
-        document.getElementById('quantity').value = state.quantity;
-        updateUI();
-    }
+    state.quantity++;
+    document.getElementById('quantity').value = state.quantity;
+    // In standard mode, pricePerItem stays the same (unitPrice)
+    updateUI();
 });
 
 // Scroll to order form
