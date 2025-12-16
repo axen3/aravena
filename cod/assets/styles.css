@@ -332,77 +332,121 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
+/* ==== QUANTITY BREAKS ===== */
+.qty-break-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
 
-.promo-card {
-    flex: 1;
-    min-width: 140px;
-    padding: 16px;
+.qty-tier-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
     border: 2px solid #e0e0e0;
-    border-radius: 16px;
+    border-radius: 12px;
+    padding: 16px;
     cursor: pointer;
-    transition: all 0.3s ease;
     position: relative;
-    background: #efeff7;
-    position: relative;
-}
-.promo-card .promo-percent {
-    position: absolute;
-    top: 5px;
-    left: 5px;
-    color: #fff;
-    background: linear-gradient(45deg, #8338ec, #3a86ff);
-    border-radius: 20px;
-    padding: 5px;
-    font-family:
-        "Segoe UI",
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
-    font-size: 12px;
-}
-.promo-card:hover {
-    border-color: #667eea;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    transition: all 0.2s ease;
 }
 
-.promo-card.selected {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    border-color: transparent;
-    color: white;
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+/* Selected State */
+.qty-tier-card.selected {
+    border-color: #0a7a3d; /* Green like the image */
+    background-color: #f0fdf4;
+    box-shadow: 0 4px 12px rgba(10, 122, 61, 0.15);
 }
-.promo-card.selected .promo-percent {
-    background: #eee;
-    color: #4a148c;
+
+/* Radio Button Styling */
+.tier-radio {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    margin-left: 12px; /* For RTL */
+    margin-right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
 }
-.promo-label {
+
+.qty-tier-card.selected .tier-radio {
+    border-color: #0a7a3d;
+    background: #0a7a3d;
+}
+
+.qty-tier-card.selected .tier-radio::after {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+}
+
+/* Text Info */
+.tier-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tier-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #333;
+}
+
+.tier-savings {
     font-size: 12px;
+    color: #0a7a3d;
     font-weight: 600;
-    margin-bottom: 8px;
-    opacity: 0.8;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    background: #dcfce7;
+    padding: 2px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    width: fit-content;
+    margin-top: 4px;
 }
 
-.promo-price {
-    font-size: 24px;
+/* Price Section */
+.tier-pricing {
+    text-align: left; /* Prices usually look better LTR, but adapts */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.tier-total {
     font-weight: 800;
-    margin-bottom: 4px;
+    font-size: 18px;
+    color: #333;
 }
 
-.promo-desc {
+.tier-per-item {
+    font-size: 13px;
+    color: #777;
+}
+
+/* Best Value Badge (Top Right) */
+.tier-badge {
+    position: absolute;
+    top: -10px;
+    left: 12px; /* RTL default */
+    background: #ff6b6b;
+    color: white;
     font-size: 11px;
-    opacity: 0.7;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
-.promo-card.selected .promo-desc,
-.promo-card.selected .promo-label {
-    opacity: 0.9;
+#quantity-section.hidden {
+    display: none !important;
 }
-
 .quantity-section {
     display: flex;
     align-items: center;
@@ -1093,6 +1137,14 @@ html[dir="rtl"] .fa-star-half-alt {
     transform: scaleX(-1);
     display: inline-block;
 }
+html[dir="ltr"] .tier-radio {
+    margin-right: 12px;
+    margin-left: 0;
+}
+html[dir="ltr"] .tier-badge {
+    right: 12px;
+    left: auto;
+}
 html[dir="rtl"] .summary-row {
     display: flex;
     justify-content: flex-start;
@@ -1109,47 +1161,15 @@ html[dir="rtl"] .summary-total {
 html[dir="rtl"] .submit-btn {
     font-family: "Tajawal";
 }
-/* Headings & text blocks */
-/*
-html[dir="rtl"] .product-title,
-html[dir="rtl"] .summary-label,
-html[dir="rtl"] .summary-value,
-html[dir="rtl"] .promo-price,
-html[dir="rtl"] .promo-desc,
-html[dir="rtl"] .promo-label {
-    text-align: right;
-}*/
-
-/* Flex sections that rely on start/end */
-/*
-html[dir="rtl"] .price-section,
-html[dir="rtl"] .summary-row,
-html[dir="rtl"] .quantity-section,
-html[dir="rtl"] .sticky-inner {
-    flex-direction: row-reverse;
-    justify-content: flex-start;
-    gap: 12px;
-}*/
-
-/* Labels + icons where spacing is left-based */
 html[dir="rtl"] .form-title i {
     margin-left: 8px;
     margin-right: 0;
 }
-
-/* Summary rows spacing fix */
-/*html[dir="rtl"] .summary-row {
-    justify-content: space-between;
-}*/
-
-/* Option label (the small title above buttons) */
 html[dir="rtl"] .option-label,
 html[dir="rtl"] .qty-label {
     text-align: right;
     font-size: 16px;
 }
-
-/* Inputs keep padding but flip direction for text */
 html[dir="rtl"] input,
 html[dir="rtl"] textarea,
 html[dir="rtl"] select {
