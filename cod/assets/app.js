@@ -233,7 +233,6 @@ function selectPromo(id, price, qty) {
 }
 
 function initProduct(data) {
-  //initMessages(data);
     state.productName = data.productName;
     state.unitPrice = parseFloat(data.price);
     state.originalPrice = data.originalPrice ? parseFloat(data.originalPrice) : state.unitPrice;
@@ -486,16 +485,6 @@ function getPromotionPercentage(unitPrice, promo) {
         document.getElementById('promo-group').style.display = 'none';
         document.getElementById('quantity-section').style.display = 'flex';
     }
-
-    // Cities
- /*   const citySelect = document.getElementById('city');
-    citySelect.innerHTML = '<option value="" disabled selected data-key="select_city">Select your city</option>';
-    MOROCCAN_CITIES.forEach(city => {
-        const option = document.createElement('option');
-        option.value = city;
-        option.textContent = city;
-        citySelect.appendChild(option);
-    });*/
 
     // Content images
     const contentContainer = document.getElementById('content-images');
