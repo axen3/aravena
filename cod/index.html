@@ -1,152 +1,200 @@
 <!DOCTYPE html>
-<!--<html lang="fr" dir="ltr">-->
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aravena One Product Page</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- ===== SECURITY META ===== -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self';
+                   script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+                   style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://fonts.googleapis.com;
+                   font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+                   img-src 'self' data: https:;
+                   connect-src 'self' https://script.google.com;">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+    <meta name="robots" content="index, follow">
+
+    <title>Aravena — Product Page</title>
+    <meta name="description" content="منتج عالي الجودة مع توصيل مجاني والدفع عند الاستلام">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@200;300;400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
     <link rel="stylesheet" href="assets/styles.css">
-<link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 <body>
 
+<!-- ===== TOP BANNER / TICKER ===== -->
 <div class="top-banner" id="top-banner">
-  <div class="ticker-wrapper"></div>
-</div>
-
-<div class="container">
-    
-    <div class="gallery">
-    <div id="main-img-wrapper" class="img-wrapper placeholder">
-        <img id="main-img" class="main-image" src="" alt="Product">
+    <div class="ticker-wrapper">
+        <div class="ticker-track" id="ticker-track"></div>
     </div>
-    
-    <div class="thumbs" id="thumbs-container"></div>
 </div>
 
+<!-- ===== MAIN CONTAINER ===== -->
+<div class="container">
+
+    <!-- ===== GALLERY ===== -->
+    <div class="gallery">
+        <div id="main-img-wrapper" class="img-wrapper placeholder">
+            <div class="skeleton-shimmer"></div>
+            <img id="main-img" class="main-image" src="" alt="Product image" referrerpolicy="strict-origin-when-cross-origin">
+            <span class="discount-badge" id="discount-badge" style="display:none;">-0%</span>
+        </div>
+        <div class="thumbs" id="thumbs-container"></div>
+    </div>
+
+    <!-- ===== PRODUCT INFO ===== -->
     <div class="product-info">
         <div class="product-header">
-            <h1 class="product-title" id="product-name">Loading...</h1>
+            <h1 class="product-title" id="product-name">
+                <span class="skeleton-line"></span>
+            </h1>
             <div id="review-container" class="stars"></div>
             <div class="price-section">
-                <span class="current-price" id="current-price">$0.00</span>
+                <span class="current-price" id="current-price">—</span>
                 <span class="original-price" id="original-price"></span>
-                <span class="discount-badge" id="discount-badge" style="display:none;">-0%</span>
             </div>
         </div>
-<span class="free-shipping">
-  <i class="fa-solid fa-truck-fast"></i> توصيل مجاني
-</span>
+
+        <span class="free-shipping">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span data-key="fast_delivery"></span>
+        </span>
+
+        <!-- Size -->
         <div class="option-group" id="size-group" style="display:none;">
             <span class="option-label" data-key="size"></span>
             <div class="option-buttons" id="size-buttons"></div>
         </div>
 
-<div class="option-group" id="color-group" style="display:none;">
-    <span style="display:block;margin-bottom:12px"><span class="option-label" style="display:unset" data-key="color"></span> <span id="selected-color-name" class="selected-color-text"></span>
-    </span>
-    <div class="color-options-container" id="color-buttons"></div>
-</div>
+        <!-- Color -->
+        <div class="option-group" id="color-group" style="display:none;">
+            <span style="display:block;margin-bottom:12px">
+                <span class="option-label" style="display:unset" data-key="color"></span>
+                <span id="selected-color-name" class="selected-color-text"></span>
+            </span>
+            <div class="color-options-container" id="color-buttons"></div>
+        </div>
 
+        <!-- Promotions -->
         <div class="option-group" id="promo-group">
             <span class="option-label" data-key="promotions"></span>
             <div class="option-buttons" id="promo-buttons"></div>
         </div>
 
-        <div class="quantity-section" id="quantity-section" style="display:none;">
+        <!-- Quantity -->
+        <div class="quantity-section" id="quantity-section">
             <span class="qty-label" data-key="quantity"></span>
             <div class="qty-controls">
-                <button type="button" class="qty-btn" id="qty-minus">−</button>
-                <input type="number" id="quantity" value="1" min="1" readonly>
-                <button type="button" class="qty-btn" id="qty-plus">+</button>
+                <button type="button" class="qty-btn" id="qty-minus" aria-label="Decrease quantity">−</button>
+                <input type="number" id="quantity" value="1" min="1" max="99" readonly aria-label="Quantity">
+                <button type="button" class="qty-btn" id="qty-plus" aria-label="Increase quantity">+</button>
             </div>
         </div>
     </div>
 
-<div class="ship-banner">
-  <img
-    src="https://i.ibb.co/b53JMXVj/goxi4jhbx-Kn-VVilgf-KAa04o-MILDv-GSbj-DF2-GTcwi-1.png"
-    alt="image"
-  >
-</div>
+    <!-- ===== SHIP BANNER ===== -->
+    <div class="ship-banner">
+        <img
+            src="https://i.ibb.co/b53JMXVj/goxi4jhbx-Kn-VVilgf-KAa04o-MILDv-GSbj-DF2-GTcwi-1.png"
+            alt="Shipping information"
+            loading="lazy"
+            referrerpolicy="strict-origin-when-cross-origin"
+        >
+    </div>
 
-<div class="countdown-box">
-  <i class="fa-solid fa-clock" style="margin-left:6px;"></i>
-  العرض ينتهي خلال:
-  <span id="timer">03:00:00</span>
-</div>
+    <!-- ===== COUNTDOWN ===== -->
+    <div class="countdown-box">
+        <i class="fa-solid fa-clock"></i>
+        <span>العرض ينتهي خلال:</span>
+        <span id="timer">03:00:00</span>
+    </div>
 
-    <div class="order-section">
+    <!-- ===== ORDER SECTION ===== -->
+    <div class="order-section" id="order-section">
         <h2 class="form-title">
             <i class="fa-solid fa-box-open"></i>
             <span data-key="complete_your_order"></span>
         </h2>
-        
+
         <div class="order-summary">
             <div class="summary-row">
                 <span class="summary-label" data-key="product"></span>
                 <span class="summary-value" id="summary-product">-</span>
             </div>
-            <div class="summary-row">
+            <div class="summary-row" id="summary-size-row" style="display:none;">
                 <span class="summary-label" data-key="size"></span>
                 <span class="summary-value" id="summary-size">-</span>
             </div>
-            <div class="summary-row">
+            <div class="summary-row" id="summary-color-row" style="display:none;">
                 <span class="summary-label" data-key="color"></span>
                 <span class="summary-value" id="summary-color">-</span>
             </div>
             <div class="summary-row">
                 <span class="summary-label" data-key="quantity"></span>
-                <span class="summary-value" id="summary-qty">-</span>
+                <span class="summary-value" id="summary-qty">1</span>
             </div>
             <div class="summary-row summary-total">
                 <span class="summary-label" data-key="total"></span>
-                <span class="summary-value" id="summary-total">$0.00</span>
+                <span class="summary-value" id="summary-total">—</span>
             </div>
         </div>
 
-      <form id="cod-form" action="" method="POST">
+        <form id="cod-form" action="" method="POST" novalidate autocomplete="on">
+            <!-- HONEYPOT — hidden from humans, traps bots -->
+            <div class="hp-field" aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;">
+                <label>Do not fill this field</label>
+                <input type="text" name="website" tabindex="-1" autocomplete="off" value="">
+            </div>
+
             <div class="form-group">
                 <label for="fullname" data-key="full_name"></label>
-                <i class="icon fa fa-user"></i>
-                <input type="text" id="fullname" name="fullname" required placeholder="Mehdi Alaoui">
-                <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
-                <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
-                <div class="error-message" id="error-fullname" data-key=""></div>
+                <div class="input-wrapper">
+                    <i class="icon fa fa-user"></i>
+                    <input type="text" id="fullname" name="fullname" required autocomplete="name" maxlength="50" inputmode="text" placeholder="مثال: محمد العلوي">
+                    <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
+                    <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
+                </div>
+                <div class="error-message" id="error-fullname"></div>
             </div>
 
             <div class="form-group">
                 <label for="phone" data-key="phone_number"></label>
-                  <i class="icon fa fa-phone"></i>
-                <input type="tel" id="phone" name="phone" required placeholder="06XXXXXXXX">
-                <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
-                                <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
-                <div class="error-message" id="error-phone" data-key=""></div>
+                <div class="input-wrapper">
+                    <i class="icon fa fa-phone"></i>
+                    <input type="tel" id="phone" name="phone" required autocomplete="tel" maxlength="14" inputmode="tel" pattern="0[5-7][0-9]{8}" placeholder="06XXXXXXXX">
+                    <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
+                    <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
+                </div>
+                <div class="error-message" id="error-phone"></div>
             </div>
 
             <div class="form-group">
                 <label for="city" data-key="city"></label>
-                <i class="icon fa fa-map-marker"></i>
-                <select id="city" name="city" required>
-                    <option value="" disabled selected data-key="select_city"></option>
-                </select>
-                <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
-                                <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
-                <div class="error-message" id="error-city" data-key=""></div>
+                <div class="input-wrapper">
+                    <i class="icon fa fa-map-marker"></i>
+                    <select id="city" name="city" required>
+                        <option value="" disabled selected data-key="select_city"></option>
+                    </select>
+                </div>
+                <div class="error-message" id="error-city"></div>
             </div>
 
             <div class="form-group">
                 <label for="address" data-key="address"></label>
-                 <i class="icon fa fa-home"></i>
-                <textarea id="address" name="address" rows="3" required placeholder="اكتب عنوانك الكامل هنا"></textarea>
-                <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
-                                <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
-                <div class="error-message" id="error-address" data-key=""></div>
+                <div class="input-wrapper textarea-wrapper">
+                    <i class="icon fa fa-home"></i>
+                    <textarea id="address" name="address" rows="3" required autocomplete="street-address" maxlength="300" placeholder="اكتب عنوانك الكامل هنا"></textarea>
+                    <i class="fa-solid fa-circle-check check-icon" aria-hidden="true"></i>
+                    <i class="fa-solid fa-circle-exclamation error-icon" aria-hidden="true"></i>
+                </div>
+                <div class="error-message" id="error-address"></div>
             </div>
 
             <input type="hidden" name="product_name" id="form-product-name">
@@ -156,81 +204,82 @@
             <input type="hidden" name="quantity" id="form-quantity">
             <input type="hidden" name="total_amount" id="form-total-amount">
 
-            <button type="submit" class="submit-btn">
-<i class="fa-solid fa-clipboard-check"></i>  <span data-key="place_order"></span>
+            <button type="submit" class="submit-btn" id="submit-btn">
+                <span class="btn-content">
+                    <i class="fa-solid fa-clipboard-check"></i>
+                    <span data-key="place_order"></span>
+                </span>
+                <span class="btn-spinner" aria-hidden="true"></span>
             </button>
         </form>
     </div>
 
-<div class="scarcity">
-  <i class="fa-solid fa-fire icon"></i>
-  طلبات كثيرة الآن… 
-  <span id="viewers">37</span> يشاهدون هذا المنتج
-  <br>
-  <i class="fa-solid fa-box-open icon"></i>
-  المتبقي في المخزون: 
-  <span id="stock">6</span> قطع فقط
-</div>
- 
- <!--
-<div class="fancy-divider wave"><span data-key="product_details"></span></div>-->
-<div class="tabs-container">
-
-    <!-- Tabs -->
-    <div class="tabs">
-      <button class="tab-btn active" data-tab="description">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-file-description"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4" /><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z" /><path d="M9 17h6" /><path d="M9 13h6" /></svg>
-        مواصفات المنتج
-        </button>
-      <button class="tab-btn" data-tab="reviews">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-message-star"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8" /><path d="M8 13h4.5" /><path d="M10.325 19.605l-2.325 1.395v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5" /><path d="M17.8 20.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z" /></svg>
-        تقييمات الزبائن (92)
-      </button>
-      <span class="indicator"></span>
+    <!-- ===== SCARCITY ===== -->
+    <div class="scarcity">
+        <div class="scarcity-item">
+            <i class="fa-solid fa-fire icon"></i>
+            <span>يشاهدون الآن</span>
+            <span id="viewers" class="scarcity-num">37</span>
+        </div>
+        <div class="scarcity-item">
+            <i class="fa-solid fa-box-open icon"></i>
+            <span>المتبقي في المخزون</span>
+            <span id="stock" class="scarcity-num">6</span>
+        </div>
     </div>
 
-    <!-- Description -->
-    <div id="description" class="tab-content active">
+    <!-- ===== TABS ===== -->
+    <div class="tabs-container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="description">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 17h6"/><path d="M9 13h6"/></svg>
+                <span data-key="product_details"></span>
+            </button>
+            <button class="tab-btn" data-tab="reviews">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M8 9h8"/><path d="M8 13h4.5"/><path d="M10.325 19.605l-2.325 1.395v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v4.5"/><path d="M17.8 20.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z"/></svg>
+                تقييمات الزبائن (<span id="reviews-tab-count">0</span>)
+            </button>
+            <span class="indicator"></span>
+        </div>
+
+        <div id="description" class="tab-content active">
             <div class="content-images" id="content-images"></div>
-      
+        </div>
+
+        <div id="reviews" class="tab-content">
+            <div class="reviews-grid" id="reviewsContainer" aria-label="Customer reviews"></div>
+            <div class="load-more-container">
+                <button class="load-more-btn" id="loadMoreBtn">
+                    <span class="spinner"></span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z"/><path d="M15 12h-6"/><path d="M12 9v6"/></svg>
+                    <span class="btn-text">رؤية المزيد</span>
+                </button>
+            </div>
+        </div>
     </div>
 
-    <!-- Reviews -->
-    <div id="reviews" class="tab-content">
-      <div class="review">
-        <section class="reviews-grid" id="reviewsContainer" aria-label="Placeholder reviews list">
-    </section>
-
-    <div class="load-more-container">
-      <button class="load-more-btn" id="loadMoreBtn">
-        <span class="spinner"></span>
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-outline icon-tabler-square-rounded-plus"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" /><path d="M15 12h-6" /><path d="M12 9v6" /></svg>
-        <span class="btn-text">
-          رؤية المزيد
-          </span>
-      </button>
-    </div>
-      </div>
-
-      
-    </div>
-
-  </div>
     <footer>
         <p data-key="copyright"></p>
     </footer>
-
 </div>
 
-<div class="sticky-bar">
+<!-- ===== STICKY BAR ===== -->
+<div class="sticky-bar" id="sticky-bar">
     <div class="sticky-inner">
-        <a href="#" id="whatsapp-link" class="sticky-btn btn-whatsapp" target="_blank">
+        <a href="#" id="whatsapp-link" class="sticky-btn btn-whatsapp" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp">
             <i class="fa-brands fa-whatsapp"></i>
         </a>
-        <a href="#" id="buy-now-btn" class="sticky-btn btn-buy"><i class="fa-solid fa-cart-shopping"></i> <span data-key="buy_now"></span></a>
+        <a href="#order-section" id="buy-now-btn" class="sticky-btn btn-buy" rel="noopener">
+            <i class="fa-solid fa-cart-shopping"></i>
+            <span data-key="buy_now"></span>
+        </a>
     </div>
 </div>
-  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<!-- ===== TOAST ===== -->
+<div class="toast-container" id="toast-container" aria-live="assertive"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script src="assets/app.js"></script>
 </body>
-</html>
+            </html>
