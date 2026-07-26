@@ -23,7 +23,7 @@
                 if (path && path !== location.pathname) {
                     // 1. Restore the correct path
                     history.replaceState(null, null, path);
-                    // 2. CRITICAL: Clear the stored path immediately after using it.
+                    // 2. CRITICAL: Clear the stored path immediately after using it. 
                     localStorage.removeItem("redirect");
                 }
             })();
